@@ -1279,3 +1279,20 @@ footer a:hover, .glass-footer a:hover {
 .card p, .feature-card p {
     color: #52525B !important;
 }
+
+/* 5. INJECT PREMIUM ACCENT (BLUE) */
+.btn-primary, .nav-cta, .hero-section .btn {
+    background-color: #2563EB !important;
+    color: #FFFFFF !important;
+    border: 1px solid #2563EB !important;
+}
+.btn-primary:hover, .nav-cta:hover, .hero-section .btn:hover {
+    background-color: #1D4ED8 !important;
+    border-color: #1D4ED8 !important;
+    color: #FFFFFF !important;
+}
+
+/* 6. UPDATE ICONS TO BLUE */
+.icon-wrapper i {
+    color: #2563EB !important;
+}
