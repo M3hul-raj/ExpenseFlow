@@ -30,7 +30,7 @@ Follow these steps to run ExpenseFlow on your own machine.
 ### Setup Instructions
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ExpenseFlow.git
+   git clone https://github.com/M3hul-raj/ExpenseFlow.git
    cd ExpenseFlow
    ```
 2. **Create a virtual environment:**
@@ -61,7 +61,7 @@ ExpenseFlow is specifically optimized to be deployed on **PythonAnywhere** for f
 1. Create a free account at [PythonAnywhere](https://www.pythonanywhere.com/).
 2. Open a **Bash Console** in PythonAnywhere and clone your GitHub repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ExpenseFlow.git
+   git clone https://github.com/M3hul-raj/ExpenseFlow.git
    cd ExpenseFlow
    ```
 3. Create a virtual environment and install dependencies:
