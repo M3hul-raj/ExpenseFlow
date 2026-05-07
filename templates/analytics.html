@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics – {{ selected_month_label }} - ExpenseFlow{% endblock %}
+
+{% block head %}
+<style>
+    .kpi-icon {
+        width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .kpi-value { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+    .kpi-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+                 letter-spacing: 0.06em; color: var(--text-secondary); margin-top: 3px; }
+
+    /* Trend banner */
+    .trend-banner { border-left: 4px solid; border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+    .trend-banner.up   { border-color: var(--danger);  background: var(--danger-bg); }
+    .trend-banner.down { border-color: var(--success); background: var(--success-bg); }
+    .trend-banner.flat { border-color: var(--text-secondary); background: var(--bg-color); }
+
+    /* Category table */
+    .cat-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0;
+               border-bottom: 1px solid var(--border-color); }
+    .cat-row:last-child { border-bottom: none; }
+    .cat-bar-wrap { flex: 1; height: 6px; border-radius: 9999px; background: var(--bg-color); overflow: hidden; }
+    .cat-bar-fill { height: 100%; border-radius: 9999px; background: var(--primary); }
+
+    /* Calendar heatmap */
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-day-header { text-align: center; font-size: 0.7rem; font-weight: 600;
+                      color: var(--text-secondary); padding: 4px 0; }
+    .cal-day { aspect-ratio: 1; border-radius: 6px; display: flex; flex-direction: column;
+               align-items: center; justify-content: center; font-size: 0.72rem; cursor: default;
+               position: relative; transition: transform 0.1s; background: var(--bg-color); }
+    .cal-day:hover { transform: scale(1.1); z-index: 2; }
+    .cal-day.empty { background: transparent; }
+    .cal-day .cal-num { font-weight: 600; line-height: 1; }
+    .cal-day .cal-amt { font-size: 0.6rem; opacity: 0.85; }
+    .cal-day.peak { box-shadow: 0 0 0 2px var(--danger); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-xl px-4 py-4">
+
+    <!-- ── Header + Month Picker ────────────────────────────── -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div>
+            <h1 class="fw-bold mb-1" style="font-size:1.75rem;">
+                <i class="fas fa-chart-bar text-primary me-2"></i>Spending Analytics
+            </h1>
+            <p class="text-secondary small mb-0">Deep insights for {{ selected_month_label }}</p>
+        </div>
+        <form method="GET" action="{{ url_for('analytics') }}" class="d-flex align-items-center gap-2">
+            <i class="fas fa-calendar-alt text-muted"></i>
+            <select name="month" class="form-select form-select-sm rounded-pill" style="min-width:160px;"
+                    onchange="this.form.submit()">
+                {% for m in available_months %}
+                <option value="{{ m.value }}" {% if m.value == selected_month %}selected{% endif %}>{{ m.label }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
+    <!-- ── KPI Cards ────────────────────────────────────────── -->
+    <div class="row g-3 mb-4">
+        <!-- Month-over-Month -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="fintech-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon {% if mom_direction == 'down' %}bg-success bg-opacity-10 text-success{% elif mom_direction == 'up' %}bg-danger bg-opacity-10 text-danger{% else %}bg-secondary bg-opacity-10 text-secondary{% endif %}">
+                    <i class="fas fa-arrow-trend-{% if mom_direction == 'up' %}up{% else %}down{% endif %}"></i>
+                </div>
+                <div>
+                    <div class="kpi-value {% if mom_direction == 'down' %}text-success{% elif mom_direction == 'up' %}text-danger{% endif %}">
+                        {% if mom_direction != 'flat' %}{{ "%.1f"|format(mom_change_pct|abs) }}%{% else %}—{% endif %}
+                    </div>
+                    <div class="kpi-label">vs Last Month</div>
+                    <div class="text-secondary" style="font-size:0.72rem;">
+                        {% if mom_direction == 'up' %}More than {% elif mom_direction == 'down' %}Less than {% endif %}
+                        ₹{{ "%.0f"|format(total_prev_month) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Biggest Expense -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="fintech-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background:var(--warning-bg);color:var(--warning);">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div>
+                    <div class="kpi-value">{% if biggest_expense %}₹{{ "%.0f"|format(biggest_expense.amount) }}{% else %}—{% endif %}</div>
+                    <div class="kpi-label">Biggest Expense</div>
+                    <div class="text-secondary" style="font-size:0.72rem;">
+                        {% if biggest_expense %}{{ biggest_expense.category }} · {{ biggest_expense.date }}{% else %}No data{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Daily Average -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="fintech-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background:var(--primary-light);color:var(--primary);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <div class="kpi-value">₹{{ "%.0f"|format(avg_daily) }}</div>
+                    <div class="kpi-label">Daily Average</div>
+                    <div class="text-secondary" style="font-size:0.72rem;">₹{{ "%.0f"|format(total_this_month) }} total</div>
+                </div>
+            </div>
+        </div>
+        <!-- Active Days -->
+        <div class="col-sm-6 col-lg-3">
+            <div class="fintech-card h-100 d-flex align-items-center gap-3">
+                <div class="kpi-icon" style="background:var(--info-bg);color:var(--info);">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div>
+                    <div class="kpi-value">{{ active_days }} <span class="text-secondary" style="font-size:1rem;font-weight:500;">/ {{ days_in_month }}</span></div>
+                    <div class="kpi-label">Active Days</div>
+                    <div class="text-secondary" style="font-size:0.72rem;">days with expenses</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Trend Banner ──────────────────────────────────────── -->
+    {% if total_this_month > 0 %}
+    <div class="trend-banner {{ mom_direction }} mb-4">
+        <div class="d-flex align-items-start gap-3">
+            <i class="fas fa-{% if mom_direction == 'up' %}exclamation-circle text-danger{% elif mom_direction == 'down' %}check-circle text-success{% else %}minus-circle text-secondary{% endif %} fs-5 mt-1"></i>
+            <div>
+                <p class="fw-bold mb-1" style="color:var(--text-primary);">
+                    You spent <strong>₹{{ "%.0f"|format(total_this_month) }}</strong> in {{ selected_month_label }}
+                    {% if mom_direction == 'up' %} — <span class="text-danger">{{ "%.1f"|format(mom_change_pct) }}% more</span> than last month
+                    {% elif mom_direction == 'down' %} — <span class="text-success">{{ "%.1f"|format(mom_change_pct|abs) }}% less</span> than last month
+                    {% else %} — same as last month{% endif %}.
+                </p>
+                {% if biggest_increase_cat and biggest_increase_amt > 0 %}
+                <p class="text-secondary small mb-0">
+                    Biggest increase: <strong>{{ biggest_increase_cat }}</strong> (+₹{{ "%.0f"|format(biggest_increase_amt) }} vs previous month)
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ── Category Breakdown + MoM Grouped Bar ─────────────── -->
+    <div class="row g-3 mb-4">
+        <!-- Category Breakdown -->
+        <div class="col-lg-5">
+            <div class="fintech-card h-100">
+                <div class="fintech-card-title mb-3">
+                    <i class="fas fa-chart-pie text-primary"></i> Category Breakdown
+                </div>
+                {% if cat_labels %}
+                <div style="position:relative;height:220px;" class="mb-3">
+                    <canvas id="catChart"></canvas>
+                </div>
+                <div>
+                    {% for i in range(cat_labels|length) %}
+                    <div class="cat-row">
+                        <span class="text-secondary" style="width:16px;height:16px;border-radius:4px;flex-shrink:0;background:{{ ['#4F46E5','#7C3AED','#0EA5E9','#10B981','#F59E0B','#F43F5E','#64748B','#14B8A6'][i % 8] }};"></span>
+                        <span class="small fw-500" style="min-width:90px;">{{ cat_labels[i] }}</span>
+                        <div class="cat-bar-wrap">
+                            <div class="cat-bar-fill" style="width:{{ cat_percentages[i] }}%;background:{{ ['#4F46E5','#7C3AED','#0EA5E9','#10B981','#F59E0B','#F43F5E','#64748B','#14B8A6'][i % 8] }};"></div>
+                        </div>
+                        <span class="small fw-bold" style="min-width:40px;text-align:right;">{{ cat_percentages[i] }}%</span>
+                        <span class="small text-secondary" style="min-width:70px;text-align:right;">₹{{ "%.0f"|format(cat_amounts[i]) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-secondary"><i class="fas fa-inbox fa-2x mb-2 d-block opacity-50"></i>No data for this month</div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Month-over-Month Grouped Bar -->
+        <div class="col-lg-7">
+            <div class="fintech-card h-100">
+                <div class="fintech-card-title mb-3">
+                    <i class="fas fa-chart-column text-primary"></i> Budget vs Actual — Last 6 Months
+                </div>
+                <div style="position:relative;height:320px;">
+                    <canvas id="momChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Daily Spending Bar Chart ──────────────────────────── -->
+    <div class="fintech-card mb-4">
+        <div class="fintech-card-title mb-3">
+            <i class="fas fa-calendar-day text-primary"></i> Daily Spending — {{ selected_month_label }}
+            {% if peak_day %}
+            <span class="ms-2 small text-secondary fw-normal">
+                Peak: Day {{ peak_day }} (₹{{ "%.0f"|format(peak_day_amount) }})
+            </span>
+            {% endif %}
+        </div>
+        {% if daily_amounts | select('>', 0) | list %}
+        <div style="position:relative;height:200px;">
+            <canvas id="dailyChart"></canvas>
+        </div>
+        {% else %}
+        <div class="text-center py-4 text-secondary"><i class="fas fa-inbox fa-2x mb-2 d-block opacity-50"></i>No daily data for this month</div>
+        {% endif %}
+    </div>
+
+    <!-- ── Payment Method + Top 5 + Calendar ─────────────────── -->
+    <div class="row g-3 mb-4">
+        <!-- Payment Method -->
+        <div class="col-lg-4">
+            <div class="fintech-card h-100">
+                <div class="fintech-card-title mb-3">
+                    <i class="fas fa-credit-card text-primary"></i> Payment Methods
+                </div>
+                {% if pay_labels %}
+                <div style="position:relative;height:220px;">
+                    <canvas id="payChart"></canvas>
+                </div>
+                {% else %}
+                <div class="text-center py-4 text-secondary"><i class="fas fa-inbox fa-2x mb-2 d-block opacity-50"></i>No data</div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Top 5 Biggest Expenses -->
+        <div class="col-lg-8">
+            <div class="fintech-card h-100">
+                <div class="fintech-card-title mb-3">
+                    <i class="fas fa-fire text-danger"></i> Top 5 Biggest Expenses
+                </div>
+                {% if top_5 %}
+                <table class="table-fintech w-100">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in top_5 %}
+                        <tr>
+                            <td class="text-secondary small fw-bold">{{ loop.index }}</td>
+                            <td class="text-secondary small">{{ e.date }}</td>
+                            <td>
+                                <span style="display:inline-flex;align-items:center;padding:.2em .65em;font-size:.76rem;font-weight:600;border-radius:9999px;background:var(--primary-light);color:var(--primary);">{{ e.category }}</span>
+                            </td>
+                            <td class="text-secondary small">{{ (e.description or '—')[:40] }}</td>
+                            <td class="text-end fw-bold" style="color:var(--danger);">₹{{ "%.2f"|format(e.amount) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="text-center py-4 text-secondary"><i class="fas fa-inbox fa-2x mb-2 d-block opacity-50"></i>No expenses this month</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Calendar Heatmap ───────────────────────────────────── -->
+    <div class="fintech-card mb-4">
+        <div class="fintech-card-title mb-3">
+            <i class="fas fa-th text-primary"></i> Spending Calendar — {{ selected_month_label }}
+            <span class="ms-2 small text-secondary fw-normal">Darker = higher spend</span>
+        </div>
+        <div class="cal-grid mb-2">
+            {% for day_name in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] %}
+            <div class="cal-day-header">{{ day_name }}</div>
+            {% endfor %}
+        </div>
+        <div class="cal-grid">
+            {% for week in calendar_weeks %}
+                {% for cell in week %}
+                    {% if cell is none %}
+                    <div class="cal-day empty"></div>
+                    {% elif cell.amount == 0 %}
+                    <div class="cal-day" style="color:var(--text-secondary);" title="No spend">
+                        <span class="cal-num">{{ cell.day }}</span>
+                    </div>
+                    {% else %}
+                    <div class="cal-day {% if cell.intensity >= 0.95 %}peak{% endif %}"
+                         style="background:rgba(79,70,229,{{ [cell.intensity * 0.85, 0.05]|max }});
+                                color:{% if cell.intensity > 0.5 %}white{% else %}var(--text-primary){% endif %};"
+                         title="Day {{ cell.day }}: ₹{{ '%.0f'|format(cell.amount) }}">
+                        <span class="cal-num">{{ cell.day }}</span>
+                        <span class="cal-amt">₹{{ "%.0f"|format(cell.amount) }}</span>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+        <!-- Legend -->
+        <div class="d-flex align-items-center gap-2 mt-3">
+            <span class="text-secondary" style="font-size:0.72rem;">Low</span>
+            {% for opacity in [0.1, 0.25, 0.45, 0.65, 0.85] %}
+            <div style="width:24px;height:12px;border-radius:3px;background:rgba(79,70,229,{{ opacity }});"></div>
+            {% endfor %}
+            <span class="text-secondary" style="font-size:0.72rem;">High</span>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.font.size   = 12;
+    Chart.defaults.color       = '#64748B';
+
+    const PALETTE = ['#4F46E5','#7C3AED','#0EA5E9','#10B981','#F59E0B','#F43F5E','#64748B','#14B8A6'];
+
+    // ── Category Donut ──────────────────────────────────────────────────
+    {% if cat_labels %}
+    new Chart(document.getElementById('catChart'), {
+        type: 'doughnut',
+        data: {
+            labels: {{ cat_labels | tojson }},
+            datasets: [{ data: {{ cat_amounts | tojson }}, backgroundColor: PALETTE, borderColor: '#fff', borderWidth: 3, hoverOffset: 8 }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, cutout: '68%',
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.toFixed(2)} (${((ctx.parsed / {{ cat_amounts | sum }}) * 100).toFixed(1)}%)` } }
+            }
+        }
+    });
+    {% endif %}
+
+    // ── MoM Grouped Bar ─────────────────────────────────────────────────
+    new Chart(document.getElementById('momChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ bh_labels | tojson }},
+            datasets: [
+                { label: 'Budget', data: {{ bh_budgets | tojson }}, backgroundColor: 'rgba(100,116,139,0.2)', borderColor: '#94a3b8', borderWidth: 1.5, borderRadius: 6 },
+                { label: 'Spent',  data: {{ bh_spending | tojson }}, backgroundColor: 'rgba(79,70,229,0.8)', borderColor: '#4F46E5', borderWidth: 0, borderRadius: 6 }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toFixed(2)}` } }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { callback: v => '₹' + v } }
+            }
+        }
+    });
+
+    // ── Daily Spending Bar ───────────────────────────────────────────────
+    {% if daily_amounts %}
+    const peakDay  = {{ peak_day if peak_day else 'null' }};
+    const dailyAmt = {{ daily_amounts | tojson }};
+    const dailyColors = dailyAmt.map((_, i) =>
+        (i + 1 === peakDay) ? '#EF4444' : (dailyAmt[i] > 0 ? 'rgba(79,70,229,0.75)' : 'rgba(79,70,229,0.1)')
+    );
+    new Chart(document.getElementById('dailyChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ daily_labels | tojson }},
+            datasets: [{ label: 'Spent', data: dailyAmt, backgroundColor: dailyColors, borderRadius: 4, borderSkipped: false }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.y.toFixed(2)}` } } },
+            scales: {
+                x: { grid: { display: false }, ticks: { maxTicksLimit: 16 } },
+                y: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { callback: v => '₹' + v } }
+            }
+        }
+    });
+    {% endif %}
+
+    // ── Payment Method Horizontal Bar ────────────────────────────────────
+    {% if pay_labels %}
+    new Chart(document.getElementById('payChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ pay_labels | tojson }},
+            datasets: [{ label: 'Spent', data: {{ pay_amounts | tojson }}, backgroundColor: PALETTE, borderRadius: 6 }]
+        },
+        options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.x.toFixed(2)}` } } },
+            scales: {
+                x: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { callback: v => '₹' + v } },
+                y: { grid: { display: false } }
+            }
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}

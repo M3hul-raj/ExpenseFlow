@@ -559,5 +559,193 @@ def edit_profile():
 
     return render_template('edit_profile.html', username=user.username, email=user.email)
 
+@app.route('/analytics')
+def analytics():
+    if not is_logged_in():
+        flash('Please log in to access analytics.', 'error')
+        return redirect(url_for('login'))
+
+    import calendar as cal_module
+    user_id = session['user_id']
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        return redirect(url_for('login'))
+
+    # ── Selected month (from query param or current) ──────────────────────
+    selected_month = request.args.get('month', get_current_year_month())
+    try:
+        sel_dt = datetime.strptime(selected_month, "%Y-%m")
+    except ValueError:
+        sel_dt = datetime.now()
+        selected_month = sel_dt.strftime("%Y-%m")
+
+    prev_dt = sel_dt - relativedelta(months=1)
+    prev_month = prev_dt.strftime("%Y-%m")
+
+    # ── Fetch expenses ─────────────────────────────────────────────────────
+    month_expenses = Expense.query.filter(
+        Expense.user_id == user_id,
+        Expense.date.startswith(selected_month)
+    ).order_by(Expense.amount.desc()).all()
+
+    prev_expenses = Expense.query.filter(
+        Expense.user_id == user_id,
+        Expense.date.startswith(prev_month)
+    ).all()
+
+    all_expenses = Expense.query.filter_by(user_id=user_id).all()
+
+    # ── Available months for selector ─────────────────────────────────────
+    all_months_raw = sorted(set(e.date[:7] for e in all_expenses), reverse=True)
+    available_months = [
+        {'value': m, 'label': datetime.strptime(m, "%Y-%m").strftime("%B %Y")}
+        for m in all_months_raw
+    ]
+    if not any(m['value'] == selected_month for m in available_months):
+        available_months.insert(0, {
+            'value': selected_month,
+            'label': sel_dt.strftime("%B %Y")
+        })
+
+    # ── Basic totals ───────────────────────────────────────────────────────
+    total_this_month = sum(e.amount for e in month_expenses)
+    total_prev_month = sum(e.amount for e in prev_expenses)
+
+    if total_prev_month > 0:
+        mom_change_pct = ((total_this_month - total_prev_month) / total_prev_month) * 100
+    else:
+        mom_change_pct = 0.0
+    mom_direction = 'up' if mom_change_pct > 0 else ('down' if mom_change_pct < 0 else 'flat')
+
+    # ── Active days ────────────────────────────────────────────────────────
+    active_days = len(set(e.date for e in month_expenses))
+
+    # ── Biggest expense ────────────────────────────────────────────────────
+    biggest_expense = month_expenses[0] if month_expenses else None
+
+    # ── Daily totals (for bar chart + calendar) ────────────────────────────
+    days_in_month = cal_module.monthrange(sel_dt.year, sel_dt.month)[1]
+    daily_totals = {}
+    for e in month_expenses:
+        day = int(e.date[8:10])
+        daily_totals[day] = daily_totals.get(day, 0) + e.amount
+
+    daily_labels = list(range(1, days_in_month + 1))
+    daily_amounts = [round(daily_totals.get(d, 0), 2) for d in daily_labels]
+    peak_day = max(daily_totals, key=daily_totals.get) if daily_totals else None
+    peak_day_amount = daily_totals.get(peak_day, 0) if peak_day else 0
+
+    # ── Category breakdown ─────────────────────────────────────────────────
+    cat_totals = {}
+    for e in month_expenses:
+        cat_totals[e.category] = cat_totals.get(e.category, 0) + e.amount
+    cat_totals_sorted = sorted(cat_totals.items(), key=lambda x: x[1], reverse=True)
+    cat_labels = [c[0] for c in cat_totals_sorted]
+    cat_amounts = [round(c[1], 2) for c in cat_totals_sorted]
+    cat_percentages = [
+        round((c[1] / total_this_month * 100), 1) if total_this_month > 0 else 0
+        for c in cat_totals_sorted
+    ]
+
+    # ── Category MoM change (for trend banner) ─────────────────────────────
+    prev_cat_totals = {}
+    for e in prev_expenses:
+        prev_cat_totals[e.category] = prev_cat_totals.get(e.category, 0) + e.amount
+
+    cat_mom = {}
+    for cat, amt in cat_totals.items():
+        prev_amt = prev_cat_totals.get(cat, 0)
+        cat_mom[cat] = amt - prev_amt
+    biggest_increase_cat = max(cat_mom, key=cat_mom.get) if cat_mom else None
+    biggest_increase_amt = cat_mom.get(biggest_increase_cat, 0) if biggest_increase_cat else 0
+
+    # ── Payment method breakdown ───────────────────────────────────────────
+    pay_totals = {}
+    for e in month_expenses:
+        method = e.payment_method or 'Other'
+        pay_totals[method] = pay_totals.get(method, 0) + e.amount
+    pay_totals_sorted = sorted(pay_totals.items(), key=lambda x: x[1], reverse=True)
+    pay_labels = [p[0] for p in pay_totals_sorted]
+    pay_amounts = [round(p[1], 2) for p in pay_totals_sorted]
+
+    # ── Top 5 expenses ─────────────────────────────────────────────────────
+    top_5 = month_expenses[:5]
+
+    # ── Budget history for grouped bar (6 months) ──────────────────────────
+    budget_history = get_budget_history(user_id, 6)
+    bh_labels   = [item['month'] for item in reversed(budget_history)]
+    bh_budgets  = [item['budget'] for item in reversed(budget_history)]
+    bh_spending = [item['spending'] for item in reversed(budget_history)]
+
+    # ── Calendar heatmap data ──────────────────────────────────────────────
+    max_day_spend = max(daily_amounts) if daily_amounts else 1
+    calendar_weeks = []
+    first_weekday = cal_module.monthrange(sel_dt.year, sel_dt.month)[0]  # 0=Mon
+    day_counter = 1
+    week = [None] * first_weekday
+    while day_counter <= days_in_month:
+        week.append({
+            'day': day_counter,
+            'amount': daily_totals.get(day_counter, 0),
+            'intensity': round(daily_totals.get(day_counter, 0) / max_day_spend, 2) if max_day_spend > 0 else 0
+        })
+        if len(week) == 7:
+            calendar_weeks.append(week)
+            week = []
+        day_counter += 1
+    if week:
+        while len(week) < 7:
+            week.append(None)
+        calendar_weeks.append(week)
+
+    # ── Avg daily spend ────────────────────────────────────────────────────
+    avg_daily = total_this_month / active_days if active_days > 0 else 0
+
+    return render_template('analytics.html',
+        username=user.username,
+        selected_month=selected_month,
+        selected_month_label=sel_dt.strftime("%B %Y"),
+        available_months=available_months,
+        # Totals
+        total_this_month=total_this_month,
+        total_prev_month=total_prev_month,
+        mom_change_pct=mom_change_pct,
+        mom_direction=mom_direction,
+        active_days=active_days,
+        days_in_month=days_in_month,
+        avg_daily=avg_daily,
+        # Biggest
+        biggest_expense=biggest_expense,
+        peak_day=peak_day,
+        peak_day_amount=peak_day_amount,
+        # Top 5
+        top_5=top_5,
+        # Trend banner
+        biggest_increase_cat=biggest_increase_cat,
+        biggest_increase_amt=biggest_increase_amt,
+        # Category chart
+        cat_labels=cat_labels,
+        cat_amounts=cat_amounts,
+        cat_percentages=cat_percentages,
+        cat_totals_sorted=cat_totals_sorted,
+        # Daily chart
+        daily_labels=daily_labels,
+        daily_amounts=daily_amounts,
+        # Payment chart
+        pay_labels=pay_labels,
+        pay_amounts=pay_amounts,
+        # Budget history chart
+        bh_labels=bh_labels,
+        bh_budgets=bh_budgets,
+        bh_spending=bh_spending,
+        # Calendar
+        calendar_weeks=calendar_weeks,
+        sel_dt=sel_dt,
+        current_date=datetime.now(),
+    )
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
