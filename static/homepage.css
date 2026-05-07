@@ -1,7 +1,7 @@
-/* ExpenseFlow Homepage - Perfect Glassmorphism UI - Full Spec */
+/* ExpenseFlow Homepage - Premium Minimalist Fintech UI */
 
 /* Reset and box-sizing */
-*, *::before, * {
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -14,11 +14,7 @@ html, body {
     overflow-y: visible;
     margin: 0;
     padding: 0;
-    background-color: #f8fafc;
-    background-image: 
-        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%);
-    background-attachment: fixed;
+    background-color: #FAFAF9;
 }
 
 /* Main container should use min-height */
@@ -34,13 +30,43 @@ section {
     min-height: 300px;
     width: 100%;
     overflow: visible;
-    padding: 3rem 0;
+    padding: 4rem 0;
 }
 
 /* Fix Bootstrap container issues */
 .container, .container-fluid {
     overflow: visible;
     max-width: 100%;
+}
+
+/* Hero Section Specifics */
+.hero-section {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8rem 0 4rem;
+}
+
+.hero-section h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #18181B;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-section p.lead {
+    color: #52525B;
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Make footer fully visible */
@@ -50,8 +76,9 @@ footer {
     width: 100%;
     overflow: visible;
     flex-shrink: 0;
-    background: #1a1a1a !important;
-    color: #ffffff !important;
+    background: #FFFFFF !important;
+    color: #52525B !important;
+    border-top: 1px solid #E5E5E5;
 }
 
 footer .container {
@@ -65,11 +92,12 @@ footer h5, footer p {
 }
 
 footer a {
-    color: #ffffff !important;
+    color: #52525B !important;
     text-decoration: none;
 }
 
 footer a:hover {
+    color: #18181B !important;
     text-decoration: underline;
 }
 
@@ -79,40 +107,36 @@ main > section:last-of-type {
     padding-bottom: 4rem;
 }
 
-/* Attractive Glassmorphism Footer for Homepage */
 .glass-footer {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 2rem 0;
+    background: #FFFFFF !important;
+    padding: 3rem 0;
 }
 
 .glass-footer h5 {
-    color: #fff !important;
+    color: #18181B !important;
     font-weight: 600;
     margin-bottom: 0.5rem;
 }
 
 .glass-footer p {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: #52525B !important;
     font-size: 0.9rem;
 }
 
 .glass-footer a {
-    color: #ff4444 !important;
+    color: #52525B !important;
     text-decoration: none;
     padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    background: rgba(255, 68, 68, 0.15);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: transparent;
     margin: 0 0.25rem;
 }
 
 .glass-footer a:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: #FAFAF9;
+    color: #18181B !important;
     text-decoration: none;
-    transform: translateY(-2px);
 }
 
 /* Footer social icons */
@@ -130,78 +154,64 @@ main > section:last-of-type {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    color: #18181B !important;
     padding: 0;
 }
 
 .footer-social a:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: #FAFAF9;
+    color: #000000 !important;
 }
 
-/* Gradient text for footer */
 .footer-brand {
-    background: linear-gradient(45deg, #4F46E5, #7C3AED);
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #18181B;
+    font-weight: 700;
 }
 
-/* Glassmorphism Cards */
+/* Minimalist Cards */
 .card {
-    background: rgba(255, 255, 255, 0.7) !important;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease !important;
+    background: #FFFFFF !important;
+    border: 1px solid #E5E5E5 !important;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(79, 70, 229, 0.1) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Premium Icon Wrappers */
+/* Solid Icon Wrappers */
 .icon-wrapper {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    background: rgba(79, 70, 229, 0.1);
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    background: #FAFAF9;
+    border: 1px solid #E5E5E5;
     margin-bottom: 1.5rem;
-    position: relative;
-}
-
-.icon-wrapper::after {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    bottom: -4px;
-    border-radius: 50%;
-    border: 2px solid rgba(79, 70, 229, 0.2);
-    animation: pulse 2.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-    0% { transform: scale(0.95); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.3; }
-    100% { transform: scale(0.95); opacity: 1; }
 }
 
 .icon-wrapper i {
-    font-size: 1.75rem !important;
+    font-size: 1.5rem !important;
     margin: 0 !important;
-    background: linear-gradient(135deg, #4F46E5, #7C3AED);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #18181B;
+}
+
+/* Sections Background Overrides */
+.bg-light {
+    background-color: #FAFAF9 !important;
 }
 
 /* Responsive Perfection for Mobile Devices */
 @media (max-width: 768px) {
     .hero-section h1 {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         line-height: 1.2;
     }
     .hero-section p.lead {
@@ -212,7 +222,6 @@ main > section:last-of-type {
     }
     .card {
         margin-bottom: 1rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Softer shadow on mobile */
     }
     .hero-section .d-flex {
         flex-direction: column;

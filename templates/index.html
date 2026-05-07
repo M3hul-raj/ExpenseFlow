@@ -12,7 +12,7 @@
 <section class="hero-section">
     <div class="container text-center py-5">
         {% if session.user_id %}
-        <h1 class="display-3 fw-bold mb-4 gradient-text">Welcome back, {{ session.username }}!</h1>
+        <h1 class="display-3 fw-bold mb-4">Welcome back, {{ session.username }}!</h1>
         <p class="lead mb-5 px-4">Track, Manage & Analyze Your Expenses Smartly</p>
         <div class="d-flex justify-content-center gap-4 flex-wrap">
             <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-5 py-3">Dashboard</a>
@@ -20,7 +20,7 @@
             <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-lg px-5 py-3">Logout</a>
         </div>
         {% else %}
-        <h1 class="display-3 fw-bold mb-4 gradient-text">ExpenseFlow – Personal Expense Tracker</h1>
+        <h1 class="display-3 fw-bold mb-4">ExpenseFlow – Personal Expense Tracker</h1>
         <p class="display-6 mb-4">Track, Manage & Analyze Your Expenses Smartly</p>
         <p class="lead mb-5 px-4">A simple and powerful expense tracking system designed for students, office workers, and individuals to manage their daily spending and monthly budgets efficiently.</p>
         <div class="d-flex justify-content-center gap-4 flex-wrap">
@@ -39,7 +39,7 @@
         </div>
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body text-center p-5">
                         <div class="icon-wrapper">
                             <i class="fas fa-user-graduate"></i>
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body text-center p-5">
                         <div class="icon-wrapper">
                             <i class="fas fa-briefcase"></i>
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body text-center p-5">
                         <div class="icon-wrapper">
                             <i class="fas fa-users"></i>
@@ -83,7 +83,7 @@
         </div>
         <div class="row g-4">
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-plus-circle"></i>
@@ -94,7 +94,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-chart-bar"></i>
@@ -105,7 +105,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-coins"></i>
@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-tags"></i>
@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-shield-alt"></i>
@@ -138,7 +138,7 @@
                 </div>
             </div>
             <div class="col-md-6 col-lg-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-database"></i>
@@ -162,7 +162,7 @@
         </div>
         <div class="row g-4 text-center">
             <div class="col-md-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="h2 fw-bold text-primary mb-3">1</div>
                         <h5>Add your daily expenses</h5>
@@ -170,7 +170,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="h2 fw-bold text-success mb-3">2</div>
                         <h5>Set your monthly budget</h5>
@@ -178,7 +178,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body p-4">
                         <div class="h2 fw-bold text-info mb-3">3</div>
                         <h5>View reports and analyze your spending</h5>
@@ -197,7 +197,7 @@
         </div>
         <div class="row g-4">
             <div class="col-md-6">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body d-flex align-items-start gap-3 p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-mouse-pointer"></i>
@@ -209,7 +209,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body d-flex align-items-start gap-3 p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-coins"></i>
@@ -221,7 +221,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body d-flex align-items-start gap-3 p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-chart-line"></i>
@@ -233,7 +233,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card h-100 shadow">
+                <div class="card h-100">
                     <div class="card-body d-flex align-items-start gap-3 p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-users"></i>
@@ -245,7 +245,7 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <div class="card shadow">
+                <div class="card">
                     <div class="card-body d-flex align-items-start gap-3 p-4">
                         <div class="icon-wrapper">
                             <i class="fas fa-bolt"></i>
