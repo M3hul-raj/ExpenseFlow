@@ -3,84 +3,73 @@
 {% block title %}Edit Profile - ExpenseFlow{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1><i class="fas fa-user-edit"></i> Edit Profile</h1>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }}">
-                        {{ message }}
+<div class="container py-5 mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="fintech-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle mb-3" style="width: 64px; height: 64px; font-size: 1.75rem;">
+                        <i class="fas fa-user-edit"></i>
                     </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+                    <h2 class="fw-bold mb-1">Edit Profile</h2>
+                    <p class="text-secondary">Update your personal information</p>
+                </div>
 
-        <form method="POST" class="auth-form">
-            <div class="form-group">
-                <label for="username">
-                    <i class="fas fa-user"></i>
-                    Username
-                </label>
-                <input type="text" id="username" name="username" value="{{ username }}" required minlength="3">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label"><i class="fas fa-user text-muted me-2"></i>Username</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ username }}" required minlength="3">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label"><i class="fas fa-envelope text-muted me-2"></i>Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ email }}" required>
+                    </div>
+                    
+                    <hr class="my-4 text-muted">
+                    
+                    <h5 class="fw-bold mb-3 fs-6">Change Password (Optional)</h5>
+
+                    <div class="mb-3">
+                        <label for="current_password" class="form-label"><i class="fas fa-lock text-muted me-2"></i>Current Password</label>
+                        <input type="password" class="form-control" id="current_password" name="current_password" required placeholder="Required to save changes">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label"><i class="fas fa-key text-muted me-2"></i>New Password</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" minlength="6" placeholder="Leave blank to keep current">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label"><i class="fas fa-check-circle text-muted me-2"></i>Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                    </div>
+
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill"><i class="fas fa-save me-2"></i>Save Changes</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-2">
+                    <a href="{{ url_for('dashboard') }}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-arrow-left me-2"></i>Back to Dashboard</a>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="email">
-                    <i class="fas fa-envelope"></i>
-                    Email Address
-                </label>
-                <input type="email" id="email" name="email" value="{{ email }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="current_password">
-                    <i class="fas fa-lock"></i>
-                    Current Password (required for changes)
-                </label>
-                <input type="password" id="current_password" name="current_password" required placeholder="Enter current password">
-            </div>
-
-            <div class="form-group">
-                <label for="new_password">
-                    <i class="fas fa-lock"></i>
-                    New Password (leave blank to keep current)
-                </label>
-                <input type="password" id="new_password" name="new_password" minlength="6" placeholder="Enter new password">
-            </div>
-
-            <div class="form-group">
-                <label for="confirm_password">
-                    <i class="fas fa-lock"></i>
-                    Confirm New Password
-                </label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
-            </div>
-
-            <button type="submit" class="btn-auth">
-                <i class="fas fa-save"></i>
-                Update Profile
-            </button>
-        </form>
-
-        <div class="auth-footer">
-<p><a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a></p>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-        // Client-side validation for password confirmation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const newPassword = document.getElementById('new_password').value;
-            const confirmPassword = document.getElementById('confirm_password').value;
+    // Client-side validation for password confirmation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const newPassword = document.getElementById('new_password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
 
-            if (newPassword && newPassword !== confirmPassword) {
-                e.preventDefault();
-                alert('New passwords do not match. Please try again.');
-            }
-        });
-    </script>
+        if (newPassword && newPassword !== confirmPassword) {
+            e.preventDefault();
+            alert('New passwords do not match. Please try again.');
+        }
+    });
+</script>
 {% endblock %}
-
