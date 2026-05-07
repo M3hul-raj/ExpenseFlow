@@ -1249,4 +1249,33 @@ a:hover {
 }
 
 .btn-outline-dark { border: 1px solid #E5E5E5; color: #18181B; background: transparent; transition: all 0.2s ease; }
-.btn-outline-dark:hover { background: #FAFAF9; color: #000000; border-color: #D4D4D8; }
+/* Explicit Overrides for Fintech UI Hotfixes */
+
+/* 1. INVISIBLE NAVBAR & LOGO */
+.navbar .nav-link, .navbar-brand, .nav-logo {
+    color: #18181B !important;
+}
+
+/* 2. INVISIBLE HERO BUTTON */
+.btn-outline-dark, .hero-section .btn-outline-dark {
+    color: #18181B !important;
+    border: 1px solid #E5E5E5 !important;
+    background: transparent !important;
+}
+.btn-outline-dark:hover, .hero-section .btn-outline-dark:hover {
+    background: #FAFAF9 !important;
+    color: #000000 !important;
+}
+
+/* 3. STUBBORN RED FOOTER */
+footer, .glass-footer, footer p, footer a, footer h5, footer h6, footer li {
+    color: #52525B !important;
+}
+footer a:hover, .glass-footer a:hover {
+    color: #18181B !important;
+}
+
+/* 4. BLUE TEXT IN CARDS */
+.card p, .feature-card p {
+    color: #52525B !important;
+}
