@@ -1,149 +1,220 @@
 {% extends "base.html" %}
 
-{% block title %}View Expenses - ExpenseFlow{% endblock %}
+{% block title %}Transactions - ExpenseFlow{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='view_expense_styles.css') }}">
+<style>
+    .filter-bar .form-select,
+    .filter-bar .form-control {
+        font-size: 0.875rem;
+    }
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: var(--surface-color);
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-decoration: none;
+        font-size: 0.8rem;
+    }
+    .action-btn:hover { background: var(--bg-color); color: var(--text-primary); }
+    .action-btn.edit:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+    .action-btn.delete:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-bg); }
+    .pagination-btn {
+        min-width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: var(--surface-color);
+        color: var(--text-secondary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    .pagination-btn:hover { background: var(--bg-color); }
+    .pagination-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .pagination-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    #resultCount { font-size: 0.82rem; }
+</style>
 {% endblock %}
 
-{% block body_class %}professional-theme{% endblock %}
-
 {% block content %}
-<div class="container-fluid px-4">
-    <!-- Header Section -->
-    <div class="row mb-4 mt-3">
-        <div class="col-12">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-list fa-2x text-primary me-3"></i>
+<div class="container-xl px-4 py-4">
+
+    <!-- ─── Page Header ─── -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="fw-bold mb-1" style="font-size: 1.75rem;">Transactions</h1>
+            <p class="text-secondary mb-0 small">{{ expenses|length }} records as of {{ current_date.strftime('%d %B %Y') }}</p>
+        </div>
+        <a href="{{ url_for('add_expense') }}" class="btn btn-primary rounded-pill d-none d-sm-inline-flex">
+            <i class="fas fa-plus me-2"></i>Add Expense
+        </a>
+    </div>
+
+    <!-- ─── Summary Strip ─── -->
+    <div class="row g-3 mb-4">
+        <div class="col-sm-4">
+            <div class="fintech-card d-flex align-items-center gap-3 py-3">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width:44px;height:44px;background:var(--primary-light);color:var(--primary);font-size:1.1rem;flex-shrink:0;">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
                 <div>
-                    <h1 class="mb-1 fw-bold">Your Expense Records</h1>
-                    <p class="text-muted mb-0">Track your daily spending history and insights • As of {{ current_date.strftime('%d %B %Y') }}</p>
+                    <div class="fw-bold" style="font-size:1.3rem;letter-spacing:-0.02em;">₹{{ "%.0f"|format(total_spent) }}</div>
+                    <div class="text-secondary" style="font-size:0.78rem;text-transform:uppercase;letter-spacing:.05em;">Total Spent</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="fintech-card d-flex align-items-center gap-3 py-3">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width:44px;height:44px;background:var(--success-bg);color:var(--success);font-size:1.1rem;flex-shrink:0;">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div>
+                    <div class="fw-bold" style="font-size:1.3rem;letter-spacing:-0.02em;">{{ expenses|length }}</div>
+                    <div class="text-secondary" style="font-size:0.78rem;text-transform:uppercase;letter-spacing:.05em;">Total Entries</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="fintech-card d-flex align-items-center gap-3 py-3">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width:44px;height:44px;background:var(--warning-bg);color:var(--warning);font-size:1.1rem;flex-shrink:0;">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div>
+                    <div class="fw-bold text-truncate" style="font-size:1.1rem;max-width:120px;">{{ top_category }}</div>
+                    <div class="text-secondary" style="font-size:0.78rem;text-transform:uppercase;letter-spacing:.05em;">Top Category</div>
                 </div>
             </div>
         </div>
     </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <!-- Summary Cards -->
-    <div class="dashboard-stats">
-        <div class="stat-card">
-            <div class="stat-icon">🪙</div>
-            <div class="stat-number">₹{{ "%.2f"|format(total_spent) }}</div>
-            <div class="stat-label">Total Spent</div>
+    <!-- ─── Filters ─── -->
+    <div class="fintech-card mb-4 filter-bar">
+        <!-- Search -->
+        <div class="input-group mb-3">
+            <span class="input-group-text bg-transparent border-end-0" style="border-color: var(--border-color);">
+                <i class="fas fa-search text-muted"></i>
+            </span>
+            <input type="text" id="searchInput" class="form-control border-start-0 ps-0"
+                   placeholder="Search by description or category…"
+                   style="border-color: var(--border-color);">
         </div>
-        <div class="stat-card">
-            <div class="stat-icon">📊</div>
-            <div class="stat-number">{{ expenses|length }}</div>
-            <div class="stat-label">Total Entries</div>
+        <!-- Filter Row -->
+        <div class="row g-2">
+            <div class="col-6 col-md-3">
+                <select id="categoryFilter" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for category, _ in category_totals %}
+                    <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-3">
+                <select id="monthFilter" class="form-select">
+                    <option value="">All Months</option>
+                    {% for month, _ in monthly_totals %}
+                    <option value="{{ month }}">{{ month }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <select id="paymentFilter" class="form-select">
+                    <option value="">All Methods</option>
+                    {% for method, _ in payment_method_totals %}
+                    <option value="{{ method }}">{{ method }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <select id="sortSelect" class="form-select">
+                    <option value="date-desc">Newest First</option>
+                    <option value="date-asc">Oldest First</option>
+                    <option value="amount-desc">Highest Amount</option>
+                    <option value="amount-asc">Lowest Amount</option>
+                    <option value="category">By Category</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-2">
+                <button id="clearFilters" class="btn btn-light w-100 rounded-pill" style="font-size:0.85rem;">
+                    <i class="fas fa-times me-1"></i>Clear
+                </button>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon">🏆</div>
-            <div class="stat-number">{{ top_category }}</div>
-            <div class="stat-label">Most Spent On</div>
-        </div>
-    </div>
-
-    <!-- Filter & Search Bar -->
-    <div class="filters-section">
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search by keyword, description, or category" class="search-input">
-            <i class="fas fa-search search-icon"></i>
-        </div>
-        <div class="filter-controls">
-            <select id="categoryFilter" class="filter-select">
-                <option value="">All Categories</option>
-                {% for category, _ in category_totals %}
-                <option value="{{ category }}">{{ category }}</option>
-                {% endfor %}
-            </select>
-            <select id="monthFilter" class="filter-select">
-                <option value="">All Months</option>
-                {% for month, _ in monthly_totals %}
-                <option value="{{ month }}">{{ month }}</option>
-                {% endfor %}
-            </select>
-            <select id="paymentFilter" class="filter-select">
-                <option value="">All Payment Methods</option>
-                {% for method, _ in payment_method_totals %}
-                <option value="{{ method }}">{{ method }}</option>
-                {% endfor %}
-            </select>
-            <select id="sortSelect" class="filter-select">
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-                <option value="amount-desc">Highest Expense</option>
-                <option value="amount-asc">Lowest Expense</option>
-                <option value="category">By Category</option>
-            </select>
-            <button id="clearFilters" class="btn btn-outline btn-sm">
-                <i class="fas fa-times"></i> Clear Filters
-            </button>
-        </div>
-    </div>
-
-    <!-- Advanced Search & Date Range -->
-    <div class="advanced-filters">
-        <div class="date-range">
-            <label for="startDate">From:</label>
-            <input type="date" id="startDate" class="date-input">
-            <label for="endDate">To:</label>
-            <input type="date" id="endDate" class="date-input">
-            <button id="applyDateFilter" class="btn btn-primary btn-sm">
-                <i class="fas fa-calendar-alt"></i> Apply Date Range
-            </button>
-        </div>
-        <div class="amount-range">
-            <label for="minAmount">Min Amount:</label>
-            <input type="number" id="minAmount" placeholder="0" class="amount-input" min="0" step="0.01">
-            <label for="maxAmount">Max Amount:</label>
-            <input type="number" id="maxAmount" placeholder="No limit" class="amount-input" min="0" step="0.01">
-            <button id="applyAmountFilter" class="btn btn-primary btn-sm">
-                <i class="fas fa-filter"></i> Apply Amount Filter
-            </button>
+        <!-- Date + Amount Range (collapsible on mobile) -->
+        <div class="row g-2 mt-1">
+            <div class="col-auto"><span class="text-secondary small">From:</span></div>
+            <div class="col-sm-2"><input type="date" id="startDate" class="form-control form-control-sm"></div>
+            <div class="col-auto"><span class="text-secondary small">To:</span></div>
+            <div class="col-sm-2"><input type="date" id="endDate" class="form-control form-control-sm"></div>
+            <div class="col-auto"><span class="text-secondary small">Min ₹:</span></div>
+            <div class="col-sm-2"><input type="number" id="minAmount" class="form-control form-control-sm" placeholder="0" min="0" step="0.01"></div>
+            <div class="col-auto"><span class="text-secondary small">Max ₹:</span></div>
+            <div class="col-sm-2"><input type="number" id="maxAmount" class="form-control form-control-sm" placeholder="∞" min="0" step="0.01"></div>
+            <div class="col-auto">
+                <button id="applyDateFilter" class="btn btn-outline-primary btn-sm rounded-pill">Apply</button>
+            </div>
         </div>
     </div>
 
-    <!-- Expense Table (Main Section) -->
-    <div class="expenses-section">
-        <h2>All Expenses</h2>
-        <div class="expenses-table-container">
-            <table class="expenses-table" id="expensesTable">
+    <!-- ─── Table ─── -->
+    {% if expenses %}
+    <div class="fintech-card p-0">
+        <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom" style="border-color: var(--border-color) !important;">
+            <span id="resultCount" class="text-secondary">Showing all {{ expenses|length }} records</span>
+            <div class="d-flex gap-2">
+                <button onclick="exportToCSV()" class="btn btn-light btn-sm rounded-pill">
+                    <i class="fas fa-file-csv me-1 text-success"></i>Export CSV
+                </button>
+                <button onclick="window.print()" class="btn btn-light btn-sm rounded-pill">
+                    <i class="fas fa-print me-1 text-secondary"></i>Print
+                </button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table-fintech w-100" id="expensesTable">
                 <thead>
                     <tr>
                         <th>Date</th>
                         <th>Category</th>
                         <th>Description</th>
-                        <th>Amount (₹)</th>
-                        <th>Payment Method</th>
-                        <th>Actions</th>
+                        <th>Method</th>
+                        <th class="text-end">Amount</th>
+                        <th class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for expense in expenses %}
-                    <tr data-category="{{ expense[1] }}" data-description="{{ expense[3] }}" data-month="{{ expense[0][:7] }}" data-payment="{{ expense[4] if expense[4] else 'N/A' }}" data-amount="{{ "%.2f"|format(expense[2]|float) }}" data-date="{{ expense[0] }}">
-                        <td>{{ expense[0] }}</td>
-                        <td><span class="category-badge">{{ expense[1] }}</span></td>
-                        <td>{{ expense[3] }}</td>
-                        <td class="amount">₹{{ "%.2f"|format(expense[2]|float) }}</td>
-                        <td>{{ expense[4] if expense[4] else 'N/A' }}</td>
+                    <tr data-category="{{ expense[1] }}"
+                        data-description="{{ expense[3] }}"
+                        data-month="{{ expense[0][:7] }}"
+                        data-payment="{{ expense[4] if expense[4] else 'N/A' }}"
+                        data-amount="{{ '%.2f'|format(expense[2]|float) }}"
+                        data-date="{{ expense[0] }}">
+                        <td class="text-secondary small fw-500" style="white-space:nowrap;">{{ expense[0] }}</td>
                         <td>
-                            <button class="btn btn-info btn-sm" onclick="viewDetails({{ loop.index0 }})" title="View Details">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-warning btn-sm" onclick="editExpense({{ loop.index0 }})" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteExpense({{ loop.index0 }})" title="Delete">
+                            <span style="display:inline-flex;align-items:center;padding:0.25em 0.75em;font-size:0.78rem;font-weight:600;border-radius:9999px;background:var(--primary-light);color:var(--primary);">
+                                {{ expense[1] }}
+                            </span>
+                        </td>
+                        <td class="text-secondary small">{{ expense[3][:60] }}{% if expense[3]|length > 60 %}…{% endif %}</td>
+                        <td class="text-secondary small">{{ expense[4] if expense[4] else '—' }}</td>
+                        <td class="text-end fw-bold" style="color:var(--danger);white-space:nowrap;">₹{{ "%.2f"|format(expense[2]|float) }}</td>
+                        <td class="text-end" style="white-space:nowrap;">
+                            <a href="/edit/{{ loop.index0 }}" class="action-btn edit me-1" title="Edit">
+                                <i class="fas fa-pen"></i>
+                            </a>
+                            <button onclick="deleteExpense({{ loop.index0 }})" class="action-btn delete" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
@@ -151,293 +222,193 @@
                     {% endfor %}
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <td colspan="4" style="text-align: right; font-weight: bold;">Total:</td>
-                        <td class="amount" style="font-weight: bold;">₹{{ "%.2f"|format(total_spent) }}</td>
+                    <tr style="background: var(--bg-color);">
+                        <td colspan="4" class="text-end fw-bold text-secondary px-4 py-3">Filtered Total</td>
+                        <td class="text-end fw-bold px-4 py-3" id="filteredTotal" style="color:var(--text-primary);">₹{{ "%.2f"|format(total_spent) }}</td>
                         <td></td>
                     </tr>
                 </tfoot>
             </table>
         </div>
-
         <!-- Pagination -->
-        <div class="pagination" id="pagination">
-            <!-- Pagination controls will be added here by JavaScript -->
+        <div class="d-flex align-items-center justify-content-between px-4 py-3 border-top" style="border-color: var(--border-color) !important;">
+            <span id="pageInfo" class="text-secondary small"></span>
+            <div id="pagination" class="d-flex gap-1"></div>
         </div>
     </div>
-
-    <!-- Export & Print Controls -->
-    <div class="export-controls">
-        <button class="btn btn-secondary" onclick="exportToCSV()"><i class="fas fa-file-csv"></i> Export to CSV</button>
-        <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print Report</button>
-        <a href="{{ url_for('dashboard') }}" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
-    </div>
-
-    {% if not expenses %}
-    <div class="empty-state">
-        <i class="fas fa-inbox"></i>
-        <h3>No expenses yet</h3>
-        <p>Start by adding your first expense!</p>
-        <a href="{{ url_for('add_expense') }}" class="btn btn-primary">Add Expense</a>
+    {% else %}
+    <div class="fintech-card text-center py-5">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-3 mb-3" style="width:72px;height:72px;background:var(--primary-light);color:var(--primary);font-size:1.75rem;">
+            <i class="fas fa-receipt"></i>
+        </div>
+        <h5 class="fw-bold mb-2">No transactions yet</h5>
+        <p class="text-secondary mb-3">Start tracking your spending to see records here.</p>
+        <a href="{{ url_for('add_expense') }}" class="btn btn-primary rounded-pill px-4">
+            <i class="fas fa-plus me-2"></i>Add Your First Expense
+        </a>
     </div>
     {% endif %}
+
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // All original JavaScript from view_expense.html preserved exactly
-    const searchInput = document.getElementById('searchInput');
-    const expensesTable = document.getElementById('expensesTable');
-    const tbody = expensesTable.querySelector('tbody');
-    const rows = Array.from(tbody.querySelectorAll('tr'));
-    const itemsPerPage = 10;
-    let currentPage = 1;
-    let filteredRows = [...rows];
+    // ── State ──
+    const tbody    = document.getElementById('expensesTable')?.querySelector('tbody');
+    const rows     = tbody ? Array.from(tbody.querySelectorAll('tr')) : [];
+    const ITEMS    = 15;
+    let page       = 1;
+    let filtered   = [...rows];
+
+    // ── Inputs ──
+    const searchInput    = document.getElementById('searchInput');
     const categoryFilter = document.getElementById('categoryFilter');
-    const monthFilter = document.getElementById('monthFilter');
-    const paymentFilter = document.getElementById('paymentFilter');
-    const sortSelect = document.getElementById('sortSelect');
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    const startDateInput = document.getElementById('startDate');
-    const endDateInput = document.getElementById('endDate');
-    const applyDateFilterBtn = document.getElementById('applyDateFilter');
-    const minAmountInput = document.getElementById('minAmount');
-    const maxAmountInput = document.getElementById('maxAmount');
-    const applyAmountFilterBtn = document.getElementById('applyAmountFilter');
+    const monthFilter    = document.getElementById('monthFilter');
+    const paymentFilter  = document.getElementById('paymentFilter');
+    const sortSelect     = document.getElementById('sortSelect');
+    const clearBtn       = document.getElementById('clearFilters');
+    const startDate      = document.getElementById('startDate');
+    const endDate        = document.getElementById('endDate');
+    const minAmount      = document.getElementById('minAmount');
+    const maxAmount      = document.getElementById('maxAmount');
+    const applyDateBtn   = document.getElementById('applyDateFilter');
 
-    // Combined filter function
     function applyFilters() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const selectedCategory = categoryFilter.value;
-        const selectedMonth = monthFilter.value;
-        const selectedPayment = paymentFilter.value;
+        const q   = searchInput.value.toLowerCase().trim();
+        const cat = categoryFilter.value;
+        const mon = monthFilter.value;
+        const pay = paymentFilter.value;
 
-        filteredRows = rows.filter(row => {
-            const description = row.dataset.description.toLowerCase();
-            const category = row.dataset.category;
-            const month = row.dataset.month;
-            const payment = row.dataset.payment;
-            const amount = parseFloat(row.dataset.amount);
-            const date = new Date(row.dataset.date);
+        filtered = rows.filter(r => {
+            const desc   = r.dataset.description.toLowerCase();
+            const rcat   = r.dataset.category;
+            const rmon   = r.dataset.month;
+            const rpay   = r.dataset.payment;
+            const amt    = parseFloat(r.dataset.amount);
+            const date   = new Date(r.dataset.date);
 
-            const matchesSearch = description.includes(searchTerm) || category.toLowerCase().includes(searchTerm);
-            const matchesCategory = selectedCategory === '' || category === selectedCategory;
-            const matchesMonth = selectedMonth === '' || month === selectedMonth;
-            const matchesPayment = selectedPayment === '' || payment === selectedPayment;
-
-            // Date range filter
-            let matchesDateRange = true;
-            if (startDateInput.value) {
-                const startDate = new Date(startDateInput.value);
-                matchesDateRange = matchesDateRange && date >= startDate;
+            if (q && !desc.includes(q) && !rcat.toLowerCase().includes(q)) return false;
+            if (cat && rcat !== cat) return false;
+            if (mon && rmon !== mon) return false;
+            if (pay && rpay !== pay) return false;
+            if (startDate.value && date < new Date(startDate.value)) return false;
+            if (endDate.value) {
+                const ed = new Date(endDate.value); ed.setHours(23,59,59,999);
+                if (date > ed) return false;
             }
-            if (endDateInput.value) {
-                const endDate = new Date(endDateInput.value);
-                endDate.setHours(23, 59, 59, 999); // End of day
-                matchesDateRange = matchesDateRange && date <= endDate;
-            }
-
-            // Amount range filter
-            let matchesAmountRange = true;
-            if (minAmountInput.value) {
-                matchesAmountRange = matchesAmountRange && amount >= parseFloat(minAmountInput.value);
-            }
-            if (maxAmountInput.value) {
-                matchesAmountRange = matchesAmountRange && amount <= parseFloat(maxAmountInput.value);
-            }
-
-            return matchesSearch && matchesCategory && matchesMonth && matchesPayment && matchesDateRange && matchesAmountRange;
+            if (minAmount.value && amt < parseFloat(minAmount.value)) return false;
+            if (maxAmount.value && amt > parseFloat(maxAmount.value)) return false;
+            return true;
         });
 
-        currentPage = 1;
-        showPage();
-        updatePagination();
-        updateTotalDisplay();
+        // Sort
+        const by = sortSelect.value;
+        filtered.sort((a, b) => {
+            if (by === 'date-desc') return new Date(b.dataset.date) - new Date(a.dataset.date);
+            if (by === 'date-asc')  return new Date(a.dataset.date) - new Date(b.dataset.date);
+            if (by === 'amount-desc') return parseFloat(b.dataset.amount) - parseFloat(a.dataset.amount);
+            if (by === 'amount-asc')  return parseFloat(a.dataset.amount) - parseFloat(b.dataset.amount);
+            if (by === 'category')    return a.dataset.category.localeCompare(b.dataset.category);
+            return 0;
+        });
+
+        // Rebuild tbody
+        tbody.innerHTML = '';
+        filtered.forEach(r => tbody.appendChild(r));
+
+        page = 1;
+        render();
     }
 
-    // Clear all filters
+    function render() {
+        const total = filtered.length;
+        const pages = Math.max(1, Math.ceil(total / ITEMS));
+        page = Math.min(page, pages);
+        const start = (page - 1) * ITEMS;
+        const end   = start + ITEMS;
+
+        filtered.forEach((r, i) => r.style.display = (i >= start && i < end) ? '' : 'none');
+
+        // Result count
+        document.getElementById('resultCount').textContent =
+            `Showing ${Math.min(total, end - start)} of ${total} records`;
+
+        // Filtered total
+        const sum = filtered.reduce((s, r) => s + parseFloat(r.dataset.amount), 0);
+        document.getElementById('filteredTotal').textContent = '₹' + sum.toFixed(2);
+
+        // Page info
+        document.getElementById('pageInfo').textContent =
+            total > ITEMS ? `Page ${page} of ${pages}` : '';
+
+        // Pagination buttons
+        const pag = document.getElementById('pagination');
+        pag.innerHTML = '';
+        if (pages <= 1) return;
+
+        const mk = (label, pg, disabled = false) => {
+            const b = document.createElement('button');
+            b.className = 'pagination-btn' + (pg === page ? ' active' : '');
+            b.innerHTML = label;
+            b.disabled = disabled;
+            if (!disabled) b.onclick = () => { page = pg; render(); };
+            pag.appendChild(b);
+        };
+
+        mk('<i class="fas fa-chevron-left"></i>', page - 1, page === 1);
+        const range = Array.from({length: pages}, (_, i) => i + 1)
+            .filter(p => p === 1 || p === pages || Math.abs(p - page) <= 2);
+        let prev = null;
+        range.forEach(p => {
+            if (prev !== null && p - prev > 1) { const s = document.createElement('span'); s.className = 'pagination-btn'; s.style.cursor = 'default'; s.textContent = '…'; pag.appendChild(s); }
+            mk(p, p);
+            prev = p;
+        });
+        mk('<i class="fas fa-chevron-right"></i>', page + 1, page === pages);
+    }
+
     function clearFilters() {
-        searchInput.value = '';
-        categoryFilter.value = '';
-        monthFilter.value = '';
-        paymentFilter.value = '';
-        startDateInput.value = '';
-        endDateInput.value = '';
-        minAmountInput.value = '';
-        maxAmountInput.value = '';
+        [searchInput, startDate, endDate, minAmount, maxAmount].forEach(el => el.value = '');
+        [categoryFilter, monthFilter, paymentFilter].forEach(el => el.value = '');
+        sortSelect.value = 'date-desc';
         applyFilters();
     }
 
-    // Update total display
-    function updateTotalDisplay() {
-        const totalAmount = filteredRows.reduce((sum, row) => {
-            return sum + parseFloat(row.dataset.amount);
-        }, 0);
-
-        const tfoot = expensesTable.querySelector('tfoot');
-        const totalCell = tfoot.querySelector('.amount');
-        totalCell.textContent = '₹' + totalAmount.toFixed(2);
-    }
-
-    // Event listeners
-    categoryFilter.addEventListener('change', applyFilters);
-    monthFilter.addEventListener('change', applyFilters);
-    paymentFilter.addEventListener('change', applyFilters);
-    searchInput.addEventListener('input', applyFilters);
-    clearFiltersBtn.addEventListener('click', clearFilters);
-    applyDateFilterBtn.addEventListener('click', applyFilters);
-    applyAmountFilterBtn.addEventListener('click', applyFilters);
-
-    // Export to CSV function
-    function exportToCSV() {
-        const table = document.getElementById('expensesTable');
-        let csv = [];
-        const rows = table.querySelectorAll('tr');
-
-        for (let i = 0; i < rows.length; i++) {
-            const row = [], cols = rows[i].querySelectorAll('td, th');
-
-            for (let j = 0; j < cols.length; j++) {
-                let text = cols[j].innerText;
-                // Remove currency symbol and clean text
-                text = text.replace('₹', '').replace('Delete', '').trim();
-                row.push('"' + text + '"');
-            }
-            csv.push(row.join(','));
-        }
-
-        // Download CSV file
-        const csvContent = csv.join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', 'expenses_export.csv');
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    // Sorting functionality
-    sortSelect.addEventListener('change', function() {
-        const sortBy = this.value;
-        const sortedRows = filteredRows.sort((a, b) => {
-            let aVal, bVal;
-            switch(sortBy) {
-                case 'date-desc':
-                    aVal = new Date(a.dataset.date);
-                    bVal = new Date(b.dataset.date);
-                    return bVal - aVal;
-                case 'date-asc':
-                    aVal = new Date(a.dataset.date);
-                    bVal = new Date(b.dataset.date);
-                    return aVal - bVal;
-                case 'amount-desc':
-                    aVal = parseFloat(a.dataset.amount);
-                    bVal = parseFloat(b.dataset.amount);
-                    return bVal - aVal;
-                case 'amount-asc':
-                    aVal = parseFloat(a.dataset.amount);
-                    bVal = parseFloat(b.dataset.amount);
-                    return aVal - bVal;
-                case 'category':
-                    aVal = a.dataset.category;
-                    bVal = b.dataset.category;
-                    return aVal.localeCompare(bVal);
-                default:
-                    return 0;
-            }
-        });
-
-        // Rebuild tbody with sorted rows
-        tbody.innerHTML = '';
-        sortedRows.forEach(row => tbody.appendChild(row));
-
-        // Update pagination after sorting
-        currentPage = 1;
-        showPage();
-        updatePagination();
-    });
-
-    // View details function
-    function viewDetails(index) {
-        const row = rows[index];
-        const details = [
-            'Date: ' + row.cells[0].textContent,
-            'Category: ' + row.cells[1].textContent,
-            'Description: ' + row.cells[2].textContent,
-            'Amount: ' + row.cells[3].textContent,
-            'Payment Method: ' + row.cells[4].textContent
-        ].join('\n');
-        alert('Expense Details:\n\n' + details);
-    }
-
-    // Edit expense function
-    function editExpense(index) {
-        window.location.href = '/edit/' + index;
-    }
-
-    // Delete expense function
     function deleteExpense(index) {
-        if (confirm('Are you sure you want to delete this expense?')) {
+        if (confirm('Delete this expense? This action cannot be undone.')) {
             window.location.href = '/delete/' + index;
         }
     }
 
-    function updatePagination() {
-        const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
-        const paginationDiv = document.getElementById('pagination');
-        paginationDiv.innerHTML = '';
-
-        if (totalPages <= 1) return;
-
-        // Previous button
-        const prevBtn = document.createElement('button');
-        prevBtn.textContent = 'Previous';
-        prevBtn.className = 'btn btn-secondary';
-        prevBtn.disabled = currentPage === 1;
-        prevBtn.onclick = () => changePage(currentPage - 1);
-        paginationDiv.appendChild(prevBtn);
-
-        // Page numbers
-        for (let i = 1; i <= totalPages; i++) {
-            const pageBtn = document.createElement('button');
-            pageBtn.textContent = i;
-            pageBtn.className = 'btn ' + (i === currentPage ? 'btn-primary' : 'btn-secondary');
-            pageBtn.onclick = () => changePage(i);
-            paginationDiv.appendChild(pageBtn);
-        }
-
-        // Next button
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = 'Next';
-        nextBtn.className = 'btn btn-secondary';
-        nextBtn.disabled = currentPage === totalPages;
-        nextBtn.onclick = () => changePage(currentPage + 1);
-        paginationDiv.appendChild(nextBtn);
-    }
-
-    function changePage(page) {
-        currentPage = page;
-        showPage();
-        updatePagination();
-    }
-
-    function showPage() {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-
-        rows.forEach((row, index) => {
-            if (filteredRows.includes(row)) {
-                row.style.display = (index >= startIndex && index < endIndex) ? '' : 'none';
-            }
+    function exportToCSV() {
+        const headers = ['Date', 'Category', 'Description', 'Payment Method', 'Amount'];
+        const csvRows = [headers.join(',')];
+        filtered.forEach(r => {
+            csvRows.push([
+                r.dataset.date,
+                r.dataset.category,
+                '"' + r.dataset.description.replace(/"/g, '""') + '"',
+                r.dataset.payment,
+                r.dataset.amount
+            ].join(','));
         });
+        const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'expenseflow_export.csv';
+        a.click();
     }
 
-    // Initialize pagination
-    updatePagination();
-    showPage();
+    // ── Event Listeners ──
+    [searchInput, categoryFilter, monthFilter, paymentFilter, sortSelect].forEach(el => {
+        if (el) el.addEventListener('change', applyFilters);
+    });
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (clearBtn)    clearBtn.addEventListener('click', clearFilters);
+    if (applyDateBtn) applyDateBtn.addEventListener('click', applyFilters);
+
+    // Initial render
+    applyFilters();
 </script>
 {% endblock %}

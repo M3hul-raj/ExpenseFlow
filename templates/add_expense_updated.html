@@ -2,204 +2,130 @@
 
 {% block title %}Add Expense - ExpenseFlow{% endblock %}
 
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='add_expense_styles.css') }}">
-<script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
-{% endblock %}
-
-{% block body_class %}professional-theme{% endblock %}
-
 {% block content %}
-<div class="container-fluid px-4">
-    <!-- Header Section -->
-    <div class="row mb-4 mt-3">
-        <div class="col-12">
-            <div class="d-flex align-items-center">
-                <i class="fas fa-plus-circle fa-2x text-primary me-3"></i>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <!-- Page Header -->
+            <div class="d-flex align-items-center mb-4">
+                <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-sm rounded-pill me-3">
+                    <i class="fas fa-arrow-left me-1"></i>Back
+                </a>
                 <div>
-                    <h1 class="mb-1 fw-bold">Add New Expense</h1>
-                    <p class="text-muted mb-0">Record your spending with ease and precision • Today: {{ current_date.strftime('%d %B %Y') }}</p>
+                    <h2 class="fw-bold mb-0" style="font-size: 1.4rem;">Add New Expense</h2>
+                    <p class="text-secondary small mb-0">{{ current_date.strftime('%A, %d %B %Y') }}</p>
                 </div>
             </div>
-        </div>
-    </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- Quick Add Shortcuts -->
+            <div class="fintech-card mb-4">
+                <p class="text-secondary small fw-500 mb-3"><i class="fas fa-zap text-warning me-2"></i>Quick Add</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-light btn-sm rounded-pill" onclick="quickAdd('Food','50')">
+                        <i class="fas fa-utensils text-primary me-1"></i>Lunch ₹50
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm rounded-pill" onclick="quickAdd('Transport','20')">
+                        <i class="fas fa-bus text-primary me-1"></i>Bus ₹20
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm rounded-pill" onclick="quickAdd('Shopping','200')">
+                        <i class="fas fa-shopping-bag text-primary me-1"></i>Groceries ₹200
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm rounded-pill" onclick="quickAdd('Entertainment','150')">
+                        <i class="fas fa-film text-primary me-1"></i>Movie ₹150
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm rounded-pill" onclick="quickAdd('Health','80')">
+                        <i class="fas fa-pills text-primary me-1"></i>Medicine ₹80
+                    </button>
                 </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <!-- Quick Add Section -->
-    <div class="quick-add">
-        <h2>Quick Add</h2>
-        <div class="quick-add-buttons">
-            <button type="button" class="quick-add-btn" onclick="quickAdd('Food & Dining', 50)">
-                <i class="fas fa-utensils"></i>
-                <span>Lunch</span>
-            </button>
-            <button type="button" class="quick-add-btn" onclick="quickAdd('Transportation', 20)">
-                <i class="fas fa-bus"></i>
-                <span>Bus Fare</span>
-            </button>
-            <button type="button" class="quick-add-btn" onclick="quickAdd('Shopping', 30)">
-                <i class="fas fa-shopping-bag"></i>
-                <span>Groceries</span>
-            </button>
-            <button type="button" class="quick-add-btn" onclick="quickAdd('Entertainment', 25)">
-                <i class="fas fa-film"></i>
-                <span>Movie</span>
-            </button>
-            <button type="button" class="quick-add-btn" onclick="quickAdd('Utilities', 100)">
-                <i class="fas fa-bolt"></i>
-                <span>Electricity</span>
-            </button>
-            <button type="button" class="quick-add-btn" onclick="quickAdd('Healthcare', 40)">
-                <i class="fas fa-pills"></i>
-                <span>Medicine</span>
-            </button>
-        </div>
-    </div>
-
-    <form method="POST" class="expense-form" id="expenseForm">
-        <div class="form-row">
-            <div class="form-group">
-                <label for="date"><i class="fas fa-calendar-alt"></i> Date:</label>
-                <input type="date" id="date" name="date" required title="Select the date when the expense occurred">
-                <div class="error-message">Please select a valid date.</div>
             </div>
-            <div class="form-group">
-                <label for="amount"><i class="fas fa-dollar-sign"></i> Amount:</label>
-                <input type="number" step="0.01" id="amount" name="amount" placeholder="0.00" required min="0.01" title="Enter the expense amount in rupees">
-                <div class="error-message">Please enter a valid amount greater than 0.</div>
-            </div>
-        </div>
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="category"><i class="fas fa-tags"></i> Category:</label>
-                <select id="category" name="category" required title="Choose the category that best describes your expense">
-                    <option value="">Select Category</option>
-                    <option value="Food & Dining">🍽️ Food & Dining</option>
-                    <option value="Transportation">🚗 Transportation</option>
-                    <option value="Entertainment">🎬 Entertainment</option>
-                    <option value="Utilities">💡 Utilities</option>
-                    <option value="Healthcare">🏥 Healthcare</option>
-                    <option value="Shopping">🛍️ Shopping</option>
-                    <option value="Education">📚 Education</option>
-                    <option value="Travel">✈️ Travel</option>
-                    <option value="Bills & Payments">📄 Bills & Payments</option>
-                    <option value="Personal Care">💅 Personal Care</option>
-                    <option value="Home & Garden">🏠 Home & Garden</option>
-                    <option value="Insurance">🛡️ Insurance</option>
-                    <option value="Investments">📈 Investments</option>
-                    <option value="Other">📝 Other</option>
-                </select>
-                <div class="error-message">Please select a category.</div>
+            <!-- Main Form -->
+            <div class="fintech-card">
+                <form method="POST" id="expenseForm">
+                    <div class="row g-3">
+                        <!-- Date -->
+                        <div class="col-sm-6">
+                            <label for="date" class="form-label"><i class="fas fa-calendar-alt text-muted me-2"></i>Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div>
+                        <!-- Amount -->
+                        <div class="col-sm-6">
+                            <label for="amount" class="form-label"><i class="fas fa-rupee-sign text-muted me-2"></i>Amount (₹)</label>
+                            <input type="number" step="0.01" min="0.01" class="form-control" id="amount" name="amount" placeholder="0.00" required>
+                        </div>
+                        <!-- Category -->
+                        <div class="col-sm-6">
+                            <label for="category" class="form-label"><i class="fas fa-tags text-muted me-2"></i>Category</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select category…</option>
+                                <option value="Food">Food &amp; Dining</option>
+                                <option value="Transport">Transportation</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Health">Healthcare</option>
+                                <option value="Utilities">Utilities &amp; Bills</option>
+                                <option value="Education">Education</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Personal Care">Personal Care</option>
+                                <option value="Home">Home &amp; Garden</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <!-- Payment Method -->
+                        <div class="col-sm-6">
+                            <label for="payment_method" class="form-label"><i class="fas fa-credit-card text-muted me-2"></i>Payment Method</label>
+                            <select class="form-select" id="payment_method" name="payment_method" required>
+                                <option value="">Select method…</option>
+                                <option value="Cash">Cash</option>
+                                <option value="UPI">UPI</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Net Banking">Net Banking</option>
+                                <option value="Digital Wallet">Digital Wallet</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label for="description" class="form-label"><i class="fas fa-sticky-note text-muted me-2"></i>Description <span class="text-muted">(optional)</span></label>
+                            <textarea class="form-control" id="description" name="description" rows="2" placeholder="Add a note about this expense…"></textarea>
+                        </div>
+                        <!-- Submit -->
+                        <div class="col-12 pt-2">
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-2" id="submitBtn">
+                                <i class="fas fa-plus me-2"></i>Add Expense
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="payment_method"><i class="fas fa-credit-card"></i> Payment Method:</label>
-                <select id="payment_method" name="payment_method" required title="Select how you paid for this expense">
-                    <option value="">Select Payment Method</option>
-                    <option value="Cash">💵 Cash</option>
-                    <option value="Credit Card">💳 Credit Card</option>
-                    <option value="Debit Card">💳 Debit Card</option>
-                    <option value="Bank Transfer">🏦 Bank Transfer</option>
-                    <option value="Digital Wallet">📱 Digital Wallet</option>
-                    <option value="Check">📋 Check</option>
-                    <option value="Other">📝 Other</option>
-                </select>
-                <div class="error-message">Please select a payment method.</div>
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label for="description"><i class="fas fa-sticky-note"></i> Description (Optional):</label>
-            <textarea id="description" name="description" placeholder="Add a note about this expense..." title="Provide additional details about your expense"></textarea>
         </div>
-
-        <button type="submit" class="btn-submit" id="submitBtn">
-            <i class="fas fa-save"></i> Add Expense
-        </button>
-    </form>
-    <div class="form-footer">
-        <a href="{{ url_for('dashboard') }}" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </a>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Set today's date by default
-    document.addEventListener('DOMContentLoaded', function() {
-        const dateInput = document.getElementById('date');
-        const today = new Date().toISOString().split('T')[0];
-        dateInput.value = today;
+    // Set today's date as default
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
     });
 
-    // Quick add function
+    // Quick add shortcuts
     function quickAdd(category, amount) {
         document.getElementById('category').value = category;
         document.getElementById('amount').value = amount;
         document.getElementById('payment_method').focus();
     }
 
-    // Form validation
-    document.getElementById('expenseForm').addEventListener('submit', function(e) {
-        const formGroups = document.querySelectorAll('.form-group');
-        let isValid = true;
-
-        formGroups.forEach(group => {
-            const input = group.querySelector('input, select');
-            const errorMsg = group.querySelector('.error-message');
-
-            if (input && input.hasAttribute('required') && !input.value.trim()) {
-                group.classList.add('error');
-                isValid = false;
-            } else {
-                group.classList.remove('error');
-            }
-
-            // Special validation for amount
-            if (input && input.id === 'amount' && input.value && parseFloat(input.value) <= 0) {
-                group.classList.add('error');
-                isValid = false;
-            }
-        });
-
-        if (!isValid) {
-            e.preventDefault();
-            return false;
-        }
-
-        // Add success animation
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-        submitBtn.disabled = true;
-    });
-
-    // Real-time validation
-    document.querySelectorAll('input, select').forEach(element => {
-        element.addEventListener('blur', function() {
-            const group = this.closest('.form-group');
-            if (this.hasAttribute('required') && !this.value.trim()) {
-                group.classList.add('error');
-            } else {
-                group.classList.remove('error');
-            }
-
-            // Special validation for amount
-            if (this.id === 'amount' && this.value && parseFloat(this.value) <= 0) {
-                group.classList.add('error');
-            }
-        });
+    // Submit feedback
+    document.getElementById('expenseForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitBtn');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving…';
+        btn.disabled = true;
     });
 </script>
 {% endblock %}
