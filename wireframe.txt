@@ -1,0 +1,148 @@
+Wireframe Layout Sketches for Expense Tracker App
+===============================================
+
+These are text-based sketches representing the layout of key pages in the Flask Expense Tracker app. Each sketch outlines the main sections, components, and flow like a rough wireframe.
+
+1. Index Page (Landing/Home Page)
+   +---------------------------------+
+   | Header: Expense Tracker Logo    |
+   |         (Centered)              |
+   +---------------------------------+
+   | Welcome Message                 |
+   | "Track your expenses easily!"   |
+   +---------------------------------+
+   | Buttons:                        |
+   | - Login                         |
+   | - Register                      |
+   +---------------------------------+
+   | Footer: Simple text             |
+   +---------------------------------+
+
+2. Login Page
+   +---------------------------------+
+   | Header: Expense Tracker         |
+   +---------------------------------+
+   | Login Form:                     |
+   | Username: [input]               |
+   | Password: [input]               |
+   | [Login Button]                  |
+   | Link: Register if no account    |
+   +---------------------------------+
+   | Footer                           |
+   +---------------------------------+
+
+3. Register Page
+   +---------------------------------+
+   | Header: Expense Tracker         |
+   +---------------------------------+
+   | Register Form:                  |
+   | Username: [input]               |
+   | Email: [input]                  |
+   | Password: [input]               |
+   | [Register Button]               |
+   | Link: Login if have account     |
+   +---------------------------------+
+   | Footer                           |
+   +---------------------------------+
+
+4. Dashboard Page
+   +---------------------------------+
+   | Header: Expense Tracker - Logout|
+   +---------------------------------+
+   | Welcome, [Username]             |
+   +---------------------------------+
+   | Metrics Cards:                  |
+   | - Total Spent: $XXX             |
+   | - Current Month Spent: $XXX     |
+   | - Avg Daily Spend: $XXX         |
+   | - Top Category: XXX             |
+   +---------------------------------+
+   | Budget Progress:                |
+   | [Progress Bar] (XX% of budget)  |
+   +---------------------------------+
+   | Charts Section:                 |
+   | - Category Pie Chart            |
+   | - Monthly Bar Chart             |
+   +---------------------------------+
+   | Recent Expenses Table:          |
+   | Date | Category | Amount | Desc |
+   | ...                            |
+   | [View All] Button               |
+   +---------------------------------+
+   | Quick Actions:                  |
+   | - Add Expense                   |
+   | - Set Budget                    |
+   | - View Summary                  |
+   +---------------------------------+
+
+5. Add Expense Page
+   +---------------------------------+
+   | Header: Expense Tracker - Logout|
+   +---------------------------------+
+   | Add New Expense Form:           |
+   | Date: [date picker]             |
+   | Category: [dropdown]            |
+   | Amount: [input]                 |
+   | Description: [textarea]         |
+   | Payment Method: [dropdown]      |
+   | [Add Expense Button]            |
+   +---------------------------------+
+   | Back to Dashboard Link          |
+   +---------------------------------+
+
+6. View Expenses Page
+   +---------------------------------+
+   | Header: Expense Tracker - Logout|
+   +---------------------------------+
+   | Expenses Table:                 |
+   | Date | Category | Amount | Desc | Payment | Actions |
+   | ...                            |
+   | [Sort buttons] [Pagination]     |
+   +---------------------------------+
+   | Insights Section:               |
+   | - Total Spent: $XXX             |
+   | - Avg Daily: $XXX               |
+   | - Top Category: XXX             |
+   | - Top Payment Method: XXX       |
+   | - Savings Tip: XXX              |
+   +---------------------------------+
+   | Category Breakdown:             |
+   | Category | Amount               |
+   | ...                            |
+   +---------------------------------+
+   | Monthly Breakdown:              |
+   | Month | Amount                  |
+   | ...                            |
+   +---------------------------------+
+
+7. Summary Page
+   +---------------------------------+
+   | Header: Expense Tracker - Logout|
+   +---------------------------------+
+   | Summary by Category:            |
+   | Category | Total Amount         |
+   | ...                            |
+   | Total Spent: $XXX               |
+   +---------------------------------+
+   | Savings Tip (if applicable)     |
+   +---------------------------------+
+
+8. Set Budget Page
+   +---------------------------------+
+   | Header: Expense Tracker - Logout|
+   +---------------------------------+
+   | Set Budget Form:                |
+   | Month: [dropdown]               |
+   | Year: [input]                   |
+   | Budget Amount: [input]          |
+   | [Set Budget Button]             |
+   +---------------------------------+
+   | Current Budget: $XXX            |
+   +---------------------------------+
+
+Notes:
+- All pages have a consistent header with navigation.
+- Forms are centered and simple.
+- Tables are sortable and paginated where applicable.
+- Responsive design assumed (mobile-friendly).
+- Colors: Use a clean theme with primary color for buttons, neutral for backgrounds.

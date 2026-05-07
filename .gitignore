@@ -1,0 +1,9 @@
+venv/
+venv_new/
+.venv2/
+venv2/
+.venv/
+__pycache__/
+*.db
+*.bat
+.env

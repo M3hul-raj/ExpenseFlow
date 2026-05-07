@@ -1,0 +1,134 @@
+/* Filter Section Styles */
+.filter-card {
+  border-radius: 15px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+}
+
+.filter-card .card-header {
+  border-radius: 15px 15px 0 0 !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.15);
+  transform: translateY(-1px);
+}
+
+.btn-filter {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary.btn-filter {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+}
+
+.btn-primary.btn-filter:hover {
+  background: linear-gradient(135deg, #5a67d8, #6b46c1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+}
+
+.btn-outline-secondary.btn-filter:hover {
+  background: #6c757d;
+  border-color: #6c757d;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.results-badge {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.table-responsive {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table-dark th {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(102,126,234,0.05);
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 0.4em 0.8em;
+}
+
+.empty-state {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Responsive Filters */
+@media (max-width: 768px) {
+  .filter-card .card-body {
+    padding: 1rem !important;
+  }
+  
+  #filterForm .col-md-3,
+  #filterForm .col-md-2 {
+    margin-bottom: 1rem;
+  }
+  
+  .btn-filter {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Loading Animation */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

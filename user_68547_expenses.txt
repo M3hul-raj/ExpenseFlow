@@ -1,0 +1,7 @@
+2026-05-01,Entertainment,25,,Debit Card
+2026-05-03,Utilities,100,,Debit Card
+2026-05-03,Shopping,30,,Credit Card
+2026-05-03,Transportation,20,,Credit Card
+2026-05-03,Food & Dining,50,,Credit Card
+2026-05-02,Investments,10000,,Bank Transfer
+2026-05-13,Insurance,25668,,Debit Card

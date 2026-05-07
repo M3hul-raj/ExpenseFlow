@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Add Expense - SpendWise{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='add_expense_styles.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+{% endblock %}
+
+{% block body_class %}professional-theme{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Header Section -->
+    <div class="row mb-4 mt-3">
+        <div class="col-12">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-plus-circle fa-2x text-primary me-3"></i>
+                <div>
+                    <h1 class="mb-1 fw-bold">Add New Expense</h1>
+                    <p class="text-muted mb-0">Record your spending with ease and precision • Today: {{ current_date.strftime('%d %B %Y') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'error' if category == 'error' else 'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Quick Add Section -->
+    <div class="quick-add">
+        <h2>Quick Add</h2>
+        <div class="quick-add-buttons">
+            <button type="button" class="quick-add-btn" onclick="quickAdd('Food & Dining', 50)">
+                <i class="fas fa-utensils"></i>
+                <span>Lunch</span>
+            </button>
+            <button type="button" class="quick-add-btn" onclick="quickAdd('Transportation', 20)">
+                <i class="fas fa-bus"></i>
+                <span>Bus Fare</span>
+            </button>
+            <button type="button" class="quick-add-btn" onclick="quickAdd('Shopping', 30)">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Groceries</span>
+            </button>
+            <button type="button" class="quick-add-btn" onclick="quickAdd('Entertainment', 25)">
+                <i class="fas fa-film"></i>
+                <span>Movie</span>
+            </button>
+            <button type="button" class="quick-add-btn" onclick="quickAdd('Utilities', 100)">
+                <i class="fas fa-bolt"></i>
+                <span>Electricity</span>
+            </button>
+            <button type="button" class="quick-add-btn" onclick="quickAdd('Healthcare', 40)">
+                <i class="fas fa-pills"></i>
+                <span>Medicine</span>
+            </button>
+        </div>
+    </div>
+
+    <form method="POST" class="expense-form" id="expenseForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="date"><i class="fas fa-calendar-alt"></i> Date:</label>
+                <input type="date" id="date" name="date" required title="Select the date when the expense occurred">
+                <div class="error-message">Please select a valid date.</div>
+            </div>
+            <div class="form-group">
+                <label for="amount"><i class="fas fa-dollar-sign"></i> Amount:</label>
+                <input type="number" step="0.01" id="amount" name="amount" placeholder="0.00" required min="0.01" title="Enter the expense amount in rupees">
+                <div class="error-message">Please enter a valid amount greater than 0.</div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="category"><i class="fas fa-tags"></i> Category:</label>
+                <select id="category" name="category" required title="Choose the category that best describes your expense">
+                    <option value="">Select Category</option>
+                    <option value="Food & Dining">🍽️ Food & Dining</option>
+                    <option value="Transportation">🚗 Transportation</option>
+                    <option value="Entertainment">🎬 Entertainment</option>
+                    <option value="Utilities">💡 Utilities</option>
+                    <option value="Healthcare">🏥 Healthcare</option>
+                    <option value="Shopping">🛍️ Shopping</option>
+                    <option value="Education">📚 Education</option>
+                    <option value="Travel">✈️ Travel</option>
+                    <option value="Bills & Payments">📄 Bills & Payments</option>
+                    <option value="Personal Care">💅 Personal Care</option>
+                    <option value="Home & Garden">🏠 Home & Garden</option>
+                    <option value="Insurance">🛡️ Insurance</option>
+                    <option value="Investments">📈 Investments</option>
+                    <option value="Other">📝 Other</option>
+                </select>
+                <div class="error-message">Please select a category.</div>
+            </div>
+            <div class="form-group">
+                <label for="payment_method"><i class="fas fa-credit-card"></i> Payment Method:</label>
+                <select id="payment_method" name="payment_method" required title="Select how you paid for this expense">
+                    <option value="">Select Payment Method</option>
+                    <option value="Cash">💵 Cash</option>
+                    <option value="Credit Card">💳 Credit Card</option>
+                    <option value="Debit Card">💳 Debit Card</option>
+                    <option value="Bank Transfer">🏦 Bank Transfer</option>
+                    <option value="Digital Wallet">📱 Digital Wallet</option>
+                    <option value="Check">📋 Check</option>
+                    <option value="Other">📝 Other</option>
+                </select>
+                <div class="error-message">Please select a payment method.</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description"><i class="fas fa-sticky-note"></i> Description (Optional):</label>
+            <textarea id="description" name="description" placeholder="Add a note about this expense..." title="Provide additional details about your expense"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+            <i class="fas fa-save"></i> Add Expense
+        </button>
+    </form>
+    <div class="form-footer">
+        <a href="{{ url_for('dashboard') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Set today's date by default
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+    });
+
+    // Quick add function
+    function quickAdd(category, amount) {
+        document.getElementById('category').value = category;
+        document.getElementById('amount').value = amount;
+        document.getElementById('payment_method').focus();
+    }
+
+    // Form validation
+    document.getElementById('expenseForm').addEventListener('submit', function(e) {
+        const formGroups = document.querySelectorAll('.form-group');
+        let isValid = true;
+
+        formGroups.forEach(group => {
+            const input = group.querySelector('input, select');
+            const errorMsg = group.querySelector('.error-message');
+
+            if (input && input.hasAttribute('required') && !input.value.trim()) {
+                group.classList.add('error');
+                isValid = false;
+            } else {
+                group.classList.remove('error');
+            }
+
+            // Special validation for amount
+            if (input && input.id === 'amount' && input.value && parseFloat(input.value) <= 0) {
+                group.classList.add('error');
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            e.preventDefault();
+            return false;
+        }
+
+        // Add success animation
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        submitBtn.disabled = true;
+    });
+
+    // Real-time validation
+    document.querySelectorAll('input, select').forEach(element => {
+        element.addEventListener('blur', function() {
+            const group = this.closest('.form-group');
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                group.classList.add('error');
+            } else {
+                group.classList.remove('error');
+            }
+
+            // Special validation for amount
+            if (this.id === 'amount' && this.value && parseFloat(this.value) <= 0) {
+                group.classList.add('error');
+            }
+        });
+    });
+</script>
+{% endblock %}

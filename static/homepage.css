@@ -1,0 +1,142 @@
+/* SpendWise Homepage - Perfect Glassmorphism UI - Full Spec */
+
+/* Reset and box-sizing */
+*, *::before, * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fix body and html for full height */
+html, body {
+    min-height: 100vh;
+    overflow-x: visible;
+    overflow-y: visible;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container should use min-height */
+main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+}
+
+/* Ensure sections have minimum height but are scrollable */
+section {
+    min-height: 300px;
+    width: 100%;
+    overflow: visible;
+    padding: 3rem 0;
+}
+
+/* Fix Bootstrap container issues */
+.container, .container-fluid {
+    overflow: visible;
+    max-width: 100%;
+}
+
+/* Make footer fully visible */
+footer {
+    margin-top: auto !important;
+    padding: 3rem 0 !important;
+    width: 100%;
+    overflow: visible;
+    flex-shrink: 0;
+    background: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+footer .container {
+    max-width: 100%;
+    padding: 0 15px;
+    overflow: visible;
+}
+
+footer h5, footer p {
+    margin-bottom: 0.5rem !important;
+}
+
+footer a {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Fix last section margin issue */
+main > section:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 4rem;
+}
+
+/* Attractive Glassmorphism Footer for Homepage */
+.glass-footer {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 2rem 0;
+}
+
+.glass-footer h5 {
+    color: #fff !important;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.glass-footer p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.9rem;
+}
+
+.glass-footer a {
+    color: #ff4444 !important;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: rgba(255, 68, 68, 0.15);
+    margin: 0 0.25rem;
+}
+
+.glass-footer a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+/* Footer social icons */
+.footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.footer-social a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0;
+}
+
+.footer-social a:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Gradient text for footer */
+.footer-brand {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
