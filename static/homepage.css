@@ -1,4 +1,4 @@
-/* SpendWise Homepage - Perfect Glassmorphism UI - Full Spec */
+/* ExpenseFlow Homepage - Perfect Glassmorphism UI - Full Spec */
 
 /* Reset and box-sizing */
 *, *::before, * {
@@ -14,6 +14,11 @@ html, body {
     overflow-y: visible;
     margin: 0;
     padding: 0;
+    background-color: #f8fafc;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%);
+    background-attachment: fixed;
 }
 
 /* Main container should use min-height */
@@ -135,8 +140,90 @@ main > section:last-of-type {
 
 /* Gradient text for footer */
 .footer-brand {
-    background: linear-gradient(45deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
+    background: linear-gradient(45deg, #4F46E5, #7C3AED);
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+/* Glassmorphism Cards */
+.card {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease !important;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(79, 70, 229, 0.1) !important;
+}
+
+/* Premium Icon Wrappers */
+.icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(79, 70, 229, 0.1);
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.icon-wrapper::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(79, 70, 229, 0.2);
+    animation: pulse 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.3; }
+    100% { transform: scale(0.95); opacity: 1; }
+}
+
+.icon-wrapper i {
+    font-size: 1.75rem !important;
+    margin: 0 !important;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Responsive Perfection for Mobile Devices */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.2rem;
+        line-height: 1.2;
+    }
+    .hero-section p.lead {
+        font-size: 1.1rem;
+    }
+    .row.g-4 > div {
+        margin-bottom: 1rem;
+    }
+    .card {
+        margin-bottom: 1rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Softer shadow on mobile */
+    }
+    .hero-section .d-flex {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 1rem;
+    }
+    .hero-section .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    .glass-footer .col-md-4 {
+        margin-bottom: 2rem;
+    }
 }
