@@ -1,76 +1,68 @@
 import hashlib
-# pyrefly: ignore [missing-import]
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from datetime import datetime
 import random, os
 from dateutil.relativedelta import relativedelta
-import sqlite3
+from models import db, User, Expense, Budget
 
 app = Flask(__name__)
+# --- CUSTOM JINJA FILTERS ---
+@app.template_filter('currency')
+def format_currency(value):
+    """Formats a float/int into Indian Rupee format."""
+    try:
+        value = float(value)
+        return f"₹{value:,.2f}"
+    except (ValueError, TypeError):
+        return "₹0.00"
+
 app.secret_key = 'your-secret-key-change-this-in-production'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-DATA_FILE = "expenses.txt"
-TIPS_FILE = "tips.txt"
-USERS_FILE = "users.txt"
+db.init_app(app)
 
-# Ensure files exist
-if not os.path.exists(DATA_FILE):
-    open(DATA_FILE, 'w').close()
+with app.app_context():
+    db.create_all()
 
-if not os.path.exists(TIPS_FILE):
-    with open(TIPS_FILE, 'w') as f:
-        f.write("Cook at home instead of eating out.\n")
-        f.write("Track your subscriptions.\n")
-        f.write("Plan weekly budgets.\n")
-        f.write("Use public transport to save fuel.\n")
-        f.write("Avoid unnecessary online purchases.\n")
-
-if not os.path.exists(USERS_FILE):
-    open(USERS_FILE, 'w').close()
-
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-
-def verify_password(password, hashed):
-    return hash_password(password) == hashed
+# Static tips to replace TIPS_FILE
+TIPS = [
+    "Cook at home instead of eating out.",
+    "Track your subscriptions.",
+    "Plan weekly budgets.",
+    "Use public transport to save fuel.",
+    "Avoid unnecessary online purchases."
+]
 
 def is_logged_in():
     return 'user_id' in session
 
-def get_user_data_file(user_id):
-    return f"user_{user_id}_expenses.txt"
+def get_current_year_month():
+    return datetime.now().strftime("%Y-%m")
 
-def get_user_budget_file(user_id, year_month=None):
-    if year_month:
-        return f"user_{user_id}_budget_{year_month}.txt"
-    else:
-        # For backward compatibility, check for old single budget file
-        old_file = f"user_{user_id}_budget.txt"
-        if os.path.exists(old_file):
-            return old_file
-        return f"user_{user_id}_budget_{get_current_year_month()}.txt"
+def get_user_budget(user_id, year_month=None):
+    if not year_month:
+        year_month = get_current_year_month()
+        
+    budget = Budget.query.filter_by(user_id=user_id, year_month=year_month).first()
+    if budget:
+        return budget.amount
+        
+    user = db.session.get(User, user_id)
+    if user and user.recurring_budget is not None:
+        return user.recurring_budget
+        
+    return 2000.0  # Default budget
 
-def get_user_recurring_budget_file(user_id):
-    return f"user_{user_id}_recurring_budget.txt"
-
-def get_recurring_budget(user_id):
-    recurring_file = get_user_recurring_budget_file(user_id)
-    try:
-        with open(recurring_file, 'r') as f:
-            return float(f.read().strip())
-    except (FileNotFoundError, ValueError):
-        return None
-
-def set_recurring_budget(user_id, amount):
-    recurring_file = get_user_recurring_budget_file(user_id)
-    with open(recurring_file, 'w') as f:
-        f.write(str(amount))
+def get_monthly_spending(user_id, year_month):
+    expenses = Expense.query.filter(
+        Expense.user_id == user_id,
+        Expense.date.startswith(year_month)
+    ).all()
+    return sum(e.amount for e in expenses)
 
 def get_budget_history(user_id, months=6):
-    """Get budget and spending data for last N months"""
-    from datetime import datetime
     import calendar
-
     history = []
     current_date = datetime.now()
 
@@ -78,110 +70,30 @@ def get_budget_history(user_id, months=6):
         date = current_date - relativedelta(months=i)
         year_month = date.strftime("%Y-%m")
 
-        budget = get_user_budget(user_id, year_month)
+        budget_amount = get_user_budget(user_id, year_month)
         spending = get_monthly_spending(user_id, year_month)
 
         status = "On Track"
-        if spending > budget:
+        if spending > budget_amount:
             status = "Over Budget"
-        elif spending > budget * 0.9:
+        elif spending > budget_amount * 0.9:
             status = "Near Limit"
 
         history.append({
             'month': f"{calendar.month_name[date.month]} {date.year}",
             'year_month': year_month,
-            'budget': budget,
+            'budget': budget_amount,
             'spending': spending,
             'status': status,
-            'remaining': budget - spending
+            'remaining': budget_amount - spending
         })
 
     return history
 
-def get_monthly_spending(user_id, year_month):
-    """Get total spending for a specific month"""
-    user_file = get_user_data_file(user_id)
-    total = 0.0
-
-    try:
-        with open(user_file, 'r') as f:
-            for line in f:
-                parts = line.strip().split(',')
-                if len(parts) >= 3:
-                    expense_date = parts[0]
-                    try:
-                        expense_year_month = expense_date[:7]  # YYYY-MM format
-                        if expense_year_month == year_month:
-                            total += float(parts[2])
-                    except (ValueError, IndexError):
-                        pass
-    except FileNotFoundError:
-        pass
-
-    return total
-
-def get_current_year_month():
-    from datetime import datetime
-    return datetime.now().strftime("%Y-%m")
-
-def get_user_budget(user_id, year_month=None):
-    budget_file = get_user_budget_file(user_id, year_month)
-    try:
-        with open(budget_file, 'r') as f:
-            return float(f.read().strip())
-    except (FileNotFoundError, ValueError):
-        # Check if recurring budget is set
-        recurring_budget = get_recurring_budget(user_id)
-        if recurring_budget is not None:
-            return recurring_budget
-        return 2000.0  # Default budget
-
-def apply_filters(expenses, filters):
-    """Apply all filters to expenses list. Returns filtered list."""
-    filtered = expenses[:]
-    
-    # Keyword search in description (case insensitive)
-    keyword = filters.get('keyword', '').strip().lower()
-    if keyword:
-        filtered = [e for e in filtered if keyword in e[3].lower()]
-    
-    # Category filter
-    category = filters.get('category', '').strip()
-    if category and category != 'All Categories':
-        filtered = [e for e in filtered if e[1] == category]
-    
-    # Month filter (YYYY-MM)
-    month = filters.get('month', '').strip()
-    if month and month != 'All Months':
-        filtered = [e for e in filtered if e[0][:7] == month]
-    
-    # Payment method filter
-    payment_method = filters.get('payment_method', '').strip()
-    if payment_method and payment_method != 'All Payment Methods':
-        filtered = [e for e in filtered if e[4] == payment_method]
-    
-    # Date range
-    from_date = filters.get('from_date', '').strip()
-    to_date = filters.get('to_date', '').strip()
-    if from_date:
-        filtered = [e for e in filtered if e[0] >= from_date]
-    if to_date:
-        filtered = [e for e in filtered if e[0] <= to_date]
-    
-    # Amount range
-    try:
-        min_amount = float(filters.get('min_amount', 0))
-        max_amount_str = filters.get('max_amount', '').strip()
-        max_amount = float(max_amount_str) if max_amount_str and max_amount_str != 'No limit' else float('inf')
-        
-        filtered = [e for e in filtered if min_amount <= float(e[2]) <= max_amount]
-    except ValueError:
-        pass  # Invalid amounts, skip filter
-    
-    # Always sort newest first
-    filtered.sort(key=lambda x: x[0], reverse=True)
-    
-    return filtered
+def get_user_expenses_sorted(user_id):
+    expenses = Expense.query.filter_by(user_id=user_id).all()
+    expenses.sort(key=lambda x: x.date, reverse=True)
+    return expenses
 
 @app.route('/')
 def index():
@@ -195,7 +107,6 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
-        # Server-side validation
         if password != confirm_password:
             flash('Passwords do not match.', 'error')
             return redirect(url_for('register'))
@@ -204,29 +115,18 @@ def register():
             flash('Password must be at least 6 characters long.', 'error')
             return redirect(url_for('register'))
 
-        # Check if user already exists
-        with open(USERS_FILE, 'r') as f:
-            for line in f:
-                try:
-                    parts = line.strip().split(',')
-                    stored_username = parts[0]
-                    if stored_username == username:
-                        flash('Username already exists. Please choose a different one.', 'error')
-                        return redirect(url_for('register'))
-                except ValueError:
-                    continue  # Skip invalid lines
+        existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+        if existing_user:
+            if existing_user.username == username:
+                flash('Username already exists. Please choose a different one.', 'error')
+            else:
+                flash('Email already exists. Please choose a different one.', 'error')
+            return redirect(url_for('register'))
 
-        # Create new user
-        user_id = str(random.randint(10000, 99999))
-        hashed_password = hash_password(password)
-        registration_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        with open(USERS_FILE, 'a') as f:
-            f.write(f"{username},{email},{hashed_password},{user_id},{registration_date}\n")
-
-        # Create user-specific expense file
-        user_file = get_user_data_file(user_id)
-        open(user_file, 'w').close()
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
 
         flash('Registration successful! Please log in.', 'success')
         return redirect(url_for('login'))
@@ -242,26 +142,21 @@ def login():
         username_or_email = request.form['username']
         password = request.form['password']
 
-        with open(USERS_FILE, 'r') as f:
-            for line in f:
-                try:
-                    parts = line.strip().split(',')
-                    if len(parts) >= 4:
-                        stored_username = parts[0]
-                        email = parts[1]
-                        hashed_password = parts[2]
-                        user_id = parts[3]
-                        if (stored_username == username_or_email or email == username_or_email) and verify_password(password, hashed_password):
-                            session['user_id'] = user_id
-                            session['username'] = stored_username
-                            session['email'] = email
-                            flash('Login successful!', 'success')
-                            return redirect(url_for('dashboard'))
-                except ValueError:
-                    continue  # Skip invalid lines
+        user = User.query.filter((User.username == username_or_email) | (User.email == username_or_email)).first()
+        
+        if user and user.check_password(password):
+            session['user_id'] = user.id
+            session['username'] = user.username
+            session['email'] = user.email
+            flash('Login successful!', 'success')
+            return redirect(url_for('dashboard'))
 
-        flash('User does not exist. Please sign up first!', 'error')
-        return redirect(url_for('register'))
+        if not user:
+            flash('User does not exist. Please sign up first!', 'error')
+            return redirect(url_for('register'))
+        else:
+            flash('Invalid password. Please try again!', 'error')
+            return redirect(url_for('login'))
 
     return render_template('login.html')
 
@@ -278,77 +173,46 @@ def dashboard():
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    user_file = get_user_data_file(user_id)
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        return redirect(url_for('login'))
 
-    # Get user registration date
-    registration_date = None
-    with open(USERS_FILE, 'r') as f:
-        for line in f:
-            try:
-                stored_username, stored_email, hashed_password, stored_user_id, reg_date = line.strip().split(',')
-                if stored_user_id == user_id:
-                    registration_date = reg_date
-                    break
-            except ValueError:
-                continue
-
-    # Ensure user file exists
-    if not os.path.exists(user_file):
-        open(user_file, 'w').close()
-
+    expenses_obj = get_user_expenses_sorted(user_id)
+    
     expenses = []
     total_spent = 0.0
     category_totals = {}
     monthly_totals = {}
+    
+    current_year_month = get_current_year_month()
+    current_month_spent = 0.0
 
-    with open(user_file, 'r') as f:
-        for line in f:
-            parts = line.strip().split(',')
-            if len(parts) >= 4:
-                if len(parts) == 4:
-                    parts.append('')
-                expenses.append(parts)
-                try:
-                    amount = float(parts[2])
-                    total_spent += amount
+    for e in expenses_obj:
+        expenses.append([e.date, e.category, str(e.amount), e.description, e.payment_method])
+        
+        total_spent += e.amount
+        category_totals[e.category] = category_totals.get(e.category, 0) + e.amount
+        
+        month_key = e.date[:7]
+        monthly_totals[month_key] = monthly_totals.get(month_key, 0) + e.amount
+        
+        if month_key == current_year_month:
+            current_month_spent += e.amount
 
-                    category = parts[1]
-                    category_totals[category] = category_totals.get(category, 0) + amount
-
-                    try:
-                        date_parts = parts[0].split('-')
-                        if len(date_parts) >= 2:
-                            month_key = f"{date_parts[0]}-{date_parts[1]}"
-                            monthly_totals[month_key] = monthly_totals.get(month_key, 0) + amount
-                    except:
-                        pass
-
-                except ValueError:
-                    pass
-
-    expenses.sort(key=lambda x: x[0], reverse=True)
-
-    unique_dates = set(e[0] for e in expenses)
+    unique_dates = set(e.date for e in expenses_obj)
     avg_daily_spend = total_spent / max(1, len(unique_dates))
     top_category = max(category_totals, key=category_totals.get) if category_totals else 'None'
 
-    current_year_month = get_current_year_month()
     budget = get_user_budget(user_id, current_year_month)
-    recurring_budget = get_recurring_budget(user_id)
-
-    current_month_spent = 0.0
-    for e in expenses:
-        try:
-            if e[0][:7] == current_year_month:
-                current_month_spent += float(e[2])
-        except:
-            pass
+    recurring_budget = user.recurring_budget
 
     budget_progress = (current_month_spent / budget) * 100 if budget > 0 else 0
 
     categories = list(category_totals.keys())
     category_amounts = list(category_totals.values())
-    months = sorted(list(monthly_totals.keys()), reverse=True)[-6:]
+    months = sorted(list(monthly_totals.keys()), reverse=True)[:6]
+    months.reverse() # chronologically
     monthly_amounts = [monthly_totals.get(m, 0) for m in months]
 
     budget_history = get_budget_history(user_id, 6)
@@ -356,19 +220,16 @@ def dashboard():
     budget_chart_budgets = [item['budget'] for item in budget_history]
     budget_chart_spending = [item['spending'] for item in budget_history]
 
-    # Add budget alerts
     if budget_progress >= 100:
         flash('⚠️ You have exceeded your monthly budget!', 'error')
     elif budget_progress >= 80:
         flash('⚠️ You are approaching your budget limit (80% used).', 'warning')
 
-    current_date = datetime.now()
-
     return render_template('dashboard.html',
                          expenses=expenses,
-                         username=session['username'],
-                         email=session['email'],
-                         registration_date=registration_date,
+                         username=user.username,
+                         email=user.email,
+                         registration_date=user.registration_date.strftime("%Y-%m-%d %H:%M:%S"),
                          total_spent=total_spent,
                          current_month_spent=current_month_spent,
                          avg_daily_spend=avg_daily_spend,
@@ -384,7 +245,7 @@ def dashboard():
                          budget_chart_labels=budget_chart_labels,
                          budget_chart_budgets=budget_chart_budgets,
                          budget_chart_spending=budget_chart_spending,
-                         current_date=current_date)
+                         current_date=datetime.now())
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_expense():
@@ -400,17 +261,22 @@ def add_expense():
         payment_method = request.form['payment_method']
 
         user_id = session['user_id']
-        user_file = get_user_data_file(user_id)
-
-        with open(user_file, 'a') as f:
-            f.write(f"{date},{category},{amount},{description},{payment_method}\n")
+        
+        new_expense = Expense(
+            user_id=user_id,
+            date=date,
+            category=category,
+            amount=float(amount),
+            description=description,
+            payment_method=payment_method
+        )
+        db.session.add(new_expense)
+        db.session.commit()
 
         flash('Expense added successfully!', 'success')
         return redirect(url_for('dashboard'))
 
-    current_date = datetime.now()
-
-    return render_template('add_expense_updated.html', current_date=current_date)
+    return render_template('add_expense_updated.html', current_date=datetime.now())
 
 @app.route('/view')
 def view_expense():
@@ -419,71 +285,34 @@ def view_expense():
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    user_file = get_user_data_file(user_id)
-
+    expenses_obj = get_user_expenses_sorted(user_id)
+    
     expenses = []
     total_spent = 0.0
     category_totals = {}
     monthly_totals = {}
     payment_method_totals = {}
 
-    with open(user_file, 'r') as f:
-        for line in f:
-            parts = line.strip().split(',')
-            if len(parts) >= 4:  # Changed to >= 4 to handle new payment_method field
-                # Handle backward compatibility - if no payment_method, add empty string
-                if len(parts) == 4:
-                    parts.append('')
-                expenses.append(parts)
-                try:
-                    amount = float(parts[2])
-                    total_spent += amount
+    for e in expenses_obj:
+        expenses.append([e.date, e.category, str(e.amount), e.description, e.payment_method])
+        
+        total_spent += e.amount
+        category_totals[e.category] = category_totals.get(e.category, 0) + e.amount
+        payment_method_totals[e.payment_method] = payment_method_totals.get(e.payment_method, 0) + e.amount
+        
+        month_key = e.date[:7]
+        monthly_totals[month_key] = monthly_totals.get(month_key, 0) + e.amount
 
-                    # Category totals
-                    category = parts[1]
-                    category_totals[category] = category_totals.get(category, 0) + amount
-
-                    # Payment method totals
-                    payment_method = parts[4] if parts[4] else 'N/A'
-                    payment_method_totals[payment_method] = payment_method_totals.get(payment_method, 0) + amount
-
-                    # Monthly totals (assuming date format YYYY-MM-DD)
-                    try:
-                        date_parts = parts[0].split('-')
-                        if len(date_parts) >= 2:
-                            month_key = f"{date_parts[0]}-{date_parts[1]}"
-                            monthly_totals[month_key] = monthly_totals.get(month_key, 0) + amount
-                    except:
-                        pass
-
-                except ValueError:
-                    pass  # Skip invalid amounts
-
-    # Sort expenses by date (newest first)
-    expenses.sort(key=lambda x: x[0], reverse=True)
-
-    # Calculate additional metrics
-    unique_dates = set(expense[0] for expense in expenses)
+    unique_dates = set(e.date for e in expenses_obj)
     avg_daily_spend = total_spent / max(1, len(unique_dates))
     top_category = max(category_totals, key=category_totals.get) if category_totals else 'None'
     top_payment_method = max(payment_method_totals, key=payment_method_totals.get) if payment_method_totals else 'None'
 
-    # Sort category totals by amount (descending)
     sorted_category_totals = sorted(category_totals.items(), key=lambda x: x[1], reverse=True)
-
-    # Sort monthly totals by month (descending)
     sorted_monthly_totals = sorted(monthly_totals.items(), key=lambda x: x[0], reverse=True)
-
-    # Sort payment method totals by amount (descending)
     sorted_payment_method_totals = sorted(payment_method_totals.items(), key=lambda x: x[1], reverse=True)
 
-    # Get a random savings tip
-    import random
-    with open(TIPS_FILE, 'r') as f:
-        tips = f.readlines()
-    savings_tip = random.choice(tips).strip() if tips else "Track your expenses regularly!"
-
-    current_date = datetime.now()
+    savings_tip = random.choice(TIPS) if TIPS else "Track your expenses regularly!"
 
     return render_template('view_expense_updated.html',
                          expenses=expenses,
@@ -495,7 +324,7 @@ def view_expense():
                          top_category=top_category,
                          top_payment_method=top_payment_method,
                          savings_tip=savings_tip,
-                         current_date=current_date)
+                         current_date=datetime.now())
 
 @app.route('/edit/<int:expense_index>', methods=['GET', 'POST'])
 def edit_expense(expense_index):
@@ -504,43 +333,28 @@ def edit_expense(expense_index):
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    user_file = get_user_data_file(user_id)
+    expenses_obj = get_user_expenses_sorted(user_id)
 
-    expenses = []
-    with open(user_file, 'r') as f:
-        for line in f:
-            parts = line.strip().split(',')
-            if len(parts) >= 4:  # Changed to >= 4 to handle new payment_method field
-                # Handle backward compatibility - if no payment_method, add empty string
-                if len(parts) == 4:
-                    parts.append('')
-                expenses.append(parts)
-
-    if not (0 <= expense_index < len(expenses)):
+    if not (0 <= expense_index < len(expenses_obj)):
         flash('Invalid expense index.', 'error')
         return redirect(url_for('view_expense'))
 
+    expense_to_edit = expenses_obj[expense_index]
+
     if request.method == 'POST':
-        date = request.form['date']
-        category = request.form['category']
-        amount = request.form['amount']
-        description = request.form['description']
-        payment_method = request.form['payment_method']
-
-        # Update the expense
-        expenses[expense_index] = [date, category, amount, description, payment_method]
-
-        # Write back to file
-        with open(user_file, 'w') as f:
-            for expense in expenses:
-                f.write(','.join(expense) + '\n')
+        expense_to_edit.date = request.form['date']
+        expense_to_edit.category = request.form['category']
+        expense_to_edit.amount = float(request.form['amount'])
+        expense_to_edit.description = request.form['description']
+        expense_to_edit.payment_method = request.form['payment_method']
+        
+        db.session.commit()
 
         flash('Expense updated successfully!', 'success')
         return redirect(url_for('view_expense'))
 
-    # GET request - show edit form with current data
-    expense = expenses[expense_index]
-    return render_template('edit_expense.html', expense=expense, expense_index=expense_index)
+    expense_list = [expense_to_edit.date, expense_to_edit.category, str(expense_to_edit.amount), expense_to_edit.description, expense_to_edit.payment_method]
+    return render_template('edit_expense.html', expense=expense_list, expense_index=expense_index)
 
 @app.route('/delete/<int:expense_index>')
 def delete_expense(expense_index):
@@ -549,23 +363,12 @@ def delete_expense(expense_index):
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    user_file = get_user_data_file(user_id)
+    expenses_obj = get_user_expenses_sorted(user_id)
 
-    expenses = []
-    with open(user_file, 'r') as f:
-        for line in f:
-            parts = line.strip().split(',')
-            if len(parts) >= 4:  # Changed to >= 4 to handle new payment_method field
-                # Handle backward compatibility - if no payment_method, add empty string
-                if len(parts) == 4:
-                    parts.append('')
-                expenses.append(parts)
-
-    if 0 <= expense_index < len(expenses):
-        expenses.pop(expense_index)
-        with open(user_file, 'w') as f:
-            for expense in expenses:
-                f.write(','.join(expense) + '\n')
+    if 0 <= expense_index < len(expenses_obj):
+        expense_to_delete = expenses_obj[expense_index]
+        db.session.delete(expense_to_delete)
+        db.session.commit()
         flash('Expense deleted successfully!', 'success')
     else:
         flash('Invalid expense index.', 'error')
@@ -587,37 +390,38 @@ def set_budget():
             month = request.form['month']
             year = request.form['year']
             year_month = f"{year}-{month}"
-            new_budget = float(request.form['budget'])
+            new_budget_amount = float(request.form['budget'])
 
-            if new_budget <= 0:
+            if new_budget_amount <= 0:
                 flash('Budget must be a positive number.', 'error')
                 return redirect(url_for('set_budget'))
 
-            budget_file = get_user_budget_file(user_id, year_month)
-            with open(budget_file, 'w') as f:
-                f.write(str(new_budget))
+            budget = Budget.query.filter_by(user_id=user_id, year_month=year_month).first()
+            if budget:
+                budget.amount = new_budget_amount
+            else:
+                budget = Budget(user_id=user_id, year_month=year_month, amount=new_budget_amount)
+                db.session.add(budget)
 
-            # Check if recurring budget is set
             if 'recurring' in request.form:
-                set_recurring_budget(user_id, new_budget)
-                flash(f'Recurring budget set to ₹{new_budget:.2f}! This will be applied to future months.', 'success')
+                user = db.session.get(User, user_id)
+                if user:
+                    user.recurring_budget = new_budget_amount
+                flash(f'Recurring budget set to ₹{new_budget_amount:.2f}! This will be applied to future months.', 'success')
             else:
                 flash(f'Budget for {month}/{year} updated successfully!', 'success')
 
+            db.session.commit()
             return redirect(url_for('dashboard'))
 
         except ValueError:
             flash('Please enter a valid budget amount.', 'error')
             return redirect(url_for('set_budget'))
 
-    from datetime import datetime
-    current_month = datetime.now().strftime("%m")
-    current_year = datetime.now().year
-
     return render_template('set_budget.html',
                          current_budget=current_budget,
-                         current_month=current_month,
-                         current_year=current_year)
+                         current_month=datetime.now().strftime("%m"),
+                         current_year=datetime.now().year)
 
 @app.route('/adjust_budget', methods=['POST'])
 def adjust_budget():
@@ -636,25 +440,26 @@ def adjust_budget():
             flash('Adjustment amount must be a positive number.', 'error')
             return redirect(url_for('dashboard'))
 
-        # Get current budget
-        current_budget = get_user_budget(user_id, current_year_month)
+        current_budget_amount = get_user_budget(user_id, current_year_month)
 
-        # Calculate new budget
         if adjustment_type == 'increase':
-            new_budget = current_budget + adjustment_amount
-            message = f'Budget increased by ₹{adjustment_amount:.2f}! New budget: ₹{new_budget:.2f}'
+            new_budget_amount = current_budget_amount + adjustment_amount
+            message = f'Budget increased by ₹{adjustment_amount:.2f}! New budget: ₹{new_budget_amount:.2f}'
         elif adjustment_type == 'decrease':
-            new_budget = max(0, current_budget - adjustment_amount)
-            message = f'Budget decreased by ₹{adjustment_amount:.2f}! New budget: ₹{new_budget:.2f}'
+            new_budget_amount = max(0, current_budget_amount - adjustment_amount)
+            message = f'Budget decreased by ₹{adjustment_amount:.2f}! New budget: ₹{new_budget_amount:.2f}'
         else:
             flash('Invalid adjustment type.', 'error')
             return redirect(url_for('dashboard'))
 
-        # Save new budget
-        budget_file = get_user_budget_file(user_id, current_year_month)
-        with open(budget_file, 'w') as f:
-            f.write(str(new_budget))
+        budget = Budget.query.filter_by(user_id=user_id, year_month=current_year_month).first()
+        if budget:
+            budget.amount = new_budget_amount
+        else:
+            budget = Budget(user_id=user_id, year_month=current_year_month, amount=new_budget_amount)
+            db.session.add(budget)
 
+        db.session.commit()
         flash(message, 'success')
         return redirect(url_for('dashboard'))
 
@@ -679,24 +484,25 @@ def quick_adjust_budget():
             flash('Invalid adjustment amount.', 'error')
             return redirect(url_for('dashboard'))
 
-        # Get current budget
-        current_budget = get_user_budget(user_id, current_year_month)
+        current_budget_amount = get_user_budget(user_id, current_year_month)
 
-        # Calculate new budget
         if action == 'add':
-            new_budget = current_budget + quick_amount
+            new_budget_amount = current_budget_amount + quick_amount
         elif action == 'subtract':
-            new_budget = max(0, current_budget - quick_amount)
+            new_budget_amount = max(0, current_budget_amount - quick_amount)
         else:
             flash('Invalid action.', 'error')
             return redirect(url_for('dashboard'))
 
-        # Save new budget
-        budget_file = get_user_budget_file(user_id, current_year_month)
-        with open(budget_file, 'w') as f:
-            f.write(str(new_budget))
+        budget = Budget.query.filter_by(user_id=user_id, year_month=current_year_month).first()
+        if budget:
+            budget.amount = new_budget_amount
+        else:
+            budget = Budget(user_id=user_id, year_month=current_year_month, amount=new_budget_amount)
+            db.session.add(budget)
 
-        flash(f'Budget adjusted by ₹{quick_amount:.2f}! New budget: ₹{new_budget:.2f}', 'success')
+        db.session.commit()
+        flash(f'Budget adjusted by ₹{quick_amount:.2f}! New budget: ₹{new_budget_amount:.2f}', 'success')
         return redirect(url_for('dashboard'))
 
     except ValueError:
@@ -710,8 +516,10 @@ def edit_profile():
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    username = session['username']
-    email = session['email']
+    user = db.session.get(User, user_id)
+    if not user:
+        session.clear()
+        return redirect(url_for('login'))
 
     if request.method == 'POST':
         new_username = request.form['username']
@@ -720,32 +528,16 @@ def edit_profile():
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
 
-        # Verify current password
-        with open(USERS_FILE, 'r') as f:
-            for line in f:
-                try:
-                    stored_username, stored_email, hashed_password, stored_user_id, registration_date = line.strip().split(',')
-                    if stored_user_id == user_id:
-                        if not verify_password(current_password, hashed_password):
-                            flash('Current password is incorrect.', 'error')
-                            return redirect(url_for('edit_profile'))
-                        break
-                except ValueError:
-                    continue
+        if not user.check_password(current_password):
+            flash('Current password is incorrect.', 'error')
+            return redirect(url_for('edit_profile'))
 
-        # Check if new username already exists (if changed)
-        if new_username != username:
-            with open(USERS_FILE, 'r') as f:
-                for line in f:
-                    try:
-                        stored_username, _, _, _, _ = line.strip().split(',')
-                        if stored_username == new_username:
-                            flash('Username already exists. Please choose a different one.', 'error')
-                            return redirect(url_for('edit_profile'))
-                    except ValueError:
-                        continue
+        if new_username != user.username:
+            existing_user = User.query.filter_by(username=new_username).first()
+            if existing_user:
+                flash('Username already exists. Please choose a different one.', 'error')
+                return redirect(url_for('edit_profile'))
 
-        # Validate new password if provided
         if new_password:
             if new_password != confirm_password:
                 flash('New passwords do not match.', 'error')
@@ -753,37 +545,19 @@ def edit_profile():
             if len(new_password) < 6:
                 flash('New password must be at least 6 characters long.', 'error')
                 return redirect(url_for('edit_profile'))
+            user.set_password(new_password)
 
-        # Update user data
-        updated_lines = []
-        with open(USERS_FILE, 'r') as f:
-            for line in f:
-                try:
-                    stored_username, stored_email, hashed_password, stored_user_id, registration_date = line.strip().split(',')
-                    if stored_user_id == user_id:
-                        # Update fields
-                        updated_username = new_username
-                        updated_email = new_email
-                        updated_password = hash_password(new_password) if new_password else hashed_password
-                        updated_line = f"{updated_username},{updated_email},{updated_password},{stored_user_id},{registration_date}\n"
-                        updated_lines.append(updated_line)
-                    else:
-                        updated_lines.append(line)
-                except ValueError:
-                    updated_lines.append(line)
+        user.username = new_username
+        user.email = new_email
+        db.session.commit()
 
-        # Write back to file
-        with open(USERS_FILE, 'w') as f:
-            f.writelines(updated_lines)
-
-        # Update session
         session['username'] = new_username
         session['email'] = new_email
 
         flash('Profile updated successfully!', 'success')
         return redirect(url_for('dashboard'))
 
-    return render_template('edit_profile.html', username=username, email=email)
+    return render_template('edit_profile.html', username=user.username, email=user.email)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
