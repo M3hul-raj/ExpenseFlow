@@ -9,7 +9,7 @@
 {% block content %}
 <div class="container-fluid px-4">
     <!-- Header -->
-<div class="row mb-5 mt-4">
+    <div class="row mb-5 mt-4">
         <div class="col-12">
             <div class="d-flex align-items-center">
                 <i class="fas fa-chart-line fa-2x text-primary me-3"></i>
@@ -21,7 +21,8 @@
         </div>
     </div>
 
-    <!-- Stats Cards Row -->  <div class="row g-4 mb-5">
+    <!-- Stats Cards Row -->
+    <div class="row g-4 mb-5">
         <div class="col-lg-4 col-md-6">
             <div class="card h-100 border-0 shadow-sm">
                 <div class="card-body text-center">
@@ -51,7 +52,8 @@
         </div>
     </div>
 
-    <!-- Budget Progress -->    <div class="row mb-5">
+    <!-- Budget Progress -->
+    <div class="row mb-5">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent border-0 pb-0">
@@ -61,11 +63,14 @@
                     <div class="row align-items-center">
                         <div class="col-md-8">
                             <div class="progress" style="height: 20px;">
-                                <div class="progress-bar {% if budget_progress > 90 %}bg-danger{% elif budget_progress > 75 %}bg-warning{% else %}bg-success{% endif %}" role="progressbar" style="width: {{ budget_progress }}%" aria-valuenow="{{ budget_progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar {% if budget_progress > 90 %}bg-danger{% elif budget_progress > 75 %}bg-warning{% else %}bg-success{% endif %}"
+                                    role="progressbar" style="width: {{ budget_progress }}%"
+                                    aria-valuenow="{{ budget_progress }}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                         <div class="col-md-4 text-end">
-                            <div class="h4 mb-1 fw-bold">₹{{ "%.2f"|format(current_month_spent) }} / ₹{{ "%.2f"|format(budget) }}</div>
+                            <div class="h4 mb-1 fw-bold">₹{{ "%.2f"|format(current_month_spent) }} / ₹{{
+                                "%.2f"|format(budget) }}</div>
                             <div class="text-muted">{{ "%.1f"|format(budget_progress) }}% used</div>
                         </div>
                     </div>
@@ -79,7 +84,8 @@
         </div>
     </div>
 
-    <!-- Charts Row -->   <div class="row g-4 mb-5">
+    <!-- Charts Row -->
+    <div class="row g-4 mb-5">
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-transparent pb-0">
@@ -93,7 +99,8 @@
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-header bg-transparent pb-0">
-                    <h5 class="card-title mb-0"><i class="fas fa-chart-line me-2 text-success"></i>Monthly Spending Trend</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-line me-2 text-success"></i>Monthly Spending
+                        Trend</h5>
                 </div>
                 <div class="card-body">
                     <canvas id="monthlyChart"></canvas>
@@ -102,7 +109,8 @@
         </div>
     </div>
 
-    <!-- Action Buttons --> <div class="row mb-5">
+    <!-- Action Buttons -->
+    <div class="row mb-5">
         <div class="col-12 text-center">
             <div class="btn-group" role="group">
                 <a href="{{ url_for('add_expense') }}" class="btn btn-primary btn-lg">
@@ -115,7 +123,7 @@
         </div>
     </div>
 
-    <!-- Recent Expenses Table -->  {% if expenses %}   <div class="row mb-5">
+    <!-- Recent Expenses Table --> {% if expenses %} <div class="row mb-5">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent">
@@ -151,12 +159,23 @@
             </div>
         </div>
     </div>
-    {% else %}  <div class="row mb-5">
-        <div class="col-12 text-center py-5">
-            <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
-            <h3 class="mb-3">No expenses yet</h3>
-            <p class="text-muted mb-4">Start by adding your first expense to see your spending patterns!</p>
-            <a href="{{ url_for('add_expense') }}" class="btn btn-primary btn-lg">Add First Expense</a>
+    {% else %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="empty-state-container text-center py-5"
+                style="background-color: #FFFFFF; border: 1px solid #E5E5E5; border-radius: 12px; margin-top: 2rem;">
+                <div class="empty-state-icon mb-3">
+                    <i class="fas fa-wallet" style="font-size: 3rem; color: #2563EB;"></i>
+                </div>
+                <h4 style="color: #18181B; font-weight: 700;">No expenses tracked yet</h4>
+                <p style="color: #52525B; max-width: 400px; margin: 0 auto 1.5rem auto;">
+                    You have a clean slate. Start tracking your daily spending to see your monthly budget breakdowns.
+                </p>
+                <a href="{{ url_for('add_expense') }}" class="btn"
+                    style="background-color: #2563EB; color: #FFFFFF; font-weight: 500; padding: 10px 24px; border-radius: 6px; text-decoration: none;">
+                    + Add Your First Expense
+                </a>
+            </div>
         </div>
     </div>
     {% endif %}
@@ -165,63 +184,63 @@
 
 {% block scripts %}
 <script>
-window.chartData = {
-    categories: {{ categories|tojson }},
-    categoryAmounts: {{ category_amounts|tojson }},
-    months: {{ months|tojson }},
-    monthlyAmounts: {{ monthly_amounts|tojson }}
+    window.chartData = {
+        categories: {{ categories | tojson }},
+    categoryAmounts: { { category_amounts | tojson } },
+    months: { { months | tojson } },
+    monthlyAmounts: { { monthly_amounts | tojson } }
 };
 
-if (window.chartData.categories && window.chartData.categories.length > 0) {
-    const categoryCtx = document.getElementById('categoryChart')?.getContext('2d');
-    if (categoryCtx) {
-        new Chart(categoryCtx, {
-            type: 'pie',
-            data: {
-                labels: window.chartData.categories,
-                datasets: [{
-                    data: window.chartData.categoryAmounts,
-                    backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'bottom' } }
-            }
-        });
-    }
-}
-
-if (window.chartData.months && window.chartData.months.length > 0) {
-    const monthlyCtx = document.getElementById('monthlyChart')?.getContext('2d');
-    if (monthlyCtx) {
-        new Chart(monthlyCtx, {
-            type: 'line',
-            data: {
-                labels: window.chartData.months,
-                datasets: [{
-                    label: 'Monthly Spending',
-                    data: window.chartData.monthlyAmounts,
-                    borderColor: '#36A2EB',
-                    backgroundColor: 'rgba(54,162,235,0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { callback: value => '₹' + value.toFixed(2) }
-                    }
+    if (window.chartData.categories && window.chartData.categories.length > 0) {
+        const categoryCtx = document.getElementById('categoryChart')?.getContext('2d');
+        if (categoryCtx) {
+            new Chart(categoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: window.chartData.categories,
+                    datasets: [{
+                        data: window.chartData.categoryAmounts,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
+                        borderWidth: 1
+                    }]
                 },
-                plugins: { legend: { display: false } }
-            }
-        });
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
     }
-}
+
+    if (window.chartData.months && window.chartData.months.length > 0) {
+        const monthlyCtx = document.getElementById('monthlyChart')?.getContext('2d');
+        if (monthlyCtx) {
+            new Chart(monthlyCtx, {
+                type: 'line',
+                data: {
+                    labels: window.chartData.months,
+                    datasets: [{
+                        label: 'Monthly Spending',
+                        data: window.chartData.monthlyAmounts,
+                        borderColor: '#36A2EB',
+                        backgroundColor: 'rgba(54,162,235,0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { callback: value => '₹' + value.toFixed(2) }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    }
 </script>
 {% endblock %}
