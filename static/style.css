@@ -1247,3 +1247,6 @@ a:hover {
         padding: 1rem;
     }
 }
+
+.btn-outline-dark { border: 1px solid #E5E5E5; color: #18181B; background: transparent; transition: all 0.2s ease; }
+.btn-outline-dark:hover { background: #FAFAF9; color: #000000; border-color: #D4D4D8; }

@@ -18,7 +18,7 @@
 .navbar-brand.nav-logo {
     font-size: 1.5rem !important;
     font-weight: 700 !important;
-    background: linear-gradient(45deg, #4F46E5, #7C3AED) !important;
+    background: #FFFFFF;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
@@ -56,8 +56,8 @@
 }
 
 .navbar-nav .nav-link:hover {
-    color: #4F46E5 !important;
-    background: rgba(79, 70, 229, 0.08) !important;
+    color: #000000 !important;
+    background: #FAFAF9 !important;
 }
 
 /* Hover underline animation */
@@ -69,7 +69,7 @@
     transform: translateX(-50%) !important;
     width: 0 !important;
     height: 2px !important;
-    background: linear-gradient(45deg, #4F46E5, #7C3AED) !important;
+    background: #FFFFFF;
     transition: width 0.3s ease !important;
     border-radius: 2px !important;
 }
@@ -80,7 +80,7 @@
 
 /* Active state */
 .navbar-nav .nav-link.active {
-    color: #4F46E5 !important;
+    color: #000000 !important;
     background: rgba(79, 70, 229, 0.12) !important;
     font-weight: 600 !important;
 }
@@ -91,7 +91,7 @@
 
 /* CTA buttons (Login/SignUp/Logout) */
 .navbar-nav .nav-cta {
-    background: linear-gradient(45deg, #4F46E5, #7C3AED) !important;
+    background: #FFFFFF;
     color: white !important;
     box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3) !important;
     border-radius: 20px !important;
@@ -128,7 +128,7 @@
 
 .nav-logo i {
     margin-right: 0.5rem !important;
-    color: #4F46E5 !important;
+    color: #000000 !important;
 }
 
 /* Container spacing */
@@ -143,3 +143,19 @@ body {
     padding-top: 80px !important;
 }
 
+
+.nav-cta {
+    background-color: #FFFFFF !important;
+    color: #18181B !important;
+    border: 1px solid #E5E5E5 !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.nav-cta:hover {
+    background-color: #FAFAF9 !important;
+    color: #000000 !important;
+    transform: none !important;
+    box-shadow: none !important;
+}

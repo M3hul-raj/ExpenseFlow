@@ -184,7 +184,6 @@ main > section:last-of-type {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
 }
 
-/* Solid Icon Wrappers */
 .icon-wrapper {
     display: inline-flex;
     align-items: center;
@@ -192,7 +191,7 @@ main > section:last-of-type {
     width: 64px;
     height: 64px;
     border-radius: 12px;
-    background: #FAFAF9;
+    background: #F4F4F5;
     border: 1px solid #E5E5E5;
     margin-bottom: 1.5rem;
 }
@@ -236,3 +235,6 @@ main > section:last-of-type {
         margin-bottom: 2rem;
     }
 }
+
+/* Overrides for How It Works Numbers */
+.h2.fw-bold { color: #18181B !important; }
