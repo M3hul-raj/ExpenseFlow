@@ -1,9 +1,23 @@
 import hashlib
+import logging
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from datetime import datetime
 import random, os
 from dateutil.relativedelta import relativedelta
 from models import db, User, Expense, Budget
+
+# ── Logging setup ─────────────────────────────────────────────────────────────
+# Logs to a rotating file in the project root; INFO level for general events,
+# WARNING/ERROR for security/DB issues.
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    handlers=[
+        logging.FileHandler('expenseflow.log', encoding='utf-8'),
+        logging.StreamHandler(),         # also print to console in dev
+    ]
+)
+logger = logging.getLogger('expenseflow')
 
 app = Flask(__name__)
 # --- CUSTOM JINJA FILTERS ---
@@ -48,12 +62,18 @@ TIPS = [
 ]
 
 def is_logged_in():
+    """Return True if a user session is currently active."""
     return 'user_id' in session
 
 def get_current_year_month():
+    """Return the current month in YYYY-MM format."""
     return datetime.now().strftime("%Y-%m")
 
 def get_user_budget(user_id, year_month=None):
+    """
+    Return the budget amount for a given user and month.
+    Priority: explicit Budget row > recurring_budget on User > default 2000.
+    """
     if not year_month:
         year_month = get_current_year_month()
         
@@ -68,6 +88,7 @@ def get_user_budget(user_id, year_month=None):
     return 2000.0  # Default budget
 
 def get_monthly_spending(user_id, year_month):
+    """Return total amount spent by a user in the given YYYY-MM month."""
     expenses = Expense.query.filter(
         Expense.user_id == user_id,
         Expense.date.startswith(year_month)
@@ -75,6 +96,11 @@ def get_monthly_spending(user_id, year_month):
     return sum(e.amount for e in expenses)
 
 def get_budget_history(user_id, months=6):
+    """
+    Build a budget vs spending summary for the last N months.
+    Returns a list of dicts with keys: month, year_month, budget, spending,
+    status ('On Track' / 'Near Limit' / 'Over Budget'), remaining.
+    """
     import calendar
     history = []
     current_date = datetime.now()
@@ -104,16 +130,23 @@ def get_budget_history(user_id, months=6):
     return history
 
 def get_user_expenses_sorted(user_id):
+    """Return all expenses for a user sorted newest-first by date."""
     expenses = Expense.query.filter_by(user_id=user_id).all()
     expenses.sort(key=lambda x: x.date, reverse=True)
     return expenses
 
 @app.route('/')
 def index():
+    """Render the public landing page."""
     return render_template('index.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    GET:  Show registration form.
+    POST: Validate input, create a new User record, redirect to login.
+    Rejects: duplicate usernames/emails, weak passwords, malformed input.
+    """
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
         email    = request.form.get('email', '').strip()
@@ -156,6 +189,7 @@ def register():
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
+        logger.info('New user registered: %s (%s)', username, email)
 
         flash('Registration successful! Please log in.', 'success')
         return redirect(url_for('login'))
@@ -164,6 +198,11 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    """
+    GET:  Show login form; redirect to dashboard if already logged in.
+    POST: Authenticate credentials, set session, redirect to dashboard.
+    Logs failed attempts for auditing.
+    """
     if is_logged_in():
         return redirect(url_for('dashboard'))
 
@@ -185,13 +224,17 @@ def login():
             session['user_id'] = user.id
             session['username'] = user.username
             session['email'] = user.email
+            logger.info('User logged in: %s', user.username)
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
 
+        # Failed login — log and flash appropriate message
         if not user:
+            logger.warning('Login attempt for unknown user: %s', username_or_email)
             flash('User does not exist. Please sign up first!', 'error')
             return redirect(url_for('register'))
         else:
+            logger.warning('Wrong password for user: %s', username_or_email)
             flash('Invalid password. Please try again!', 'error')
             return redirect(url_for('login'))
 
@@ -199,12 +242,21 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """Clear the user session and redirect to the landing page."""
+    logger.info('User logged out: %s', session.get('username', 'unknown'))
     session.clear()
     flash('You have been logged out.', 'info')
     return redirect(url_for('index'))
 
 @app.route('/dashboard')
 def dashboard():
+    """
+    Main authenticated dashboard.
+    Computes: monthly spending totals, category/monthly breakdowns,
+    budget progress, 6-month budget history, and chart data.
+    Determines budget_alert_level ('none' / 'warning' / 'danger')
+    for the dismissible banner in the template.
+    """
     if not is_logged_in():
         flash('Please log in to access your dashboard.', 'error')
         return redirect(url_for('login'))
@@ -290,6 +342,12 @@ def dashboard():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_expense():
+    """
+    GET:  Show the add-expense form with current budget context.
+    POST: Validate all fields server-side, persist a new Expense record.
+    Validation: date format, category whitelist, positive amount cap,
+    payment method whitelist, description length.
+    """
     if not is_logged_in():
         flash('Please log in to add expenses.', 'error')
         return redirect(url_for('login'))
@@ -345,6 +403,7 @@ def add_expense():
         )
         db.session.add(new_expense)
         db.session.commit()
+        logger.info('Expense added: user=%s amount=%.2f category=%s', user_id, amount, category)
 
         flash('Expense added successfully!', 'success')
         return redirect(url_for('dashboard'))
@@ -374,6 +433,11 @@ def add_expense():
 
 @app.route('/view')
 def view_expense():
+    """
+    Transactions list page.
+    Aggregates all user expenses into category, monthly and payment-method
+    totals for the filter UI; passes the raw expense list for JS filtering.
+    """
     if not is_logged_in():
         flash('Please log in to view expenses.', 'error')
         return redirect(url_for('login'))
@@ -422,6 +486,11 @@ def view_expense():
 
 @app.route('/edit/<int:expense_index>', methods=['GET', 'POST'])
 def edit_expense(expense_index):
+    """
+    GET:  Load an existing expense into the edit form.
+    POST: Validate and persist the updated fields.
+    expense_index is a positional index into the user's date-sorted expense list.
+    """
     if not is_logged_in():
         flash('Please log in to edit expenses.', 'error')
         return redirect(url_for('login'))
@@ -452,6 +521,10 @@ def edit_expense(expense_index):
 
 @app.route('/delete/<int:expense_index>')
 def delete_expense(expense_index):
+    """
+    Delete the expense at the given positional index in the user's sorted list.
+    Redirects to the transactions page with a success or error flash.
+    """
     if not is_logged_in():
         flash('Please log in to delete expenses.', 'error')
         return redirect(url_for('login'))
@@ -463,14 +536,21 @@ def delete_expense(expense_index):
         expense_to_delete = expenses_obj[expense_index]
         db.session.delete(expense_to_delete)
         db.session.commit()
+        logger.info('Expense deleted: user=%s id=%s', user_id, expense_to_delete.id)
         flash('Expense deleted successfully!', 'success')
     else:
-        flash('Invalid expense index.', 'error')
+        logger.warning('Invalid delete index %s for user %s', expense_index, user_id)
+        flash('Expense not found.', 'error')
 
     return redirect(url_for('view_expense'))
 
 @app.route('/set_budget', methods=['GET', 'POST'])
 def set_budget():
+    """
+    GET:  Show the set-budget form with the current month's budget pre-filled.
+    POST: Validate the submitted budget amount, upsert the Budget record.
+          If 'recurring' checkbox is checked, also update user.recurring_budget.
+    """
     if not is_logged_in():
         flash('Please log in to set your budget.', 'error')
         return redirect(url_for('login'))
@@ -519,6 +599,10 @@ def set_budget():
 
 @app.route('/adjust_budget', methods=['POST'])
 def adjust_budget():
+    """
+    Increase or decrease the current month's budget by a given amount.
+    Reads 'adjustment_type' ('increase'|'decrease') and 'adjustment_amount' from POST.
+    """
     if not is_logged_in():
         flash('Please log in to adjust your budget.', 'error')
         return redirect(url_for('login'))
@@ -563,6 +647,10 @@ def adjust_budget():
 
 @app.route('/quick_adjust_budget', methods=['POST'])
 def quick_adjust_budget():
+    """
+    Quick ± budget adjustment from the dashboard modal.
+    Reads 'action' ('add'|'subtract') and 'quick_amount' from POST.
+    """
     if not is_logged_in():
         flash('Please log in to adjust your budget.', 'error')
         return redirect(url_for('login'))
@@ -605,6 +693,11 @@ def quick_adjust_budget():
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
+    """
+    GET:  Show the profile edit form with current username/email.
+    POST: Validate current password, apply username/email/password changes.
+    Prevents duplicate usernames/emails.
+    """
     if not is_logged_in():
         flash('Please log in to edit your profile.', 'error')
         return redirect(url_for('login'))
@@ -655,6 +748,12 @@ def edit_profile():
 
 @app.route('/analytics')
 def analytics():
+    """
+    Spending analytics page with 9 sections:
+    KPI cards, trend banner, category breakdown + table, MoM grouped bar,
+    daily bar chart, payment method chart, top 5 expenses, calendar heatmap.
+    Accepts ?month=YYYY-MM query param to switch months.
+    """
     if not is_logged_in():
         flash('Please log in to access analytics.', 'error')
         return redirect(url_for('login'))
@@ -842,6 +941,12 @@ def analytics():
 
 @app.route('/export/pdf')
 def export_pdf():
+    """
+    Generate and stream a PDF expense report for the selected month.
+    Uses ReportLab SimpleDocTemplate with Platypus for layout.
+    Accepts ?month=YYYY-MM; defaults to current month.
+    Returns the PDF as a file download attachment.
+    """
     if not is_logged_in():
         flash('Please log in first.', 'error')
         return redirect(url_for('login'))
