@@ -223,7 +223,7 @@ def dashboard():
     # budget_alert_level is used by the template banner (no flash — handled client-side)
     if budget_progress >= 100:
         budget_alert_level = 'danger'
-    elif budget_progress >= 80:
+    elif budget_progress >= 90:
         budget_alert_level = 'warning'
     else:
         budget_alert_level = 'none'
@@ -291,6 +291,7 @@ def add_expense():
     add_budget = get_user_budget(user_id, current_ym)
     add_budget_remaining = add_budget - month_spent
     add_budget_pct = (month_spent / add_budget * 100) if add_budget > 0 else 0
+    # threshold for badge/strip colour: 90%
 
     return render_template('add_expense_updated.html',
         current_date=datetime.now(),
