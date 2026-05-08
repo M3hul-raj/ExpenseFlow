@@ -16,7 +16,8 @@ def format_currency(value):
     except (ValueError, TypeError):
         return "₹0.00"
 
-app.secret_key = 'your-secret-key-change-this-in-production'
+# SECRET_KEY: read from environment in production; use a strong fallback for dev
+app.secret_key = os.environ.get('EXPENSEFLOW_SECRET_KEY', 'dev-only-fallback-change-in-prod-!@#')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -114,15 +115,31 @@ def index():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+        username = request.form.get('username', '').strip()
+        email    = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
 
+        # ── Server-side validation ────────────────────────────────────────
+        import re
+        if not username or len(username) < 3:
+            flash('Username must be at least 3 characters long.', 'error')
+            return redirect(url_for('register'))
+        if len(username) > 30:
+            flash('Username must be 30 characters or fewer.', 'error')
+            return redirect(url_for('register'))
+        if not re.match(r'^[a-zA-Z0-9_]+$', username):
+            flash('Username may only contain letters, numbers, and underscores.', 'error')
+            return redirect(url_for('register'))
+        if not email or '@' not in email or '.' not in email.split('@')[-1]:
+            flash('Please enter a valid email address.', 'error')
+            return redirect(url_for('register'))
+        if not password:
+            flash('Password is required.', 'error')
+            return redirect(url_for('register'))
         if password != confirm_password:
             flash('Passwords do not match.', 'error')
             return redirect(url_for('register'))
-
         if len(password) < 6:
             flash('Password must be at least 6 characters long.', 'error')
             return redirect(url_for('register'))
@@ -151,8 +168,16 @@ def login():
         return redirect(url_for('dashboard'))
 
     if request.method == 'POST':
-        username_or_email = request.form['username']
-        password = request.form['password']
+        username_or_email = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+
+        # ── Server-side validation ────────────────────────────────────────
+        if not username_or_email:
+            flash('Please enter your username or email.', 'error')
+            return redirect(url_for('login'))
+        if not password:
+            flash('Please enter your password.', 'error')
+            return redirect(url_for('login'))
 
         user = User.query.filter((User.username == username_or_email) | (User.email == username_or_email)).first()
         
@@ -270,19 +295,51 @@ def add_expense():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        date = request.form['date']
-        category = request.form['category']
-        amount = request.form['amount']
-        description = request.form['description']
-        payment_method = request.form['payment_method']
+        date            = request.form.get('date', '').strip()
+        category        = request.form.get('category', '').strip()
+        amount_raw      = request.form.get('amount', '').strip()
+        description     = request.form.get('description', '').strip()
+        payment_method  = request.form.get('payment_method', '').strip()
 
+        # ── Server-side validation ────────────────────────────────────────
+        VALID_CATEGORIES = {
+            'Food','Transport','Shopping','Entertainment','Health',
+            'Utilities','Education','Travel','Personal Care','Home','Insurance','Other'
+        }
+        VALID_METHODS = {'Cash','UPI','Credit Card','Debit Card','Net Banking','Digital Wallet','Other'}
+        import re as _re
+        if not date or not _re.match(r'\d{4}-\d{2}-\d{2}', date):
+            flash('Please select a valid date.', 'error')
+            return redirect(url_for('add_expense'))
+        if category not in VALID_CATEGORIES:
+            flash('Please select a valid category.', 'error')
+            return redirect(url_for('add_expense'))
+        if not amount_raw:
+            flash('Amount is required.', 'error')
+            return redirect(url_for('add_expense'))
+        try:
+            amount = float(amount_raw)
+            if amount <= 0:
+                raise ValueError
+            if amount > 10_000_000:
+                flash('Amount seems too large. Please check your entry.', 'warning')
+                return redirect(url_for('add_expense'))
+        except ValueError:
+            flash('Please enter a valid positive amount.', 'error')
+            return redirect(url_for('add_expense'))
+        if payment_method not in VALID_METHODS:
+            flash('Please select a valid payment method.', 'error')
+            return redirect(url_for('add_expense'))
+        # Sanitise description
+        description = description[:255]
+
+        # ── Persist to database ───────────────────────────────────────────
         user_id = session['user_id']
-        
         new_expense = Expense(
             user_id=user_id,
             date=date,
             category=category,
-            amount=float(amount),
+            amount=amount,
             description=description,
             payment_method=payment_method
         )
@@ -292,7 +349,9 @@ def add_expense():
         flash('Expense added successfully!', 'success')
         return redirect(url_for('dashboard'))
 
+    # GET — compute budget context for the info strip
     user_id = session['user_id']
+
     current_ym = get_current_year_month()
     month_spent = sum(
         e.amount for e in Expense.query.filter(
