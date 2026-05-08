@@ -25,6 +25,18 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+# ── Error handlers ────────────────────────────────────────────────────────────
+@app.errorhandler(404)
+def page_not_found(e):
+    """Render a branded 404 page for any missing route."""
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(e):
+    """Render a branded 500 page for any unhandled server error."""
+    db.session.rollback()  # safety: clear any broken transaction
+    return render_template('500.html'), 500
+
 # Static tips to replace TIPS_FILE
 TIPS = [
     "Cook at home instead of eating out.",
