@@ -220,12 +220,16 @@ def dashboard():
     budget_chart_budgets = [item['budget'] for item in budget_history]
     budget_chart_spending = [item['spending'] for item in budget_history]
 
+    # budget_alert_level is used by the template banner (no flash — handled client-side)
     if budget_progress >= 100:
-        flash('⚠️ You have exceeded your monthly budget!', 'error')
+        budget_alert_level = 'danger'
     elif budget_progress >= 80:
-        flash('⚠️ You are approaching your budget limit (80% used).', 'warning')
+        budget_alert_level = 'warning'
+    else:
+        budget_alert_level = 'none'
 
     return render_template('dashboard.html',
+                         budget_alert_level=budget_alert_level,
                          expenses=expenses,
                          username=user.username,
                          email=user.email,
@@ -276,7 +280,25 @@ def add_expense():
         flash('Expense added successfully!', 'success')
         return redirect(url_for('dashboard'))
 
-    return render_template('add_expense_updated.html', current_date=datetime.now())
+    user_id = session['user_id']
+    current_ym = get_current_year_month()
+    month_spent = sum(
+        e.amount for e in Expense.query.filter(
+            Expense.user_id == user_id,
+            Expense.date.startswith(current_ym)
+        ).all()
+    )
+    add_budget = get_user_budget(user_id, current_ym)
+    add_budget_remaining = add_budget - month_spent
+    add_budget_pct = (month_spent / add_budget * 100) if add_budget > 0 else 0
+
+    return render_template('add_expense_updated.html',
+        current_date=datetime.now(),
+        budget=add_budget,
+        budget_spent=month_spent,
+        budget_remaining=add_budget_remaining,
+        budget_pct=add_budget_pct,
+    )
 
 @app.route('/view')
 def view_expense():

@@ -40,7 +40,28 @@
                 </div>
             </div>
 
+            <!-- Budget Status Strip -->
+            {% if budget > 0 %}
+            <div class="d-flex align-items-center gap-2 mb-3 px-1">
+                <i class="fas fa-wallet {% if budget_remaining <= 0 %}text-danger{% elif budget_pct >= 80 %}text-warning{% else %}text-success{% endif %}" style="font-size:0.9rem;"></i>
+                <span class="small fw-500" style="color:var(--text-secondary);">
+                    Budget this month:
+                    <strong style="color:{% if budget_remaining <= 0 %}var(--danger){% elif budget_pct >= 80 %}#D97706{% else %}var(--success){% endif %};">
+                        {% if budget_remaining > 0 %}₹{{ "%.0f"|format(budget_remaining) }} remaining{% else %}₹{{ "%.0f"|format(budget_remaining|abs) }} over budget{% endif %}
+                    </strong>
+                    <span class="text-secondary">(₹{{ "%.0f"|format(budget_spent) }} spent of ₹{{ "%.0f"|format(budget) }})</span>
+                </span>
+                {% if budget_pct >= 80 %}
+                <span class="badge rounded-pill ms-auto"
+                      style="font-size:0.7rem;{% if budget_remaining <= 0 %}background:var(--danger-bg);color:var(--danger);{% else %}background:#FEF3C7;color:#92400E;{% endif %}">
+                    {{ "%.0f"|format(budget_pct) }}% used
+                </span>
+                {% endif %}
+            </div>
+            {% endif %}
+
             <!-- Main Form -->
+
             <div class="fintech-card">
                 <form method="POST" id="expenseForm">
                     <div class="row g-3">

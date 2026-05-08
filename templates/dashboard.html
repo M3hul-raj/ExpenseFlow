@@ -88,7 +88,58 @@
         </a>
     </div>
 
+    <!-- ─── Budget Alert Banner ──────────────────────────────────── -->
+    {% if budget_alert_level != 'none' %}
+    <div id="budgetAlertBanner"
+         class="mb-4 rounded-3 px-4 py-3 d-flex align-items-center justify-content-between gap-3"
+         style="{% if budget_alert_level == 'danger' %}background:var(--danger-bg);border:1px solid rgba(239,68,68,0.35);{% else %}background:#FFFBEB;border:1px solid rgba(245,158,11,0.4);{% endif %}">
+        <div class="d-flex align-items-center gap-3">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                 style="width:40px;height:40px;font-size:1.1rem;{% if budget_alert_level == 'danger' %}background:rgba(239,68,68,0.15);color:var(--danger);{% else %}background:rgba(245,158,11,0.15);color:#D97706;{% endif %}">
+                <i class="fas fa-{% if budget_alert_level == 'danger' %}exclamation-circle{% else %}exclamation-triangle{% endif %}"></i>
+            </div>
+            <div>
+                {% if budget_alert_level == 'danger' %}
+                <p class="fw-bold mb-0" style="color:var(--danger);">
+                    Budget Exceeded &mdash; You have spent <strong>₹{{ "%.0f"|format(current_month_spent) }}</strong>
+                    of your ₹{{ "%.0f"|format(budget) }} budget ({{ "%.0f"|format(budget_progress) }}% used).
+                </p>
+                <p class="small mb-0" style="color:var(--danger);opacity:0.8;">
+                    Consider reviewing your spending or increasing your budget for this month.
+                </p>
+                {% else %}
+                <p class="fw-bold mb-0" style="color:#92400E;">
+                    Approaching Budget Limit &mdash; {{ "%.0f"|format(budget_progress) }}% used
+                    (₹{{ "%.0f"|format(current_month_spent) }} of ₹{{ "%.0f"|format(budget) }}).
+                </p>
+                <p class="small mb-0" style="color:#92400E;opacity:0.8;">
+                    Only <strong>₹{{ "%.0f"|format(budget - current_month_spent) }}</strong> remaining this month.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+        <button id="dismissBudgetAlert"
+                class="btn btn-sm rounded-circle flex-shrink-0"
+                style="width:32px;height:32px;padding:0;{% if budget_alert_level == 'danger' %}background:rgba(239,68,68,0.12);color:var(--danger);border:1px solid rgba(239,68,68,0.2);{% else %}background:rgba(245,158,11,0.12);color:#D97706;border:1px solid rgba(245,158,11,0.25);{% endif %}"
+                title="Dismiss for this session" aria-label="Dismiss">
+            <i class="fas fa-times" style="font-size:0.75rem;"></i>
+        </button>
+    </div>
+    <script>
+    (function() {
+        var key = 'ef_alert_{{ budget_alert_level }}_{{ current_date.strftime("%Y-%m") }}';
+        var banner = document.getElementById('budgetAlertBanner');
+        if (sessionStorage.getItem(key) === '1') { banner.style.display = 'none'; }
+        document.getElementById('dismissBudgetAlert').addEventListener('click', function() {
+            sessionStorage.setItem(key, '1');
+            banner.style.display = 'none';
+        });
+    })();
+    </script>
+    {% endif %}
+
     <!-- ─── Stat Cards ─── -->
+
     <div class="row g-3 mb-4">
         <!-- Total Spent -->
         <div class="col-sm-6 col-lg-3">
