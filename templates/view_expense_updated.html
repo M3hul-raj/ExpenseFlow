@@ -173,6 +173,9 @@
         <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom" style="border-color: var(--border-color) !important;">
             <span id="resultCount" class="text-secondary">Showing all {{ expenses|length }} records</span>
             <div class="d-flex gap-2">
+                <a href="{{ url_for('export_pdf') }}" class="btn btn-light btn-sm rounded-pill">
+                    <i class="fas fa-file-pdf me-1 text-danger"></i>Export PDF
+                </a>
                 <button onclick="exportToCSV()" class="btn btn-light btn-sm rounded-pill">
                     <i class="fas fa-file-csv me-1 text-success"></i>Export CSV
                 </button>
