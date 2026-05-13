@@ -49,14 +49,18 @@
     <!-- Main Content Area -->
     <main class="min-vh-100 pb-5">
         <div class="container-fluid px-4 px-lg-5 mt-4">
-            <!-- Flash Messages -->
+            <!-- Flash Messages — auto-dismiss after 4 s with smooth fade -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'error' else 'warning' if category == 'warning' else 'info' }} shadow-sm mb-4" role="alert">
-                            <i class="fas {% if category == 'success' %}fa-check-circle text-success{% elif category == 'error' %}fa-exclamation-circle text-danger{% else %}fa-info-circle text-info{% endif %} fs-5"></i>
-                            <div>{{ message }}</div>
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'error' else 'warning' if category == 'warning' else 'info' }} alert-dismissible shadow-sm mb-3 ef-flash"
+                         role="alert" id="flash-{{ loop.index }}">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="fas {% if category == 'success' %}fa-check-circle text-success{% elif category == 'error' %}fa-times-circle text-danger{% elif category == 'warning' %}fa-exclamation-triangle text-warning{% else %}fa-info-circle text-info{% endif %} fs-6 mt-1 flex-shrink-0"></i>
+                            <span>{{ message }}</span>
                         </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                     {% endfor %}
                 {% endif %}
             {% endwith %}
@@ -67,6 +71,28 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // ── Flash auto-dismiss after 4 seconds with smooth collapse ──────────────
+    (function () {
+        document.querySelectorAll('.ef-flash').forEach(function (el) {
+            setTimeout(function () {
+                el.style.transition = 'opacity 0.6s ease, transform 0.5s ease';
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(-4px)';
+                setTimeout(function () {
+                    el.style.transition += ', max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease';
+                    el.style.maxHeight = '0';
+                    el.style.overflow = 'hidden';
+                    el.style.marginBottom = '0';
+                    el.style.paddingTop = '0';
+                    el.style.paddingBottom = '0';
+                    setTimeout(function () { el.remove(); }, 420);
+                }, 620);
+            }, 4000);
+        });
+    })();
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
+

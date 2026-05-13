@@ -130,9 +130,12 @@
 
 {% block scripts %}
 <script>
-    // Set today's date as default
+    // Set today's date as default and as the max allowed date
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('date');
+        dateInput.value = today;
+        dateInput.max = today;  // prevent future date selection
     });
 
     // Quick add shortcuts

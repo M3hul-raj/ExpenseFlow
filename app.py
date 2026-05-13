@@ -300,9 +300,16 @@ def dashboard():
 
     categories = list(category_totals.keys())
     category_amounts = list(category_totals.values())
-    months = sorted(list(monthly_totals.keys()), reverse=True)[:6]
-    months.reverse() # chronologically
-    monthly_amounts = [monthly_totals.get(m, 0) for m in months]
+
+    # Always produce exactly 6 months of trend data (oldest → newest),
+    # filling ₹0 for months that have no recorded expenses.
+    months = []
+    monthly_amounts = []
+    for i in range(5, -1, -1):  # 5 months ago ... current month
+        d = datetime.now() - relativedelta(months=i)
+        ym = d.strftime('%Y-%m')
+        months.append(ym)
+        monthly_amounts.append(monthly_totals.get(ym, 0))
 
     budget_history = get_budget_history(user_id, 6)
     budget_chart_labels = [item['month'] for item in budget_history]
@@ -367,6 +374,15 @@ def add_expense():
         VALID_METHODS = {'Cash','UPI','Credit Card','Debit Card','Net Banking','Digital Wallet','Other'}
         import re as _re
         if not date or not _re.match(r'\d{4}-\d{2}-\d{2}', date):
+            flash('Please select a valid date.', 'error')
+            return redirect(url_for('add_expense'))
+        # Reject future dates
+        try:
+            expense_date = datetime.strptime(date, '%Y-%m-%d').date()
+            if expense_date > datetime.now().date():
+                flash('Expense date cannot be in the future.', 'error')
+                return redirect(url_for('add_expense'))
+        except ValueError:
             flash('Please select a valid date.', 'error')
             return redirect(url_for('add_expense'))
         if category not in VALID_CATEGORIES:
