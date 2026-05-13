@@ -167,6 +167,21 @@
         </div>
     </div>
 
+    <!-- ─── Tip of the Day ─── -->
+    {% if savings_tip %}
+    <div class="d-flex align-items-center gap-3 mb-4 px-3 py-2 rounded-3"
+         style="background: var(--primary-light); border: 1px solid rgba(79,70,229,0.12);">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+             style="width:34px;height:34px;background:rgba(79,70,229,0.12);color:var(--primary);font-size:0.9rem;">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <div>
+            <span class="text-secondary" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">Tip of the day</span>
+            <p class="mb-0" style="font-size:0.88rem;color:var(--text-primary);font-weight:500;">{{ savings_tip }}</p>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- ─── Table ─── -->
     {% if expenses %}
     <div class="fintech-card p-0">
