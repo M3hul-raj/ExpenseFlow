@@ -1,5 +1,5 @@
 import logging
-from flask import Flask, render_template, request, redirect, session, flash, url_for
+from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory
 from datetime import datetime
 import random, os
 from dateutil.relativedelta import relativedelta
@@ -50,6 +50,22 @@ def internal_error(e):
     """Render a branded 500 page for any unhandled server error."""
     db.session.rollback()  # safety: clear any broken transaction
     return render_template('500.html'), 500
+
+# ── PWA routes (service worker must be served from root for full scope) ───────
+@app.route('/sw.js')
+def service_worker():
+    """Serve the service worker from root scope for full PWA coverage."""
+    return send_from_directory('static', 'sw.js', mimetype='application/javascript')
+
+@app.route('/manifest.json')
+def manifest():
+    """Serve the PWA web app manifest."""
+    return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
+
+@app.route('/offline')
+def offline():
+    """Offline fallback page shown by the service worker when network is unavailable."""
+    return render_template('offline.html')
 
 # Static tips to replace TIPS_FILE
 TIPS = [

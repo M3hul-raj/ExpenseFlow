@@ -164,3 +164,28 @@
 2026-05-13 16:30:50,214 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:50] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2026-05-13 16:30:55,468 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:55] "GET /view HTTP/1.1" 200 -
 2026-05-13 16:30:55,514 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:55] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 17:39:54,058 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.236.223.40:5000
+2026-05-13 17:39:54,059 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-13 17:39:54,060 [INFO] werkzeug:  * Restarting with stat
+2026-05-13 17:39:54,778 [WARNING] werkzeug:  * Debugger is active!
+2026-05-13 17:39:54,780 [INFO] werkzeug:  * Debugger PIN: 117-012-724
+2026-05-13 17:41:43,978 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:43] "GET / HTTP/1.1" 200 -
+2026-05-13 17:41:44,071 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-13 17:41:44,167 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 17:41:44,283 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-13 17:41:44,287 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "GET /static/icons/icon-192x192.png HTTP/1.1" 200 -
+2026-05-13 17:41:44,295 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "GET /sw.js HTTP/1.1" 200 -
+2026-05-13 17:41:44,339 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 17:41:44,342 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "GET /offline HTTP/1.1" 200 -
+2026-05-13 17:41:44,366 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-13 17:41:44,372 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:41:44] "GET /static/icons/icon-512x512.png HTTP/1.1" 200 -
+2026-05-13 17:42:08,262 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:42:08] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-13 17:42:09,998 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:42:09] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-13 17:42:18,308 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:42:18] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-13 17:42:20,018 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:42:20] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-13 17:42:35,251 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:42:35] "GET / HTTP/1.1" 200 -
+2026-05-13 17:42:35,312 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:42:35] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-13 17:42:37,066 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 17:42:37] "[36mGET /sw.js HTTP/1.1[0m" 304 -
