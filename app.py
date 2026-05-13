@@ -1,4 +1,3 @@
-import hashlib
 import logging
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from datetime import datetime
@@ -521,16 +520,56 @@ def edit_expense(expense_index):
     expense_to_edit = expenses_obj[expense_index]
 
     if request.method == 'POST':
-        expense_to_edit.date = request.form['date']
-        expense_to_edit.category = request.form['category']
-        expense_to_edit.amount = float(request.form['amount'])
-        expense_to_edit.description = request.form['description']
-        expense_to_edit.payment_method = request.form['payment_method']
-        
+        import re as _re
+        date           = request.form.get('date', '').strip()
+        category       = request.form.get('category', '').strip()
+        amount_raw     = request.form.get('amount', '').strip()
+        description    = request.form.get('description', '').strip()
+        payment_method = request.form.get('payment_method', '').strip()
+
+        VALID_CATEGORIES = {
+            'Food','Transport','Shopping','Entertainment','Health',
+            'Utilities','Education','Travel','Personal Care','Home','Insurance','Other'
+        }
+        VALID_METHODS = {'Cash','UPI','Credit Card','Debit Card','Net Banking','Digital Wallet','Other'}
+
+        if not date or not _re.match(r'\d{4}-\d{2}-\d{2}', date):
+            flash('Please select a valid date.', 'error')
+            return redirect(url_for('edit_expense', expense_index=expense_index))
+        try:
+            if datetime.strptime(date, '%Y-%m-%d').date() > datetime.now().date():
+                flash('Expense date cannot be in the future.', 'error')
+                return redirect(url_for('edit_expense', expense_index=expense_index))
+        except ValueError:
+            flash('Please select a valid date.', 'error')
+            return redirect(url_for('edit_expense', expense_index=expense_index))
+        if category not in VALID_CATEGORIES:
+            flash('Please select a valid category.', 'error')
+            return redirect(url_for('edit_expense', expense_index=expense_index))
+        try:
+            amount = float(amount_raw)
+            if amount <= 0:
+                raise ValueError
+        except (ValueError, TypeError):
+            flash('Please enter a valid positive amount.', 'error')
+            return redirect(url_for('edit_expense', expense_index=expense_index))
+        if payment_method not in VALID_METHODS:
+            flash('Please select a valid payment method.', 'error')
+            return redirect(url_for('edit_expense', expense_index=expense_index))
+        description = description[:255]
+
+        expense_to_edit.date = date
+        expense_to_edit.category = category
+        expense_to_edit.amount = amount
+        expense_to_edit.description = description
+        expense_to_edit.payment_method = payment_method
+
         db.session.commit()
+        logger.info('Expense edited: user=%s id=%s', user_id, expense_to_edit.id)
 
         flash('Expense updated successfully!', 'success')
         return redirect(url_for('view_expense'))
+
 
     expense_list = [expense_to_edit.date, expense_to_edit.category, str(expense_to_edit.amount), expense_to_edit.description, expense_to_edit.payment_method]
     return render_template('edit_expense.html', expense=expense_list, expense_index=expense_index)
@@ -739,6 +778,12 @@ def edit_profile():
             existing_user = User.query.filter_by(username=new_username).first()
             if existing_user:
                 flash('Username already exists. Please choose a different one.', 'error')
+                return redirect(url_for('edit_profile'))
+
+        if new_email != user.email:
+            existing_email = User.query.filter_by(email=new_email).first()
+            if existing_email:
+                flash('Email already in use. Please choose a different one.', 'error')
                 return redirect(url_for('edit_profile'))
 
         if new_password:

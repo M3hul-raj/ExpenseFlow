@@ -37,7 +37,7 @@
                             <label for="category" class="form-label"><i class="fas fa-tags text-muted me-2"></i>Category</label>
                             <select class="form-select" id="category" name="category" required>
                                 <option value="">Select category…</option>
-                                {% for opt in ['Food', 'Food & Dining', 'Transport', 'Transportation', 'Shopping', 'Entertainment', 'Health', 'Healthcare', 'Utilities', 'Utilities & Bills', 'Education', 'Travel', 'Personal Care', 'Home', 'Home & Garden', 'Insurance', 'Other'] %}
+                                {% for opt in ['Food', 'Transport', 'Shopping', 'Entertainment', 'Health', 'Utilities', 'Education', 'Travel', 'Personal Care', 'Home', 'Insurance', 'Other'] %}
                                 <option value="{{ opt }}" {% if expense[1] == opt %}selected{% endif %}>{{ opt }}</option>
                                 {% endfor %}
                             </select>
@@ -47,7 +47,7 @@
                             <label for="payment_method" class="form-label"><i class="fas fa-credit-card text-muted me-2"></i>Payment Method</label>
                             <select class="form-select" id="payment_method" name="payment_method" required>
                                 <option value="">Select method…</option>
-                                {% for m in ['Cash', 'UPI', 'Credit Card', 'Debit Card', 'Net Banking', 'Digital Wallet', 'Wallet', 'Other'] %}
+                                {% for m in ['Cash', 'UPI', 'Credit Card', 'Debit Card', 'Net Banking', 'Digital Wallet', 'Other'] %}
                                 <option value="{{ m }}" {% if expense[4] == m %}selected{% endif %}>{{ m }}</option>
                                 {% endfor %}
                             </select>
