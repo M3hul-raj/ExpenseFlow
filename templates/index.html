@@ -22,6 +22,156 @@
                     <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">Get Started for Free</a>
                     <a href="{{ url_for('login') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill">Sign In</a>
                 </div>
+
+                <!-- ── Hero Visual: Floating Stat Cards ──────────────────── -->
+                <div class="hero-cards-wrap d-none d-md-flex mt-5 position-relative justify-content-center" aria-hidden="true">
+
+                    <!-- Card 1: Total Spent -->
+                    <div class="hero-card hero-card--float-a" style="--delay:0s;">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="hero-card-icon" style="background:#EEF2FF;color:#4F46E5;">
+                                <i class="fas fa-indian-rupee-sign"></i>
+                            </div>
+                            <div class="text-start">
+                                <p class="hero-card-label mb-0">This Month</p>
+                                <p class="hero-card-value mb-0">₹24,500</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Budget Progress -->
+                    <div class="hero-card hero-card--float-b" style="--delay:0.4s;">
+                        <p class="hero-card-label mb-2">Monthly Budget</p>
+                        <div class="hero-progress-track">
+                            <div class="hero-progress-fill" style="width:78%;"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <span class="hero-card-small">₹7,800 left</span>
+                            <span class="hero-card-small" style="color:#D97706;font-weight:600;">78% used</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Top Category -->
+                    <div class="hero-card hero-card--float-c" style="--delay:0.8s;">
+                        <p class="hero-card-label mb-2">Top Category</p>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="hero-trophy">🏆</span>
+                            <div>
+                                <p class="hero-card-value mb-0" style="font-size:1rem;">Shopping</p>
+                                <p class="hero-card-small mb-0">₹8,200 this month</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Streak -->
+                    <div class="hero-card hero-card--float-d" style="--delay:1.2s;">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="hero-streak-icon">
+                                <i class="fas fa-circle-check"></i>
+                            </div>
+                            <div class="text-start">
+                                <p class="hero-card-value mb-0" style="font-size:0.9rem;color:#065F46;">Under budget</p>
+                                <p class="hero-card-small mb-0">3 months in a row 🎉</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /hero-cards-wrap -->
+
+                <style>
+                /* ── Hero cards layout ───────────────────────────────────── */
+                .hero-cards-wrap {
+                    gap: 1rem;
+                    flex-wrap: wrap;
+                    align-items: flex-start;
+                    pointer-events: none;
+                    user-select: none;
+                }
+
+                .hero-card {
+                    background: #fff;
+                    border: 1px solid #E2E8F0;
+                    border-radius: 16px;
+                    box-shadow: 0 8px 24px rgba(15,23,42,0.07), 0 2px 6px rgba(15,23,42,0.04);
+                    padding: 1rem 1.25rem;
+                    min-width: 180px;
+                    max-width: 220px;
+                    animation-fill-mode: both;
+                    animation-timing-function: ease-in-out;
+                    animation-iteration-count: infinite;
+                    animation-direction: alternate;
+                }
+
+                /* Four distinct float keyframes at slightly different amplitudes */
+                @keyframes heroFloatA {
+                    from { transform: translateY(0px);  }
+                    to   { transform: translateY(-10px); }
+                }
+                @keyframes heroFloatB {
+                    from { transform: translateY(-4px); }
+                    to   { transform: translateY(8px);  }
+                }
+                @keyframes heroFloatC {
+                    from { transform: translateY(0px);  }
+                    to   { transform: translateY(-12px);}
+                }
+                @keyframes heroFloatD {
+                    from { transform: translateY(-6px); }
+                    to   { transform: translateY(6px);  }
+                }
+
+                .hero-card--float-a { animation-name: heroFloatA; animation-duration: 3.8s; animation-delay: var(--delay); margin-top: 12px; }
+                .hero-card--float-b { animation-name: heroFloatB; animation-duration: 4.4s; animation-delay: var(--delay); margin-top: 0;   }
+                .hero-card--float-c { animation-name: heroFloatC; animation-duration: 3.5s; animation-delay: var(--delay); margin-top: 24px;}
+                .hero-card--float-d { animation-name: heroFloatD; animation-duration: 5.0s; animation-delay: var(--delay); margin-top: 8px; }
+
+                /* Inner elements */
+                .hero-card-icon {
+                    width: 40px; height: 40px;
+                    border-radius: 10px;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 1rem; flex-shrink: 0;
+                }
+                .hero-card-label {
+                    font-size: 0.72rem;
+                    font-weight: 500;
+                    color: #64748B;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                }
+                .hero-card-value {
+                    font-size: 1.25rem;
+                    font-weight: 700;
+                    color: #0F172A;
+                    letter-spacing: -0.03em;
+                    line-height: 1.1;
+                }
+                .hero-card-small {
+                    font-size: 0.72rem;
+                    color: #94A3B8;
+                }
+                .hero-progress-track {
+                    height: 7px;
+                    background: #F1F5F9;
+                    border-radius: 9999px;
+                    overflow: hidden;
+                }
+                .hero-progress-fill {
+                    height: 100%;
+                    border-radius: 9999px;
+                    background: linear-gradient(90deg, #10B981 0%, #F59E0B 100%);
+                }
+                .hero-trophy { font-size: 1.4rem; line-height: 1; }
+                .hero-streak-icon {
+                    width: 34px; height: 34px;
+                    border-radius: 50%;
+                    background: #D1FAE5;
+                    color: #059669;
+                    display: flex; align-items: center; justify-content: center;
+                    font-size: 1rem; flex-shrink: 0;
+                }
+                </style>
+
                 {% endif %}
             </div>
         </div>
