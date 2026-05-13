@@ -17,3 +17,150 @@
 2026-05-13 15:03:27,151 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:03:27] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
 2026-05-13 15:03:30,525 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:03:30] "GET / HTTP/1.1" 200 -
 2026-05-13 15:03:30,544 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:03:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 15:58:01,279 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.236.223.40:5000
+2026-05-13 15:58:01,280 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-13 15:58:01,280 [INFO] werkzeug:  * Restarting with stat
+2026-05-13 15:58:01,879 [WARNING] werkzeug:  * Debugger is active!
+2026-05-13 15:58:01,883 [INFO] werkzeug:  * Debugger PIN: 117-012-724
+2026-05-13 15:58:46,768 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:58:46] "GET /login HTTP/1.1" 200 -
+2026-05-13 15:58:46,861 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:58:46] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 15:58:57,651 [WARNING] expenseflow: Login attempt for unknown user: admin
+2026-05-13 15:58:57,652 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:58:57] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 15:58:57,661 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:58:57] "GET /register HTTP/1.1" 200 -
+2026-05-13 15:58:57,712 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:58:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 15:59:03,758 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:59:03] "GET /login HTTP/1.1" 200 -
+2026-05-13 15:59:03,795 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:59:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 15:59:14,619 [WARNING] expenseflow: Login attempt for unknown user: test
+2026-05-13 15:59:14,621 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:59:14] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 15:59:14,633 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:59:14] "GET /register HTTP/1.1" 200 -
+2026-05-13 15:59:14,705 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 15:59:14] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:00:00,994 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:00:00] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:00:01,011 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:00:01] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:00:01,071 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:00:01] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:00:27,363 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:00:27] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:00:27,402 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:00:27] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:00:58,475 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:00:58] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:00:58,528 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:00:58] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:01:12,587 [INFO] expenseflow: New user registered: audit1 (audit1@example.com)
+2026-05-13 16:01:12,589 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:01:12] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:01:12,597 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:01:12] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:01:12,636 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:01:12] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:01:30,335 [WARNING] expenseflow: Login attempt for unknown user: audit123
+2026-05-13 16:01:30,336 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:01:30] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:01:30,344 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:01:30] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:01:30,403 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:01:30] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:02:09,720 [INFO] expenseflow: New user registered: audit2 (audit2@example.com)
+2026-05-13 16:02:09,722 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:09] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:02:09,731 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:09] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:02:09,771 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:09] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:02:23,342 [WARNING] expenseflow: Login attempt for unknown user: audit123
+2026-05-13 16:02:23,345 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:23] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:02:23,357 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:23] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:02:23,407 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:23] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:02:33,202 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:33] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:02:33,230 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:33] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:02:54,701 [INFO] expenseflow: New user registered: user1 (user1@example.com)
+2026-05-13 16:02:54,703 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:54] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:02:54,714 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:54] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:02:54,755 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:02:54] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:03:26,719 [WARNING] expenseflow: Login attempt for unknown user: password123
+2026-05-13 16:03:26,722 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:26] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:03:26,743 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:26] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:03:26,810 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:26] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:03:43,442 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:43] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:03:43,492 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:43] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:03:57,203 [WARNING] expenseflow: Login attempt for unknown user: admin
+2026-05-13 16:03:57,206 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:57] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:03:57,214 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:57] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:03:57,251 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:03:57] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:04:39,595 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:04:39] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:04:39,600 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:04:39] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:04:39,632 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:04:39] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:05:15,555 [INFO] expenseflow: New user registered: audit4 (audit4@example.com)
+2026-05-13 16:05:15,557 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:15] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:05:15,565 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:15] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:05:15,602 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:05:25,035 [WARNING] expenseflow: Login attempt for unknown user: audit123
+2026-05-13 16:05:25,038 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:25] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:05:25,053 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:25] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:05:25,121 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:25] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:05:39,895 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:39] "[32mGET /view HTTP/1.1[0m" 302 -
+2026-05-13 16:05:39,910 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:39] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:05:39,963 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:39] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:05:55,634 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:55] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:05:55,679 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:05:55] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:06:39,372 [INFO] expenseflow: New user registered: audit_fin (audit_fin@example.com)
+2026-05-13 16:06:39,373 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:06:39] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:06:39,383 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:06:39] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:06:39,421 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:06:39] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:06:56,770 [WARNING] expenseflow: Login attempt for unknown user: audit123
+2026-05-13 16:06:56,771 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:06:56] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:06:56,791 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:06:56] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:06:56,853 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:06:56] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:07:51,046 [INFO] expenseflow: New user registered: admin_user (admin_user@example.com)
+2026-05-13 16:07:51,047 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:07:51] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:07:51,055 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:07:51] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:07:51,093 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:07:51] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:08:02,960 [WARNING] expenseflow: Login attempt for unknown user: admin12345678
+2026-05-13 16:08:02,961 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:08:02] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:08:02,968 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:08:02] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:08:03,014 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:08:03] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:15:33,648 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.236.223.40:5000
+2026-05-13 16:15:33,648 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-13 16:15:33,649 [INFO] werkzeug:  * Restarting with stat
+2026-05-13 16:15:34,259 [WARNING] werkzeug:  * Debugger is active!
+2026-05-13 16:15:34,261 [INFO] werkzeug:  * Debugger PIN: 117-012-724
+2026-05-13 16:16:41,438 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:16:41] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:16:41,564 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:16:41] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:16:41,612 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:16:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-13 16:17:15,846 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:15] "GET /register HTTP/1.1" 200 -
+2026-05-13 16:17:15,876 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:15] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:17:39,674 [INFO] expenseflow: New user registered: tiptest (tiptest@test.com)
+2026-05-13 16:17:39,675 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:39] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-13 16:17:39,683 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:39] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:17:39,714 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:39] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:17:59,783 [INFO] expenseflow: User logged in: tiptest
+2026-05-13 16:17:59,785 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:59] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:17:59,888 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:59] "GET /dashboard HTTP/1.1" 200 -
+2026-05-13 16:17:59,920 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:17:59] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:18:12,776 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:18:12] "GET /view HTTP/1.1" 200 -
+2026-05-13 16:18:12,807 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:18:12] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:20:17,850 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:20:17] "GET /add HTTP/1.1" 200 -
+2026-05-13 16:20:17,892 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:20:17] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:21:16,171 [INFO] expenseflow: Expense added: user=8 amount=50.00 category=Food
+2026-05-13 16:21:16,172 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:21:16] "[32mPOST /add HTTP/1.1[0m" 302 -
+2026-05-13 16:21:16,199 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:21:16] "GET /dashboard HTTP/1.1" 200 -
+2026-05-13 16:21:16,235 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:21:16] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:21:23,060 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:21:23] "GET /view HTTP/1.1" 200 -
+2026-05-13 16:21:23,088 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:21:23] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:29:16,067 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.236.223.40:5000
+2026-05-13 16:29:16,067 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-13 16:29:16,068 [INFO] werkzeug:  * Restarting with stat
+2026-05-13 16:29:16,694 [WARNING] werkzeug:  * Debugger is active!
+2026-05-13 16:29:16,695 [INFO] werkzeug:  * Debugger PIN: 117-012-724
+2026-05-13 16:30:07,076 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:07] "[32mGET /login HTTP/1.1[0m" 302 -
+2026-05-13 16:30:07,124 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:07] "GET /dashboard HTTP/1.1" 200 -
+2026-05-13 16:30:07,198 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:07] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:30:13,342 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:13] "GET /view HTTP/1.1" 200 -
+2026-05-13 16:30:13,388 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:13] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:30:22,910 [INFO] expenseflow: User logged out: tiptest
+2026-05-13 16:30:22,912 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:22] "[32mGET /logout HTTP/1.1[0m" 302 -
+2026-05-13 16:30:22,929 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:22] "GET / HTTP/1.1" 200 -
+2026-05-13 16:30:22,975 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:22] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:30:37,561 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:37] "GET /login HTTP/1.1" 200 -
+2026-05-13 16:30:37,609 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:37] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:30:50,136 [INFO] expenseflow: User logged in: tiptest
+2026-05-13 16:30:50,138 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:50] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-13 16:30:50,158 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:50] "GET /dashboard HTTP/1.1" 200 -
+2026-05-13 16:30:50,214 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:50] "[36mGET /static/main.css HTTP/1.1[0m" 304 -
+2026-05-13 16:30:55,468 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:55] "GET /view HTTP/1.1" 200 -
+2026-05-13 16:30:55,514 [INFO] werkzeug: 127.0.0.1 - - [13/May/2026 16:30:55] "[36mGET /static/main.css HTTP/1.1[0m" 304 -

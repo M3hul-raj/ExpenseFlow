@@ -3,20 +3,21 @@
 {% block title %}Add Expense - ExpenseFlow{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-7">
+<div class="container-xl px-4 py-4">
 
             <!-- Page Header -->
-            <div class="d-flex align-items-center mb-4">
-                <a href="{{ url_for('dashboard') }}" class="btn btn-light btn-sm rounded-pill me-3">
-                    <i class="fas fa-arrow-left me-1"></i>Back
-                </a>
+            <div class="d-flex align-items-center justify-content-between mb-4">
                 <div>
-                    <h2 class="fw-bold mb-0" style="font-size: 1.4rem;">Add New Expense</h2>
-                    <p class="text-secondary small mb-0">{{ current_date.strftime('%A, %d %B %Y') }}</p>
+                    <h1 class="fw-bold mb-1" style="font-size: 1.75rem;">Add New Expense</h1>
+                    <p class="text-secondary mb-0 small">{{ current_date.strftime('%A, %d %B %Y') }}</p>
                 </div>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-light rounded-pill d-none d-md-inline-flex">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
             </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
 
             <!-- Quick Add Shortcuts -->
             <div class="fintech-card mb-4">
@@ -40,28 +41,7 @@
                 </div>
             </div>
 
-            <!-- Budget Status Strip -->
-            {% if budget > 0 %}
-            <div class="d-flex align-items-center gap-2 mb-3 px-1">
-                <i class="fas fa-wallet {% if budget_remaining <= 0 %}text-danger{% elif budget_pct >= 90 %}text-warning{% else %}text-success{% endif %}" style="font-size:0.9rem;"></i>
-                <span class="small fw-500" style="color:var(--text-secondary);">
-                    Budget this month:
-                    <strong style="color:{% if budget_remaining <= 0 %}var(--danger){% elif budget_pct >= 90 %}#D97706{% else %}var(--success){% endif %};">
-                        {% if budget_remaining > 0 %}₹{{ "%.0f"|format(budget_remaining) }} remaining{% else %}₹{{ "%.0f"|format(budget_remaining|abs) }} over budget{% endif %}
-                    </strong>
-                    <span class="text-secondary">(₹{{ "%.0f"|format(budget_spent) }} spent of ₹{{ "%.0f"|format(budget) }})</span>
-                </span>
-                {% if budget_pct >= 90 %}
-                <span class="badge rounded-pill ms-auto"
-                      style="font-size:0.7rem;{% if budget_remaining <= 0 %}background:var(--danger-bg);color:var(--danger);{% else %}background:#FEF3C7;color:#92400E;{% endif %}">
-                    {{ "%.0f"|format(budget_pct) }}% used
-                </span>
-                {% endif %}
-            </div>
-            {% endif %}
-
             <!-- Main Form -->
-
             <div class="fintech-card">
                 <form method="POST" id="expenseForm">
                     <div class="row g-3">
@@ -124,8 +104,41 @@
             </div>
 
         </div>
+
+        <!-- Right Sidebar: Budget Info -->
+        <div class="col-lg-4">
+            {% if budget > 0 %}
+            <div class="fintech-card mb-4">
+                <div class="fintech-card-title mb-3">
+                    <i class="fas fa-wallet text-primary"></i>
+                    Budget Status
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-secondary small">₹{{ "%.0f"|format(budget_spent) }} spent</span>
+                    <span class="fw-bold small
+                        {% if budget_pct > 90 %}text-danger{% elif budget_pct > 75 %}text-warning{% else %}text-success{% endif %}">
+                        {{ "%.1f"|format(budget_pct) }}%
+                    </span>
+                </div>
+                <div style="background:var(--bg-color);border-radius:9999px;height:8px;overflow:hidden;">
+                    <div style="height:100%;border-radius:9999px;width:{{ [budget_pct, 100]|min }}%;"
+                         class="{% if budget_pct > 90 %}bg-danger{% elif budget_pct > 75 %}bg-warning{% else %}bg-success{% endif %}"></div>
+                </div>
+                <p class="text-secondary small mt-2 mb-0">
+                    <i class="fas fa-info-circle me-1"></i>
+                    {% if budget_remaining > 0 %}
+                        <strong style="color:var(--success);">₹{{ "%.0f"|format(budget_remaining) }}</strong> remaining of ₹{{ "%.0f"|format(budget) }}
+                    {% else %}
+                        <strong style="color:var(--danger);">₹{{ "%.0f"|format(budget_remaining|abs) }}</strong> over budget
+                    {% endif %}
+                </p>
+            </div>
+            {% endif %}
+        </div>
     </div>
+
 </div>
+
 {% endblock %}
 
 {% block scripts %}
