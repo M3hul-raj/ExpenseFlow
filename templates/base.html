@@ -14,7 +14,7 @@
     <script>
     (function() {
         var saved = localStorage.getItem('ef-theme');
-        var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        var theme = saved || 'dark';
         document.documentElement.setAttribute('data-theme', theme);
         var meta = document.getElementById('metaThemeColor');
         if (meta) meta.content = theme === 'dark' ? '#0A0A0F' : '#4F46E5';
