@@ -37,6 +37,15 @@
         font-weight: 600;
         box-shadow: inset 0 -2px 0 var(--primary);
     }
+    
+    #mobileMenu {
+        background-color: var(--bg-color) !important;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+    }
+    [data-theme="dark"] #mobileMenu {
+        background-color: #0A0A0F !important;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    }
     </style>
     {% block head %}{% endblock %}
 </head>
@@ -88,23 +97,23 @@
                     {% endif %}
                 </ul>
             </div>
+        </div>
 
-            <!-- Mobile Floating Menu -->
-            <div class="collapse position-absolute end-0 d-lg-none fintech-card mt-2 me-3 me-sm-4" id="mobileMenu" style="top: 100%; width: 250px; z-index: 1050; padding: 0.75rem 1.25rem; border-radius: var(--radius-md); box-shadow: var(--shadow-lg);">
-                <ul class="navbar-nav gap-2">
-                    {% if session.get('user_id') %}
-                        <li class="nav-item"><a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.endpoint == 'analytics' %}active{% endif %}" href="{{ url_for('analytics') }}">Analytics</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.endpoint == 'view_expense' %}active{% endif %}" href="{{ url_for('view_expense') }}">Transactions</a></li>
-                        <li class="nav-item"><a class="nav-link {% if request.endpoint == 'add_expense' %}active{% endif %}" href="{{ url_for('add_expense') }}">Add Record</a></li>
-                        <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 {% if request.endpoint == 'edit_profile' %}active{% endif %}" href="{{ url_for('edit_profile') }}"><span class="avatar avatar-sm avatar-{{ (session.get('avatar', 'avatar_1') | replace('avatar_', '')) }}"></span>Profile</a></li>
-                        <li class="nav-item mt-3 mb-2"><a class="nav-outline-btn w-100 text-center" href="{{ url_for('logout') }}">Sign Out</a></li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Sign In</a></li>
-                        <li class="nav-item mt-3 mb-2"><a class="nav-cta-btn w-100 text-center" href="{{ url_for('register') }}">Get Started</a></li>
-                    {% endif %}
-                </ul>
-            </div>
+        <!-- Mobile Full-Height Sidebar Dropdown -->
+        <div class="collapse position-absolute end-0 d-lg-none" id="mobileMenu" style="top: 100%; width: 280px; height: calc(100vh - 75px); z-index: 1050; padding: 1.5rem; border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); overflow-y: auto;">
+            <ul class="navbar-nav gap-2">
+                {% if session.get('user_id') %}
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'analytics' %}active{% endif %}" href="{{ url_for('analytics') }}">Analytics</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'view_expense' %}active{% endif %}" href="{{ url_for('view_expense') }}">Transactions</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.endpoint == 'add_expense' %}active{% endif %}" href="{{ url_for('add_expense') }}">Add Record</a></li>
+                    <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 {% if request.endpoint == 'edit_profile' %}active{% endif %}" href="{{ url_for('edit_profile') }}"><span class="avatar avatar-sm avatar-{{ (session.get('avatar', 'avatar_1') | replace('avatar_', '')) }}"></span>Profile</a></li>
+                    <li class="nav-item mt-3 mb-2"><a class="nav-outline-btn w-100 text-center" href="{{ url_for('logout') }}">Sign Out</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Sign In</a></li>
+                    <li class="nav-item mt-3 mb-2"><a class="nav-cta-btn w-100 text-center" href="{{ url_for('register') }}">Get Started</a></li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
 
