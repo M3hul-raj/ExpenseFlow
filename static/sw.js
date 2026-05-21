@@ -1,5 +1,5 @@
 // ExpenseFlow Service Worker — v1
-const CACHE_NAME = 'expenseflow-v1';
+const CACHE_NAME = 'expenseflow-v2';
 
 // Static assets to pre-cache on install
 const PRE_CACHE = [

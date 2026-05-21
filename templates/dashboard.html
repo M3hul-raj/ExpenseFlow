@@ -337,108 +337,108 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    // ── Indigo Design Palette ──
-    const PALETTE = {
-        indigo:  '#4F46E5',
-        violet:  '#7C3AED',
-        sky:     '#0EA5E9',
-        emerald: '#10B981',
-        amber:   '#F59E0B',
-        rose:    '#F43F5E',
-        slate:   '#64748B',
-        teal:    '#14B8A6',
-    };
-    const INDIGO_PALETTE = [
-        PALETTE.indigo, PALETTE.violet, PALETTE.sky,
-        PALETTE.emerald, PALETTE.amber, PALETTE.rose,
-        PALETTE.slate, PALETTE.teal
-    ];
-    Chart.defaults.font.family = "'Inter', sans-serif";
-    Chart.defaults.font.size   = 12;
-    Chart.defaults.color       = '#64748B';
-    Chart.defaults.plugins.legend.labels.boxWidth = 10;
-    Chart.defaults.plugins.legend.labels.padding  = 16;
-
-    // ── Category Donut Chart ──
-    const catData = {
-        categories:  {{ categories | tojson }},
-        amounts:     {{ category_amounts | tojson }}
-    };
-    if (catData.categories.length > 0) {
-        new Chart(document.getElementById('categoryChart'), {
-            type: 'doughnut',
-            data: {
-                labels: catData.categories,
-                datasets: [{
-                    data: catData.amounts,
-                    backgroundColor: INDIGO_PALETTE,
-                    borderColor:     '#ffffff',
-                    borderWidth:     3,
-                    hoverOffset:     8,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '68%',
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => ` ₹${ctx.parsed.toFixed(2)} (${((ctx.parsed / catData.amounts.reduce((a,b)=>a+b,0))*100).toFixed(1)}%)`
-                        }
-                    }
-                }
-            }
-        });
+    // ── Theme-aware chart helpers ──
+    function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+    function chartColors() {
+        var d = isDark();
+        return {
+            grid: d ? 'rgba(255,255,255,0.08)' : '#F1F5F9',
+            text: d ? '#94A3B8' : '#64748B',
+            border: d ? '#334155' : '#ffffff',
+            tooltipBg: d ? '#1E293B' : '#fff',
+            tooltipText: d ? '#F1F5F9' : '#0F172A',
+            tooltipBorder: d ? '#475569' : '#E2E8F0',
+        };
     }
 
-    // ── Monthly Trend Line Chart ──
-    const trendData = {
-        months:  {{ months | tojson }},
-        amounts: {{ monthly_amounts | tojson }}
-    };
-    if (trendData.months.length > 0) {
-        new Chart(document.getElementById('monthlyChart'), {
-            type: 'line',
-            data: {
-                labels: trendData.months,
-                datasets: [{
-                    label: 'Spending',
-                    data: trendData.amounts,
-                    borderColor:     PALETTE.indigo,
-                    backgroundColor: 'rgba(79, 70, 229, 0.08)',
-                    pointBackgroundColor: PALETTE.indigo,
-                    pointBorderColor:     '#ffffff',
-                    pointBorderWidth:     2,
-                    pointRadius:          5,
-                    pointHoverRadius:     7,
-                    borderWidth: 2.5,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: ctx => ` ₹${ctx.parsed.y.toFixed(2)}`
-                        }
-                    }
+    var catChartInstance, monthlyChartInstance;
+
+    function renderDashboardCharts() {
+        var c = chartColors();
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.font.size   = 12;
+        Chart.defaults.color       = c.text;
+        Chart.defaults.plugins.legend.labels.boxWidth = 10;
+        Chart.defaults.plugins.legend.labels.padding  = 16;
+
+        var PALETTE = {
+            indigo: '#4F46E5', violet: '#7C3AED', sky: '#0EA5E9',
+            emerald: '#10B981', amber: '#F59E0B', rose: '#F43F5E',
+            slate: '#64748B', teal: '#14B8A6',
+        };
+        if (isDark()) { PALETTE.indigo = '#6366F1'; PALETTE.violet = '#8B5CF6'; }
+        var INDIGO_PALETTE = [PALETTE.indigo, PALETTE.violet, PALETTE.sky, PALETTE.emerald, PALETTE.amber, PALETTE.rose, PALETTE.slate, PALETTE.teal];
+
+        var tooltipOpts = {
+            backgroundColor: c.tooltipBg,
+            titleColor: c.tooltipText,
+            bodyColor: c.tooltipText,
+            borderColor: c.tooltipBorder,
+            borderWidth: 1,
+        };
+
+        // ── Category Donut ──
+        var catData = {
+            categories: {{ categories | tojson }},
+            amounts:    {{ category_amounts | tojson }}
+        };
+        var catEl = document.getElementById('categoryChart');
+        if (catData.categories.length > 0 && catEl) {
+            if (catChartInstance) catChartInstance.destroy();
+            catChartInstance = new Chart(catEl, {
+                type: 'doughnut',
+                data: {
+                    labels: catData.categories,
+                    datasets: [{ data: catData.amounts, backgroundColor: INDIGO_PALETTE, borderColor: c.border, borderWidth: 3, hoverOffset: 8 }]
                 },
-                scales: {
-                    x: { grid: { display: false } },
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: '#F1F5F9' },
-                        ticks: { callback: v => '₹' + v }
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '68%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: Object.assign({ callbacks: { label: function(ctx) { return ' ₹' + ctx.parsed.toFixed(2) + ' (' + ((ctx.parsed / catData.amounts.reduce(function(a,b){return a+b},0))*100).toFixed(1) + '%)'; } } }, tooltipOpts)
                     }
                 }
-            }
-        });
+            });
+        }
+
+        // ── Monthly Trend Line ──
+        var trendData = {
+            months:  {{ months | tojson }},
+            amounts: {{ monthly_amounts | tojson }}
+        };
+        var trendEl = document.getElementById('monthlyChart');
+        if (trendData.months.length > 0 && trendEl) {
+            if (monthlyChartInstance) monthlyChartInstance.destroy();
+            monthlyChartInstance = new Chart(trendEl, {
+                type: 'line',
+                data: {
+                    labels: trendData.months,
+                    datasets: [{
+                        label: 'Spending', data: trendData.amounts,
+                        borderColor: PALETTE.indigo,
+                        backgroundColor: isDark() ? 'rgba(99, 102, 241, 0.1)' : 'rgba(79, 70, 229, 0.08)',
+                        pointBackgroundColor: PALETTE.indigo,
+                        pointBorderColor: c.border,
+                        pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7,
+                        borderWidth: 2.5, fill: true, tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: Object.assign({ callbacks: { label: function(ctx) { return ' ₹' + ctx.parsed.y.toFixed(2); } } }, tooltipOpts)
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: c.text } },
+                        y: { beginAtZero: true, grid: { color: c.grid }, ticks: { color: c.text, callback: function(v) { return '₹' + v; } } }
+                    }
+                }
+            });
+        }
     }
+
+    renderDashboardCharts();
+    window.addEventListener('themechange', function() { renderDashboardCharts(); });
 </script>
 {% endblock %}

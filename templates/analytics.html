@@ -312,94 +312,126 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-    Chart.defaults.font.family = "'Inter', sans-serif";
-    Chart.defaults.font.size   = 12;
-    Chart.defaults.color       = '#64748B';
+    function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+    function cc() {
+        var d = isDark();
+        return {
+            grid: d ? 'rgba(255,255,255,0.08)' : '#F1F5F9',
+            text: d ? '#94A3B8' : '#64748B',
+            border: d ? '#334155' : '#fff',
+            tooltipBg: d ? '#1E293B' : '#fff',
+            tooltipText: d ? '#F1F5F9' : '#0F172A',
+            tooltipBorder: d ? '#475569' : '#E2E8F0',
+        };
+    }
 
-    const PALETTE = ['#4F46E5','#7C3AED','#0EA5E9','#10B981','#F59E0B','#F43F5E','#64748B','#14B8A6'];
+    var PALETTE = ['#4F46E5','#7C3AED','#0EA5E9','#10B981','#F59E0B','#F43F5E','#64748B','#14B8A6'];
+    var _catC, _momC, _dailyC, _payC;
 
-    // ── Category Donut ──────────────────────────────────────────────────
-    {% if cat_labels %}
-    new Chart(document.getElementById('catChart'), {
-        type: 'doughnut',
-        data: {
-            labels: {{ cat_labels | tojson }},
-            datasets: [{ data: {{ cat_amounts | tojson }}, backgroundColor: PALETTE, borderColor: '#fff', borderWidth: 3, hoverOffset: 8 }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false, cutout: '68%',
-            plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.toFixed(2)} (${((ctx.parsed / {{ cat_amounts | sum }}) * 100).toFixed(1)}%)` } }
-            }
+    function renderAnalyticsCharts() {
+        var c = cc();
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.font.size   = 12;
+        Chart.defaults.color       = c.text;
+        if (isDark()) PALETTE[0] = '#6366F1';
+        else PALETTE[0] = '#4F46E5';
+
+        var tooltipOpts = { backgroundColor: c.tooltipBg, titleColor: c.tooltipText, bodyColor: c.tooltipText, borderColor: c.tooltipBorder, borderWidth: 1 };
+
+        // ── Category Donut ──
+        {% if cat_labels %}
+        var catEl = document.getElementById('catChart');
+        if (catEl) {
+            if (_catC) _catC.destroy();
+            _catC = new Chart(catEl, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ cat_labels | tojson }},
+                    datasets: [{ data: {{ cat_amounts | tojson }}, backgroundColor: PALETTE, borderColor: c.border, borderWidth: 3, hoverOffset: 8 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '68%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: Object.assign({ callbacks: { label: function(ctx) { return ' ₹' + ctx.parsed.toFixed(2) + ' (' + ((ctx.parsed / {{ cat_amounts | sum }}) * 100).toFixed(1) + '%)'; } } }, tooltipOpts)
+                    }
+                }
+            });
         }
-    });
-    {% endif %}
+        {% endif %}
 
-    // ── MoM Grouped Bar ─────────────────────────────────────────────────
-    new Chart(document.getElementById('momChart'), {
-        type: 'bar',
-        data: {
-            labels: {{ bh_labels | tojson }},
-            datasets: [
-                { label: 'Budget', data: {{ bh_budgets | tojson }}, backgroundColor: 'rgba(100,116,139,0.2)', borderColor: '#94a3b8', borderWidth: 1.5, borderRadius: 6 },
-                { label: 'Spent',  data: {{ bh_spending | tojson }}, backgroundColor: 'rgba(79,70,229,0.8)', borderColor: '#4F46E5', borderWidth: 0, borderRadius: 6 }
-            ]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'top' },
-                tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ₹${ctx.parsed.y.toFixed(2)}` } }
-            },
-            scales: {
-                x: { grid: { display: false } },
-                y: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { callback: v => '₹' + v } }
-            }
+        // ── MoM Grouped Bar ──
+        var momEl = document.getElementById('momChart');
+        if (momEl) {
+            if (_momC) _momC.destroy();
+            _momC = new Chart(momEl, {
+                type: 'bar',
+                data: {
+                    labels: {{ bh_labels | tojson }},
+                    datasets: [
+                        { label: 'Budget', data: {{ bh_budgets | tojson }}, backgroundColor: isDark() ? 'rgba(148,163,184,0.25)' : 'rgba(100,116,139,0.2)', borderColor: '#94a3b8', borderWidth: 1.5, borderRadius: 6 },
+                        { label: 'Spent',  data: {{ bh_spending | tojson }}, backgroundColor: isDark() ? 'rgba(99,102,241,0.85)' : 'rgba(79,70,229,0.8)', borderColor: PALETTE[0], borderWidth: 0, borderRadius: 6 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' }, tooltip: Object.assign({ callbacks: { label: function(ctx) { return ' ' + ctx.dataset.label + ': ₹' + ctx.parsed.y.toFixed(2); } } }, tooltipOpts) },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: c.text } },
+                        y: { beginAtZero: true, grid: { color: c.grid }, ticks: { color: c.text, callback: function(v) { return '₹' + v; } } }
+                    }
+                }
+            });
         }
-    });
 
-    // ── Daily Spending Bar ───────────────────────────────────────────────
-    {% if daily_amounts %}
-    const peakDay  = {{ peak_day if peak_day else 'null' }};
-    const dailyAmt = {{ daily_amounts | tojson }};
-    const dailyColors = dailyAmt.map((_, i) =>
-        (i + 1 === peakDay) ? '#EF4444' : (dailyAmt[i] > 0 ? 'rgba(79,70,229,0.75)' : 'rgba(79,70,229,0.1)')
-    );
-    new Chart(document.getElementById('dailyChart'), {
-        type: 'bar',
-        data: {
-            labels: {{ daily_labels | tojson }},
-            datasets: [{ label: 'Spent', data: dailyAmt, backgroundColor: dailyColors, borderRadius: 4, borderSkipped: false }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.y.toFixed(2)}` } } },
-            scales: {
-                x: { grid: { display: false }, ticks: { maxTicksLimit: 16 } },
-                y: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { callback: v => '₹' + v } }
-            }
+        // ── Daily Spending Bar ──
+        {% if daily_amounts %}
+        var dailyEl = document.getElementById('dailyChart');
+        if (dailyEl) {
+            if (_dailyC) _dailyC.destroy();
+            var peakDay  = {{ peak_day if peak_day else 'null' }};
+            var dailyAmt = {{ daily_amounts | tojson }};
+            var dailyColors = dailyAmt.map(function(_, i) {
+                return (i + 1 === peakDay) ? '#EF4444' : (dailyAmt[i] > 0 ? (isDark() ? 'rgba(99,102,241,0.8)' : 'rgba(79,70,229,0.75)') : (isDark() ? 'rgba(99,102,241,0.15)' : 'rgba(79,70,229,0.1)'));
+            });
+            _dailyC = new Chart(dailyEl, {
+                type: 'bar',
+                data: { labels: {{ daily_labels | tojson }}, datasets: [{ label: 'Spent', data: dailyAmt, backgroundColor: dailyColors, borderRadius: 4, borderSkipped: false }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: Object.assign({ callbacks: { label: function(ctx) { return ' ₹' + ctx.parsed.y.toFixed(2); } } }, tooltipOpts) },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { maxTicksLimit: 16, color: c.text } },
+                        y: { beginAtZero: true, grid: { color: c.grid }, ticks: { color: c.text, callback: function(v) { return '₹' + v; } } }
+                    }
+                }
+            });
         }
-    });
-    {% endif %}
+        {% endif %}
 
-    // ── Payment Method Horizontal Bar ────────────────────────────────────
-    {% if pay_labels %}
-    new Chart(document.getElementById('payChart'), {
-        type: 'bar',
-        data: {
-            labels: {{ pay_labels | tojson }},
-            datasets: [{ label: 'Spent', data: {{ pay_amounts | tojson }}, backgroundColor: PALETTE, borderRadius: 6 }]
-        },
-        options: {
-            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.x.toFixed(2)}` } } },
-            scales: {
-                x: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { callback: v => '₹' + v } },
-                y: { grid: { display: false } }
-            }
+        // ── Payment Method Horizontal Bar ──
+        {% if pay_labels %}
+        var payEl = document.getElementById('payChart');
+        if (payEl) {
+            if (_payC) _payC.destroy();
+            _payC = new Chart(payEl, {
+                type: 'bar',
+                data: { labels: {{ pay_labels | tojson }}, datasets: [{ label: 'Spent', data: {{ pay_amounts | tojson }}, backgroundColor: PALETTE, borderRadius: 6 }] },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: Object.assign({ callbacks: { label: function(ctx) { return ' ₹' + ctx.parsed.x.toFixed(2); } } }, tooltipOpts) },
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: c.grid }, ticks: { color: c.text, callback: function(v) { return '₹' + v; } } },
+                        y: { grid: { display: false }, ticks: { color: c.text } }
+                    }
+                }
+            });
         }
-    });
-    {% endif %}
+        {% endif %}
+    }
+
+    renderAnalyticsCharts();
+    window.addEventListener('themechange', function() { renderAnalyticsCharts(); });
 </script>
 {% endblock %}
+
