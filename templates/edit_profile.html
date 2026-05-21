@@ -9,21 +9,52 @@
             <div class="fintech-card p-4 p-md-5">
                 <div class="text-center mb-4">
                     <!-- Current avatar large preview -->
-                    <span class="avatar avatar-xl avatar-{{ (current_avatar | replace('avatar_', '')) }} mb-3" id="avatarPreview">{{ (display_name or username)[0] }}</span>
+                    <div style="cursor: pointer; display: inline-block; position: relative;" id="avatarPreviewContainer" title="Click to change avatar">
+                        <span class="avatar avatar-xl avatar-{{ (current_avatar | replace('avatar_', '')) }} mb-3" id="avatarPreview"></span>
+                        <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2" style="transform: translate(25%, -50%); box-shadow: var(--shadow-sm);"><i class="fas fa-camera"></i></div>
+                    </div>
                     <h2 class="fw-bold mb-1">Edit Profile</h2>
                     <p class="text-secondary">Update your personal information</p>
                 </div>
 
                 <form method="POST">
                     <!-- Avatar Selection Grid -->
-                    <div class="mb-4">
-                        <label class="form-label"><i class="fas fa-palette text-muted me-2"></i>Choose Avatar</label>
-                        <div class="avatar-grid" id="avatarGrid">
-                            {% for i in range(1, 9) %}
-                            <div class="avatar-option {% if current_avatar == 'avatar_' ~ i %}selected{% endif %}" data-avatar="avatar_{{ i }}">
-                                <span class="avatar avatar-md avatar-{{ i }}">{{ (display_name or username)[0] }}</span>
+                    <!-- Avatar Selection Grid -->
+                    <div class="mb-4 d-none" id="avatarSection">
+                        <label class="form-label d-block text-center mb-3"><i class="fas fa-palette text-muted me-2"></i>Choose Avatar</label>
+                        
+                        <!-- Tabs -->
+                        <ul class="nav nav-pills justify-content-center mb-3" id="avatarTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active rounded-pill btn-sm" id="pills-3d-tab" data-bs-toggle="pill" data-bs-target="#pills-3d" type="button" role="tab">3D Realistic</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link rounded-pill btn-sm" id="pills-2d-tab" data-bs-toggle="pill" data-bs-target="#pills-2d" type="button" role="tab">2D Minimalist</button>
+                            </li>
+                        </ul>
+
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="avatarTabsContent">
+                            <!-- 3D Avatars (1-16) -->
+                            <div class="tab-pane fade show active" id="pills-3d" role="tabpanel">
+                                <div class="avatar-grid" id="avatarGrid3D">
+                                    {% for i in range(1, 17) %}
+                                    <div class="avatar-option {% if current_avatar == 'avatar_' ~ i %}selected{% endif %}" data-avatar="avatar_{{ i }}">
+                                        <span class="avatar avatar-md avatar-{{ i }}"></span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            {% endfor %}
+                            <!-- 2D Avatars (17-40) -->
+                            <div class="tab-pane fade" id="pills-2d" role="tabpanel">
+                                <div class="avatar-grid" id="avatarGrid2D">
+                                    {% for i in range(17, 41) %}
+                                    <div class="avatar-option {% if current_avatar == 'avatar_' ~ i %}selected{% endif %}" data-avatar="avatar_{{ i }}">
+                                        <span class="avatar avatar-md avatar-{{ i }}"></span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                         <input type="hidden" name="avatar" id="avatarInput" value="{{ current_avatar }}">
                     </div>
@@ -50,21 +81,29 @@
                     
                     <hr class="my-4" style="border-color: var(--border-color);">
                     
-                    <h5 class="fw-bold mb-3 fs-6">Change Password (Optional)</h5>
+                    <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill mb-3" data-bs-toggle="collapse" data-bs-target="#passwordSection" aria-expanded="false" aria-controls="passwordSection">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </button>
 
-                    <div class="mb-3">
-                        <label for="current_password" class="form-label"><i class="fas fa-lock text-muted me-2"></i>Current Password</label>
-                        <input type="password" class="form-control" id="current_password" name="current_password" required placeholder="Required to save changes">
-                    </div>
+                    <div class="collapse" id="passwordSection">
+                        <div class="p-3 mb-4 rounded" style="background-color: var(--surface-alt); border: 1px solid var(--border-color);">
+                            <h5 class="fw-bold mb-3 fs-6">Update Password</h5>
 
-                    <div class="mb-3">
-                        <label for="new_password" class="form-label"><i class="fas fa-key text-muted me-2"></i>New Password</label>
-                        <input type="password" class="form-control" id="new_password" name="new_password" minlength="6" placeholder="Leave blank to keep current">
-                    </div>
+                            <div class="mb-3">
+                                <label for="current_password" class="form-label"><i class="fas fa-lock text-muted me-2"></i>Current Password</label>
+                                <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Required if changing password">
+                            </div>
 
-                    <div class="mb-4">
-                        <label for="confirm_password" class="form-label"><i class="fas fa-check-circle text-muted me-2"></i>Confirm New Password</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                            <div class="mb-3">
+                                <label for="new_password" class="form-label"><i class="fas fa-key text-muted me-2"></i>New Password</label>
+                                <input type="password" class="form-control" id="new_password" name="new_password" minlength="6" placeholder="Leave blank to keep current">
+                            </div>
+
+                            <div class="mb-2">
+                                <label for="confirm_password" class="form-label"><i class="fas fa-check-circle text-muted me-2"></i>Confirm New Password</label>
+                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm new password">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="d-grid gap-2 mb-4">
@@ -87,14 +126,14 @@
 <script>
     // Avatar selection
     (function() {
-        var grid = document.getElementById('avatarGrid');
+        var section = document.getElementById('avatarSection');
         var input = document.getElementById('avatarInput');
         var preview = document.getElementById('avatarPreview');
-        grid.addEventListener('click', function(e) {
+        section.addEventListener('click', function(e) {
             var option = e.target.closest('.avatar-option');
             if (!option) return;
             // Remove selected from all
-            grid.querySelectorAll('.avatar-option').forEach(function(el) { el.classList.remove('selected'); });
+            document.querySelectorAll('.avatar-option').forEach(function(el) { el.classList.remove('selected'); });
             option.classList.add('selected');
             input.value = option.dataset.avatar;
             // Update preview avatar class
@@ -103,14 +142,34 @@
         });
     })();
 
+    // Toggle avatar grid
+    document.getElementById('avatarPreviewContainer').addEventListener('click', function() {
+        document.getElementById('avatarSection').classList.toggle('d-none');
+    });
+
+    // Dynamic password requirement
+    var newPass = document.getElementById('new_password');
+    var currentPass = document.getElementById('current_password');
+    newPass.addEventListener('input', function() {
+        if (newPass.value.length > 0) {
+            currentPass.required = true;
+        } else {
+            currentPass.required = false;
+        }
+    });
+
     // Client-side validation for password confirmation
     document.querySelector('form').addEventListener('submit', function(e) {
-        var newPassword = document.getElementById('new_password').value;
+        var newPassword = newPass.value;
         var confirmPassword = document.getElementById('confirm_password').value;
 
         if (newPassword && newPassword !== confirmPassword) {
             e.preventDefault();
             alert('New passwords do not match. Please try again.');
+        }
+        if (newPassword && !currentPass.value) {
+            e.preventDefault();
+            alert('Please enter your current password to set a new password.');
         }
     });
 </script>

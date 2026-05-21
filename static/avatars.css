@@ -8,30 +8,64 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #FFFFFF;
     flex-shrink: 0;
     user-select: none;
-    letter-spacing: 0.02em;
-    line-height: 1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: var(--surface-alt);
+    color: transparent; /* Hide any fallback text */
 }
 
 /* ── Sizes ──────────────────────────────────────────────────────────────── */
-.avatar-sm  { width: 36px;  height: 36px;  font-size: 0.85rem; }
-.avatar-md  { width: 48px;  height: 48px;  font-size: 1.1rem;  }
-.avatar-lg  { width: 80px;  height: 80px;  font-size: 1.75rem; }
-.avatar-xl  { width: 120px; height: 120px; font-size: 2.5rem;  }
+.avatar-sm  { width: 36px;  height: 36px; }
+.avatar-md  { width: 48px;  height: 48px; }
+.avatar-lg  { width: 80px;  height: 80px; }
+.avatar-xl  { width: 120px; height: 120px; }
 
-/* ── Color Schemes ──────────────────────────────────────────────────────── */
-.avatar-1  { background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); } /* Indigo   */
-.avatar-2  { background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%); } /* Teal     */
-.avatar-3  { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); } /* Amber    */
-.avatar-4  { background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%); } /* Rose     */
-.avatar-5  { background: linear-gradient(135deg, #10B981 0%, #059669 100%); } /* Emerald  */
-.avatar-6  { background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); } /* Violet   */
-.avatar-7  { background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); } /* Green    */
-.avatar-8  { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); } /* Orange   */
+/* ── Image Sources ──────────────────────────────────────────────────────── */
+.avatar-1  { background-image: url('avatars/avatar_1.png'); }
+.avatar-2  { background-image: url('avatars/avatar_2.png'); }
+.avatar-3  { background-image: url('avatars/avatar_3.png'); }
+.avatar-4  { background-image: url('avatars/avatar_4.png'); }
+.avatar-5  { background-image: url('avatars/avatar_5.png'); }
+.avatar-6  { background-image: url('avatars/avatar_6.png'); }
+.avatar-7  { background-image: url('avatars/avatar_7.png'); }
+.avatar-8  { background-image: url('avatars/avatar_8.png'); }
+.avatar-9  { background-image: url('avatars/avatar_9.png'); }
+.avatar-10 { background-image: url('avatars/avatar_10.png'); }
+.avatar-11 { background-image: url('avatars/avatar_11.png'); }
+.avatar-12 { background-image: url('avatars/avatar_12.png'); }
+.avatar-13 { background-image: url('avatars/avatar_13.png'); }
+.avatar-14 { background-image: url('avatars/avatar_14.png'); }
+.avatar-15 { background-image: url('avatars/avatar_15.png'); }
+.avatar-16 { background-image: url('avatars/avatar_16.png'); }
+
+/* 2D Minimalist Vector Avatars */
+.avatar-17 { background-image: url('avatars/avatar_17.svg'); }
+.avatar-18 { background-image: url('avatars/avatar_18.svg'); }
+.avatar-19 { background-image: url('avatars/avatar_19.svg'); }
+.avatar-20 { background-image: url('avatars/avatar_20.svg'); }
+.avatar-21 { background-image: url('avatars/avatar_21.svg'); }
+.avatar-22 { background-image: url('avatars/avatar_22.svg'); }
+.avatar-23 { background-image: url('avatars/avatar_23.svg'); }
+.avatar-24 { background-image: url('avatars/avatar_24.svg'); }
+.avatar-25 { background-image: url('avatars/avatar_25.svg'); }
+.avatar-26 { background-image: url('avatars/avatar_26.svg'); }
+.avatar-27 { background-image: url('avatars/avatar_27.svg'); }
+.avatar-28 { background-image: url('avatars/avatar_28.svg'); }
+.avatar-29 { background-image: url('avatars/avatar_29.svg'); }
+.avatar-30 { background-image: url('avatars/avatar_30.svg'); }
+.avatar-31 { background-image: url('avatars/avatar_31.svg'); }
+.avatar-32 { background-image: url('avatars/avatar_32.svg'); }
+.avatar-33 { background-image: url('avatars/avatar_33.svg'); }
+.avatar-34 { background-image: url('avatars/avatar_34.svg'); }
+.avatar-35 { background-image: url('avatars/avatar_35.svg'); }
+.avatar-36 { background-image: url('avatars/avatar_36.svg'); }
+.avatar-37 { background-image: url('avatars/avatar_37.svg'); }
+.avatar-38 { background-image: url('avatars/avatar_38.svg'); }
+.avatar-39 { background-image: url('avatars/avatar_39.svg'); }
+.avatar-40 { background-image: url('avatars/avatar_40.svg'); }
 
 /* ── Selection Grid ─────────────────────────────────────────────────────── */
 .avatar-grid {

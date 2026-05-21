@@ -792,10 +792,6 @@ def edit_profile():
         new_avatar = request.form.get('avatar', user.avatar or 'avatar_1')
         new_display_name = request.form.get('display_name', '').strip() or None
 
-        if not user.check_password(current_password):
-            flash('Current password is incorrect.', 'error')
-            return redirect(url_for('edit_profile'))
-
         if new_username != user.username:
             existing_user = User.query.filter_by(username=new_username).first()
             if existing_user:
@@ -809,6 +805,9 @@ def edit_profile():
                 return redirect(url_for('edit_profile'))
 
         if new_password:
+            if not current_password or not user.check_password(current_password):
+                flash('Current password is required and must be correct to set a new password.', 'error')
+                return redirect(url_for('edit_profile'))
             if new_password != confirm_password:
                 flash('New passwords do not match.', 'error')
                 return redirect(url_for('edit_profile'))

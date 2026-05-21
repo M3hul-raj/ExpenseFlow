@@ -61,7 +61,7 @@
                         <li class="nav-item"><a class="nav-link {% if request.endpoint == 'analytics' %}active{% endif %}" href="{{ url_for('analytics') }}">Analytics</a></li>
                         <li class="nav-item"><a class="nav-link {% if request.endpoint == 'view_expense' %}active{% endif %}" href="{{ url_for('view_expense') }}">Transactions</a></li>
                         <li class="nav-item"><a class="nav-link {% if request.endpoint == 'add_expense' %}active{% endif %}" href="{{ url_for('add_expense') }}">Add Record</a></li>
-                        <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 {% if request.endpoint == 'edit_profile' %}active{% endif %}" href="{{ url_for('edit_profile') }}"><span class="avatar avatar-sm avatar-{{ (session.get('avatar', 'avatar_1') | replace('avatar_', '')) }}">{{ (session.get('display_name') or session.get('username', 'U'))[0] }}</span>Profile</a></li>
+                        <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 {% if request.endpoint == 'edit_profile' %}active{% endif %}" href="{{ url_for('edit_profile') }}"><span class="avatar avatar-sm avatar-{{ (session.get('avatar', 'avatar_1') | replace('avatar_', '')) }}"></span>Profile</a></li>
                         <li class="nav-item ms-lg-1">
                             <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
                                 <i class="fas fa-sun"></i>
@@ -160,28 +160,6 @@
             glow.style.top = gy + 'px';
             requestAnimationFrame(tick);
         })();
-    })();
-
-    // ── Card Hover Tilt Effect ───────────────────────────────────────────────
-    (function () {
-        var cards = document.querySelectorAll('.fintech-card');
-        cards.forEach(function (card) {
-            card.addEventListener('mousemove', function (e) {
-                var rect = card.getBoundingClientRect();
-                var x = e.clientX - rect.left;
-                var y = e.clientY - rect.top;
-                var cx = rect.width / 2;
-                var cy = rect.height / 2;
-                var rotateY = ((x - cx) / cx) * 5;  // max 5 degrees
-                var rotateX = ((cy - y) / cy) * 5;
-                card.style.transition = 'transform 0.1s ease';
-                card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.01)';
-            });
-            card.addEventListener('mouseleave', function () {
-                card.style.transition = 'transform 0.4s ease, box-shadow 0.2s ease';
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-            });
-        });
     })();
     </script>
     <!-- PWA Service Worker Registration -->
