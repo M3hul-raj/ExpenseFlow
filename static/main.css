@@ -50,6 +50,7 @@
    Dark Theme — Premium Glassmorphism
    ========================================================================== */
 [data-theme="dark"] {
+    color-scheme: dark;
     --bg-color: #0A0A0F;
     --surface-color: rgba(255, 255, 255, 0.05);
     --surface-alt: rgba(255, 255, 255, 0.06);
@@ -100,6 +101,13 @@
 [data-theme="dark"] .form-select {
     background-color: rgba(255, 255, 255, 0.06);
     border-color: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+}
+[data-theme="dark"] .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+[data-theme="dark"] option {
+    background-color: var(--bg-color);
     color: #FFFFFF;
 }
 [data-theme="dark"] .form-control:focus,
@@ -237,6 +245,12 @@
 
 main {
     animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.btn, .nav-link, .theme-toggle, .pagination-btn, .action-btn, .nav-cta-btn, .nav-outline-btn, .fintech-card {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* ==========================================================================
