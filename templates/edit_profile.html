@@ -8,14 +8,36 @@
         <div class="col-md-8 col-lg-6 col-xl-5">
             <div class="fintech-card p-4 p-md-5">
                 <div class="text-center mb-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle mb-3" style="width: 64px; height: 64px; font-size: 1.75rem;">
-                        <i class="fas fa-user-edit"></i>
-                    </div>
+                    <!-- Current avatar large preview -->
+                    <span class="avatar avatar-xl avatar-{{ (current_avatar | replace('avatar_', '')) }} mb-3" id="avatarPreview">{{ (display_name or username)[0] }}</span>
                     <h2 class="fw-bold mb-1">Edit Profile</h2>
                     <p class="text-secondary">Update your personal information</p>
                 </div>
 
                 <form method="POST">
+                    <!-- Avatar Selection Grid -->
+                    <div class="mb-4">
+                        <label class="form-label"><i class="fas fa-palette text-muted me-2"></i>Choose Avatar</label>
+                        <div class="avatar-grid" id="avatarGrid">
+                            {% for i in range(1, 9) %}
+                            <div class="avatar-option {% if current_avatar == 'avatar_' ~ i %}selected{% endif %}" data-avatar="avatar_{{ i }}">
+                                <span class="avatar avatar-md avatar-{{ i }}">{{ (display_name or username)[0] }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="avatar" id="avatarInput" value="{{ current_avatar }}">
+                    </div>
+
+                    <!-- Display Name -->
+                    <div class="mb-3">
+                        <label for="display_name" class="form-label"><i class="fas fa-id-card text-muted me-2"></i>Display Name <span class="text-muted" style="font-size:0.75rem;">(optional)</span></label>
+                        <input type="text" class="form-control" id="display_name" name="display_name" value="{{ display_name or '' }}" placeholder="How should we greet you?" maxlength="80">
+                        <div class="form-text" style="font-size:0.75rem;color:var(--text-muted);">Shown on dashboard greeting and navbar. Leave blank to use username.</div>
+                    </div>
+
+                    <hr class="my-4" style="border-color: var(--border-color);">
+
+                    <!-- Account Info -->
                     <div class="mb-3">
                         <label for="username" class="form-label"><i class="fas fa-user text-muted me-2"></i>Username</label>
                         <input type="text" class="form-control" id="username" name="username" value="{{ username }}" required minlength="3">
@@ -26,7 +48,7 @@
                         <input type="email" class="form-control" id="email" name="email" value="{{ email }}" required>
                     </div>
                     
-                    <hr class="my-4 text-muted">
+                    <hr class="my-4" style="border-color: var(--border-color);">
                     
                     <h5 class="fw-bold mb-3 fs-6">Change Password (Optional)</h5>
 
@@ -50,7 +72,9 @@
                     </div>
                 </form>
 
-                <div class="text-center mt-2">
+                <!-- Member Since -->
+                <div class="text-center">
+                    <p class="text-muted small mb-2"><i class="fas fa-calendar-alt me-1"></i>Member since {{ registration_date }}</p>
                     <a href="{{ url_for('dashboard') }}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-arrow-left me-2"></i>Back to Dashboard</a>
                 </div>
             </div>
@@ -61,10 +85,28 @@
 
 {% block scripts %}
 <script>
+    // Avatar selection
+    (function() {
+        var grid = document.getElementById('avatarGrid');
+        var input = document.getElementById('avatarInput');
+        var preview = document.getElementById('avatarPreview');
+        grid.addEventListener('click', function(e) {
+            var option = e.target.closest('.avatar-option');
+            if (!option) return;
+            // Remove selected from all
+            grid.querySelectorAll('.avatar-option').forEach(function(el) { el.classList.remove('selected'); });
+            option.classList.add('selected');
+            input.value = option.dataset.avatar;
+            // Update preview avatar class
+            var num = option.dataset.avatar.replace('avatar_', '');
+            preview.className = 'avatar avatar-xl avatar-' + num + ' mb-3';
+        });
+    })();
+
     // Client-side validation for password confirmation
     document.querySelector('form').addEventListener('submit', function(e) {
-        const newPassword = document.getElementById('new_password').value;
-        const confirmPassword = document.getElementById('confirm_password').value;
+        var newPassword = document.getElementById('new_password').value;
+        var confirmPassword = document.getElementById('confirm_password').value;
 
         if (newPassword && newPassword !== confirmPassword) {
             e.preventDefault();

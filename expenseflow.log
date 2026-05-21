@@ -289,3 +289,193 @@
 2026-05-21 15:42:33,561 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:42:33] "GET / HTTP/1.1" 200 -
 2026-05-21 15:42:33,851 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:42:33] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
 2026-05-21 15:42:35,516 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:42:35] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 15:49:50,074 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.90.55.40:5000
+2026-05-21 15:49:50,075 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-21 15:49:50,076 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 15:49:51,512 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 15:49:51,514 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 15:51:34,210 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:34] "GET / HTTP/1.1" 200 -
+2026-05-21 15:51:34,432 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:34] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 15:51:36,146 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:36] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 15:51:52,400 [INFO] expenseflow: User logged out: test123
+2026-05-21 15:51:52,402 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:52] "[32mGET /logout HTTP/1.1[0m" 302 -
+2026-05-21 15:51:52,418 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:52] "GET / HTTP/1.1" 200 -
+2026-05-21 15:51:52,558 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:52] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 15:51:54,279 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:54] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 15:51:59,267 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:59] "GET /register HTTP/1.1" 200 -
+2026-05-21 15:51:59,477 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:51:59] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 15:52:01,205 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:52:01] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 15:53:43,797 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:53:43] "GET / HTTP/1.1" 200 -
+2026-05-21 15:53:43,943 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:53:43] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 15:53:46,035 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:53:46] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 15:59:41,705 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:59:41] "GET /register HTTP/1.1" 200 -
+2026-05-21 15:59:41,992 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:59:41] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 15:59:43,670 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 15:59:43] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:06:26,045 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:26] "GET /register HTTP/1.1" 200 -
+2026-05-21 16:06:26,236 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:26] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:06:28,091 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:28] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:06:36,177 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:36] "GET /register HTTP/1.1" 200 -
+2026-05-21 16:06:36,309 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:36] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:06:36,388 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:36] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:06:36,765 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:06:36,767 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:06:36] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:07:12,020 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:12] "GET / HTTP/1.1" 200 -
+2026-05-21 16:07:12,296 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:12] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:07:14,044 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:14] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:07:53,608 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:53] "GET /register HTTP/1.1" 200 -
+2026-05-21 16:07:54,050 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:54] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:07:55,812 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:55] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:07:58,999 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:58] "GET / HTTP/1.1" 200 -
+2026-05-21 16:07:59,186 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:07:59] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:08:00,890 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:00] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:08:02,919 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:02] "GET / HTTP/1.1" 200 -
+2026-05-21 16:08:02,984 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:02] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:08:03,052 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:03] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:08:03,491 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:03] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:08:03,496 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:03] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:08:08,194 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:08] "GET /register HTTP/1.1" 200 -
+2026-05-21 16:08:08,406 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:08] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:08:10,070 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:10] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:08:10,291 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:10] "GET /register HTTP/1.1" 200 -
+2026-05-21 16:08:10,378 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:10] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:08:10,418 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:10] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:08:10,752 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:10] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:08:10,757 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:10] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:08:12,980 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:12] "GET / HTTP/1.1" 200 -
+2026-05-21 16:08:13,236 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:13] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:08:14,916 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:14] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:08:15,061 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:15] "GET / HTTP/1.1" 200 -
+2026-05-21 16:08:15,132 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:15] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:08:15,202 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:15] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:08:15,605 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:15] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:08:15,609 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:15] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:08:40,502 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:40] "GET /login HTTP/1.1" 200 -
+2026-05-21 16:08:40,779 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:40] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:08:42,517 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:42] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:08:49,675 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:49] "GET /login HTTP/1.1" 200 -
+2026-05-21 16:08:49,752 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:49] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:08:49,808 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:49] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:08:50,288 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:50] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:08:50,294 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:50] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:08:56,442 [INFO] expenseflow: User logged in: test123
+2026-05-21 16:08:56,444 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:56] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-21 16:08:56,534 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:56] "GET /dashboard HTTP/1.1" 200 -
+2026-05-21 16:08:56,745 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:56] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:08:58,521 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:08:58] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:09:28,000 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:28] "GET /dashboard HTTP/1.1" 200 -
+2026-05-21 16:09:28,090 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:28] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:09:28,185 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:28] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:09:28,908 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:09:28,920 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:28] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:09:34,165 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:34] "GET /analytics HTTP/1.1" 200 -
+2026-05-21 16:09:34,362 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:34] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:09:36,218 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:36] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:09:36,395 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:36] "GET /analytics HTTP/1.1" 200 -
+2026-05-21 16:09:36,476 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:36] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:09:36,536 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:36] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:09:36,960 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:09:36,965 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:36] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:09:45,990 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:45] "GET /dashboard HTTP/1.1" 200 -
+2026-05-21 16:09:46,194 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:46] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:09:47,953 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:47] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:09:48,072 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:48] "GET /dashboard HTTP/1.1" 200 -
+2026-05-21 16:09:48,135 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:48] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:09:48,199 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:48] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:09:48,567 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:09:48,577 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:09:48] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:17:38,976 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:38] "GET /analytics HTTP/1.1" 200 -
+2026-05-21 16:17:39,155 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:39] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:17:40,927 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:17:41,207 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:41] "GET /analytics HTTP/1.1" 200 -
+2026-05-21 16:17:41,241 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:41] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:17:41,267 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:41] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:17:41,962 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:17:41,965 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:17:41] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:25:25,707 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:25] "GET /view HTTP/1.1" 200 -
+2026-05-21 16:25:25,962 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:25] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:25:27,688 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:27] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:25:29,162 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:29] "GET /view HTTP/1.1" 200 -
+2026-05-21 16:25:29,193 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:29] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:25:29,218 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:29] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:25:29,923 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:29] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:25:29,926 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:29] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:25:38,853 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:38] "GET /add HTTP/1.1" 200 -
+2026-05-21 16:25:38,982 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:38] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:25:40,626 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:40] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:25:41,223 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:41] "GET /add HTTP/1.1" 200 -
+2026-05-21 16:25:41,255 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:41] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:25:41,276 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:41] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:25:41,547 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:25:41,550 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:41] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:25:45,156 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:45] "GET /edit_profile HTTP/1.1" 200 -
+2026-05-21 16:25:45,243 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:45] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:25:46,869 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:46] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:25:47,180 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:47] "GET /edit_profile HTTP/1.1" 200 -
+2026-05-21 16:25:47,217 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:47] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:25:47,235 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:47] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:25:47,523 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:25:47,526 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:25:47] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:26:21,574 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:21] "GET /view HTTP/1.1" 200 -
+2026-05-21 16:26:21,719 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:21] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:26:22,628 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:22] "GET /add HTTP/1.1" 200 -
+2026-05-21 16:26:22,722 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:22] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:26:24,354 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:24] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:26:25,112 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:25] "GET /add HTTP/1.1" 200 -
+2026-05-21 16:26:25,143 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:25] "GET /static/main.css HTTP/1.1" 200 -
+2026-05-21 16:26:25,163 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:25] "GET /manifest.json HTTP/1.1" 200 -
+2026-05-21 16:26:25,629 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:25] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-05-21 16:26:25,632 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:25] "[36mGET /static/icons/icon-192x192.png HTTP/1.1[0m" 304 -
+2026-05-21 16:26:34,113 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:34] "GET /edit_profile HTTP/1.1" 200 -
+2026-05-21 16:26:34,210 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:34] "[36mGET /manifest.json HTTP/1.1[0m" 304 -
+2026-05-21 16:26:35,853 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 16:26:35] "[36mGET /sw.js HTTP/1.1[0m" 304 -
+2026-05-21 16:49:46,556 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.90.55.40:5000
+2026-05-21 16:49:46,557 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-21 16:49:46,558 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 16:49:47,649 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 16:49:47,651 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 19:42:32,420 [INFO] werkzeug:  * Detected change in 'C:\\Users\\mehul\\Downloads\\Python ca 2\\models.py', reloading
+2026-05-21 19:42:32,545 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 19:42:37,792 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 19:42:37,795 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 19:42:43,099 [INFO] werkzeug:  * Detected change in 'C:\\Users\\mehul\\Downloads\\Python ca 2\\migrate_avatar.py', reloading
+2026-05-21 19:42:43,210 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 19:42:44,654 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 19:42:44,657 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 19:45:30,409 [INFO] werkzeug:  * Detected change in 'C:\\Users\\mehul\\Downloads\\Python ca 2\\models.py', reloading
+2026-05-21 19:45:30,528 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 19:45:31,985 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 19:45:31,987 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 19:45:41,448 [INFO] werkzeug:  * Detected change in 'C:\\Users\\mehul\\Downloads\\Python ca 2\\migrate_avatar.py', reloading
+2026-05-21 19:45:41,556 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 19:45:42,727 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 19:45:42,730 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 19:47:32,069 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.90.55.40:5000
+2026-05-21 19:47:32,070 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2026-05-21 19:47:32,071 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 19:47:33,437 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 19:47:33,440 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 19:48:04,558 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:48:04] "GET / HTTP/1.1" 200 -
+2026-05-21 19:49:17,099 [INFO] werkzeug:  * Detected change in 'C:\\Users\\mehul\\Downloads\\Python ca 2\\test_avatar.py', reloading
+2026-05-21 19:49:17,228 [INFO] werkzeug:  * Restarting with stat
+2026-05-21 19:49:18,423 [WARNING] werkzeug:  * Debugger is active!
+2026-05-21 19:49:18,425 [INFO] werkzeug:  * Debugger PIN: 625-782-697
+2026-05-21 19:49:27,246 [INFO] expenseflow: New user registered: avtest2 (avtest2@test.com)
+2026-05-21 19:49:27,247 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "[32mPOST /register HTTP/1.1[0m" 302 -
+2026-05-21 19:49:27,265 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "GET /login HTTP/1.1" 200 -
+2026-05-21 19:49:27,362 [INFO] expenseflow: User logged in: avtest2
+2026-05-21 19:49:27,365 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "[32mPOST /login HTTP/1.1[0m" 302 -
+2026-05-21 19:49:27,446 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "GET /dashboard HTTP/1.1" 200 -
+2026-05-21 19:49:27,455 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "GET /dashboard HTTP/1.1" 200 -
+2026-05-21 19:49:27,463 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "GET /edit_profile HTTP/1.1" 200 -
+2026-05-21 19:49:27,574 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "[32mPOST /edit_profile HTTP/1.1[0m" 302 -
+2026-05-21 19:49:27,583 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "GET /dashboard HTTP/1.1" 200 -
+2026-05-21 19:49:27,591 [INFO] werkzeug: 127.0.0.1 - - [21/May/2026 19:49:27] "GET /dashboard HTTP/1.1" 200 -

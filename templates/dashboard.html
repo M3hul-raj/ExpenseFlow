@@ -79,9 +79,12 @@
 
     <!-- ─── Page Header ─── -->
     <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h1 class="fw-bold mb-1" style="font-size: 1.75rem;">Good {{ 'morning' if current_date.hour < 12 else ('afternoon' if current_date.hour < 17 else 'evening') }}, {{ username }} 👋</h1>
-            <p class="text-secondary mb-0 small">Here's your financial overview for {{ current_date.strftime('%B %Y') }}</p>
+        <div class="d-flex align-items-center gap-3">
+            <span class="avatar avatar-lg avatar-{{ (user_avatar | replace('avatar_', '')) }}">{{ (display_name or username)[0] }}</span>
+            <div>
+                <h1 class="fw-bold mb-1" style="font-size: 1.75rem;">Good {{ 'morning' if current_date.hour < 12 else ('afternoon' if current_date.hour < 17 else 'evening') }}, {{ display_name or username }}</h1>
+                <p class="text-secondary mb-0 small">Here's your financial overview for {{ current_date.strftime('%B %Y') }}</p>
+            </div>
         </div>
         <a href="{{ url_for('add_expense') }}" class="btn btn-primary rounded-pill d-none d-md-inline-flex">
             <i class="fas fa-plus me-2"></i>Add Expense

@@ -13,6 +13,8 @@ class User(db.Model):
     password_hash = db.Column(db.String(256), nullable=False)
     recurring_budget = db.Column(db.Float, nullable=True)
     registration_date = db.Column(db.DateTime, default=datetime.utcnow)
+    avatar        = db.Column(db.String(50), default='avatar_1')
+    display_name  = db.Column(db.String(80))
 
     expenses = db.relationship('Expense', backref='user', lazy=True, cascade="all, delete-orphan")
     budgets  = db.relationship('Budget',  backref='user', lazy=True, cascade="all, delete-orphan")

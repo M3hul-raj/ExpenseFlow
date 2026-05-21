@@ -239,6 +239,8 @@ def login():
             session['user_id'] = user.id
             session['username'] = user.username
             session['email'] = user.email
+            session['avatar'] = user.avatar or 'avatar_1'
+            session['display_name'] = user.display_name
             logger.info('User logged in: %s', user.username)
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
@@ -343,6 +345,8 @@ def dashboard():
                          budget_alert_level=budget_alert_level,
                          expenses=expenses,
                          username=user.username,
+                         display_name=user.display_name,
+                         user_avatar=user.avatar or 'avatar_1',
                          email=user.email,
                          registration_date=user.registration_date.strftime("%Y-%m-%d %H:%M:%S"),
                          total_spent=total_spent,
@@ -785,6 +789,8 @@ def edit_profile():
         current_password = request.form['current_password']
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
+        new_avatar = request.form.get('avatar', user.avatar or 'avatar_1')
+        new_display_name = request.form.get('display_name', '').strip() or None
 
         if not user.check_password(current_password):
             flash('Current password is incorrect.', 'error')
@@ -813,15 +819,25 @@ def edit_profile():
 
         user.username = new_username
         user.email = new_email
+        user.avatar = new_avatar
+        user.display_name = new_display_name
         db.session.commit()
 
         session['username'] = new_username
         session['email'] = new_email
+        session['avatar'] = new_avatar
+        session['display_name'] = new_display_name
 
         flash('Profile updated successfully!', 'success')
         return redirect(url_for('dashboard'))
 
-    return render_template('edit_profile.html', username=user.username, email=user.email)
+    reg_date = user.registration_date.strftime('%B %d, %Y') if user.registration_date else 'Unknown'
+    return render_template('edit_profile.html',
+                           username=user.username,
+                           email=user.email,
+                           current_avatar=user.avatar or 'avatar_1',
+                           display_name=user.display_name,
+                           registration_date=reg_date)
 
 @app.route('/analytics')
 def analytics():

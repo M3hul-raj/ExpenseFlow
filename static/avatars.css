@@ -1,0 +1,66 @@
+/* ==========================================================================
+   ExpenseFlow — CSS Avatar System
+   8 distinct color-coded circle avatars with initial letter
+   ========================================================================== */
+
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    flex-shrink: 0;
+    user-select: none;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+/* ── Sizes ──────────────────────────────────────────────────────────────── */
+.avatar-sm  { width: 36px;  height: 36px;  font-size: 0.85rem; }
+.avatar-md  { width: 48px;  height: 48px;  font-size: 1.1rem;  }
+.avatar-lg  { width: 80px;  height: 80px;  font-size: 1.75rem; }
+.avatar-xl  { width: 120px; height: 120px; font-size: 2.5rem;  }
+
+/* ── Color Schemes ──────────────────────────────────────────────────────── */
+.avatar-1  { background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%); } /* Indigo   */
+.avatar-2  { background: linear-gradient(135deg, #14B8A6 0%, #0D9488 100%); } /* Teal     */
+.avatar-3  { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); } /* Amber    */
+.avatar-4  { background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%); } /* Rose     */
+.avatar-5  { background: linear-gradient(135deg, #10B981 0%, #059669 100%); } /* Emerald  */
+.avatar-6  { background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%); } /* Violet   */
+.avatar-7  { background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); } /* Green    */
+.avatar-8  { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); } /* Orange   */
+
+/* ── Selection Grid ─────────────────────────────────────────────────────── */
+.avatar-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+.avatar-option {
+    cursor: pointer;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    padding: 3px;
+    transition: all 0.2s ease;
+}
+.avatar-option:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: scale(1.08);
+}
+.avatar-option.selected {
+    border-color: #6366F1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .avatar-option:hover {
+    border-color: rgba(99, 102, 241, 0.6);
+}
+[data-theme="dark"] .avatar-option.selected {
+    border-color: #818CF8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.3);
+}
