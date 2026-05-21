@@ -110,7 +110,7 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 
 ## What Makes This Different?
 
-Most student expense trackers are basic CRUD apps with minimal styling. ExpenseFlow is built to **production standards**:
+Most expense trackers are basic CRUD apps with minimal styling. ExpenseFlow is built to **production standards**:
 
 - **Real fintech UI** — Not Bootstrap defaults. Custom design system with indigo palette, glassmorphic cards, micro-animations, and responsive layouts that look like a real SaaS product.
 - **Smart budgeting** — Not just "set a number". Recurring budgets, visual progress bars, contextual warnings at 90% and 100% thresholds, and budget sidebar visible while adding expenses.
@@ -225,7 +225,7 @@ ExpenseFlow/
 
 ## License
 
-This project was built for educational purposes as part of a college assignment.
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
