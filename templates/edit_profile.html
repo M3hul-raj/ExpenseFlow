@@ -14,7 +14,8 @@
                         <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2" style="transform: translate(25%, -50%); box-shadow: var(--shadow-sm);"><i class="fas fa-camera"></i></div>
                     </div>
                     <h2 class="fw-bold mb-1">Edit Profile</h2>
-                    <p class="text-secondary">Update your personal information</p>
+                    <p class="text-secondary mb-2">Update your personal information</p>
+                    <span class="badge rounded-pill bg-secondary bg-opacity-10 text-muted px-3 py-2 fw-normal"><i class="fas fa-calendar-alt me-1"></i>Member since {{ registration_date }}</span>
                 </div>
 
                 <form method="POST">
@@ -111,9 +112,8 @@
                     </div>
                 </form>
 
-                <!-- Member Since -->
-                <div class="text-center">
-                    <p class="text-muted small mb-2"><i class="fas fa-calendar-alt me-1"></i>Member since {{ registration_date }}</p>
+                <!-- Back to Dashboard -->
+                <div class="text-center mt-3">
                     <a href="{{ url_for('dashboard') }}" class="text-secondary text-decoration-none hover-primary"><i class="fas fa-arrow-left me-2"></i>Back to Dashboard</a>
                 </div>
             </div>

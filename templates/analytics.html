@@ -233,30 +233,32 @@
                     <i class="fas fa-fire text-danger"></i> Top 5 Biggest Expenses
                 </div>
                 {% if top_5 %}
-                <table class="table-fintech w-100">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Date</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th class="text-end">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for e in top_5 %}
-                        <tr>
-                            <td class="text-secondary small fw-bold">{{ loop.index }}</td>
-                            <td class="text-secondary small">{{ e.date }}</td>
-                            <td>
-                                <span style="display:inline-flex;align-items:center;padding:.2em .65em;font-size:.76rem;font-weight:600;border-radius:9999px;background:var(--primary-light);color:var(--primary);">{{ e.category }}</span>
-                            </td>
-                            <td class="text-secondary small">{{ (e.description or '—')[:40] }}</td>
-                            <td class="text-end fw-bold" style="color:var(--danger);">₹{{ "%.2f"|format(e.amount) }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table-fintech w-100">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in top_5 %}
+                            <tr>
+                                <td class="text-secondary small fw-bold">{{ loop.index }}</td>
+                                <td class="text-secondary small">{{ e.date }}</td>
+                                <td>
+                                    <span style="display:inline-flex;align-items:center;padding:.2em .65em;font-size:.76rem;font-weight:600;border-radius:9999px;background:var(--primary-light);color:var(--primary);">{{ e.category }}</span>
+                                </td>
+                                <td class="text-secondary small">{{ (e.description or '—')[:40] }}</td>
+                                <td class="text-end fw-bold" style="color:var(--danger);">₹{{ "%.2f"|format(e.amount) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 {% else %}
                 <div class="text-center py-4 text-secondary"><i class="fas fa-inbox fa-2x mb-2 d-block opacity-50"></i>No expenses this month</div>
                 {% endif %}

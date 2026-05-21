@@ -51,9 +51,15 @@
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-layer-group"></i> ExpenseFlow
             </a>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="d-flex align-items-center gap-3 d-lg-none">
+                <button class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="navbar-toggler border-0 shadow-none px-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <i class="fas fa-bars fs-4"></i>
+                </button>
+            </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center gap-2">
                     {% if session.get('user_id') %}
@@ -62,16 +68,16 @@
                         <li class="nav-item"><a class="nav-link {% if request.endpoint == 'view_expense' %}active{% endif %}" href="{{ url_for('view_expense') }}">Transactions</a></li>
                         <li class="nav-item"><a class="nav-link {% if request.endpoint == 'add_expense' %}active{% endif %}" href="{{ url_for('add_expense') }}">Add Record</a></li>
                         <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 {% if request.endpoint == 'edit_profile' %}active{% endif %}" href="{{ url_for('edit_profile') }}"><span class="avatar avatar-sm avatar-{{ (session.get('avatar', 'avatar_1') | replace('avatar_', '')) }}"></span>Profile</a></li>
-                        <li class="nav-item ms-lg-1">
-                            <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+                        <li class="nav-item d-none d-lg-block ms-lg-1">
+                            <button class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
                                 <i class="fas fa-sun"></i>
                                 <i class="fas fa-moon"></i>
                             </button>
                         </li>
                         <li class="nav-item ms-lg-1"><a class="nav-outline-btn" href="{{ url_for('logout') }}">Sign Out</a></li>
                     {% else %}
-                        <li class="nav-item">
-                            <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">
+                        <li class="nav-item d-none d-lg-block">
+                            <button class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
                                 <i class="fas fa-sun"></i>
                                 <i class="fas fa-moon"></i>
                             </button>
@@ -132,18 +138,19 @@
 
     // ── Dark Mode Toggle ─────────────────────────────────────────────────────
     (function () {
-        var toggle = document.getElementById('themeToggle');
-        if (!toggle) return;
-        toggle.addEventListener('click', function () {
-            var current = document.documentElement.getAttribute('data-theme');
-            var next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('ef-theme', next);
-            // Update theme-color meta
-            var meta = document.getElementById('metaThemeColor');
-            if (meta) meta.content = next === 'dark' ? '#0A0A0F' : '#4F46E5';
-            // Dispatch event for chart updates
-            window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
+        var toggles = document.querySelectorAll('.theme-toggle');
+        toggles.forEach(function(toggle) {
+            toggle.addEventListener('click', function () {
+                var current = document.documentElement.getAttribute('data-theme');
+                var next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('ef-theme', next);
+                // Update theme-color meta
+                var meta = document.getElementById('metaThemeColor');
+                if (meta) meta.content = next === 'dark' ? '#0A0A0F' : '#4F46E5';
+                // Dispatch event for chart updates
+                window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
+            });
         });
     })();
 
