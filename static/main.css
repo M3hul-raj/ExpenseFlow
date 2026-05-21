@@ -42,6 +42,8 @@
     
     /* Typography */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    --btn-close-filter: none;
 }
 
 /* ==========================================================================
@@ -73,6 +75,7 @@
     --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
     --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6);
+    --btn-close-filter: invert(1) grayscale(100%) brightness(200%);
 }
 
 /* Dark: glassmorphic cards */
@@ -502,14 +505,43 @@ a:hover {
 .table-fintech tbody tr:hover {
     background-color: var(--bg-color);
 }
- 
- / *    % %  M o b i l e   U I / U X   F i x e s    % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %  * /  
- @ m e d i a   ( m a x - w i d t h :   9 9 1 . 9 8 p x )   {  
-         . n a v b a r - t o g g l e r   i   {   c o l o r :   v a r ( - - t e x t - p r i m a r y ) ;   }  
-         . n a v b a r - c o l l a p s e   {   b a c k g r o u n d - c o l o r :   v a r ( - - s u r f a c e - c o l o r ) ;   p a d d i n g :   1 r e m ;   b o r d e r - r a d i u s :   v a r ( - - r a d i u s - m d ) ;   b o x - s h a d o w :   v a r ( - - s h a d o w - l g ) ;   m a r g i n - t o p :   0 . 5 r e m ;   }  
-         . n a v b a r - n a v   . n a v - i t e m   {   b o r d e r - b o t t o m :   1 p x   s o l i d   v a r ( - - b o r d e r - c o l o r ) ;   }  
-         . n a v b a r - n a v   . n a v - i t e m : l a s t - c h i l d   {   b o r d e r - b o t t o m :   n o n e ;   }  
-         . n a v b a r - n a v   . n a v - l i n k   {   p a d d i n g :   1 r e m   0 . 5 r e m   ! i m p o r t a n t ;   m a r g i n :   0 ;   }  
-         . n a v b a r - n a v   . n a v - o u t l i n e - b t n ,   . n a v b a r - n a v   . n a v - c t a - b t n   {   m a r g i n - t o p :   1 r e m ;   t e x t - a l i g n :   c e n t e r ;   d i s p l a y :   b l o c k ;   }  
- }  
- 
+
+/* ==========================================================================
+   Mobile Offcanvas Menu
+   ========================================================================== */
+@media (max-width: 991.98px) {
+    .offcanvas-lg {
+        width: 75vw !important; /* LinkedIn style partial side-drawer */
+        max-width: 350px !important;
+        background-color: var(--surface-color) !important;
+        border-left: 1px solid var(--border-color);
+        box-shadow: var(--shadow-lg) !important;
+    }
+    
+    .offcanvas-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .offcanvas-body {
+        padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+    
+    .navbar-nav .nav-item {
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .navbar-nav .nav-item:last-child {
+        border-bottom: none;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 1rem 0 !important;
+        margin: 0;
+        font-size: 1.1rem;
+    }
+    
+    .navbar-nav .nav-outline-btn, .navbar-nav .nav-cta-btn {
+        margin-top: 1.5rem;
+        padding: 0.75rem !important;
+    }
+}
