@@ -170,6 +170,18 @@
                     display: flex; align-items: center; justify-content: center;
                     font-size: 1rem; flex-shrink: 0;
                 }
+
+                /* Dark mode: glassmorphic hero cards */
+                [data-theme="dark"] .hero-card {
+                    background: rgba(255, 255, 255, 0.05);
+                    backdrop-filter: blur(12px);
+                    -webkit-backdrop-filter: blur(12px);
+                    border-color: rgba(255, 255, 255, 0.1);
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                }
+                [data-theme="dark"] .hero-progress-track {
+                    background: rgba(255, 255, 255, 0.1);
+                }
                 </style>
 
                 {% endif %}
@@ -239,7 +251,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="card border-0 bg-transparent text-center position-relative" style="z-index: 1;">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-white border border-2 border-primary text-primary rounded-circle shadow-sm mb-4" style="width: 48px; height: 48px; font-size: 1.25rem; font-weight: bold;">
+                    <div class="d-inline-flex align-items-center justify-content-center border border-2 border-primary text-primary rounded-circle shadow-sm mb-4" style="width: 48px; height: 48px; font-size: 1.25rem; font-weight: bold; background: var(--surface-color);">
                         2
                     </div>
                     <h5 class="fw-bold mb-2">Log Transactions</h5>
@@ -248,7 +260,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="card border-0 bg-transparent text-center position-relative" style="z-index: 1;">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-white border border-2 border-primary text-primary rounded-circle shadow-sm mb-4" style="width: 48px; height: 48px; font-size: 1.25rem; font-weight: bold;">
+                    <div class="d-inline-flex align-items-center justify-content-center border border-2 border-primary text-primary rounded-circle shadow-sm mb-4" style="width: 48px; height: 48px; font-size: 1.25rem; font-weight: bold; background: var(--surface-color);">
                         3
                     </div>
                     <h5 class="fw-bold mb-2">Gain Insights</h5>

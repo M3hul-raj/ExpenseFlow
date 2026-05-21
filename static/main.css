@@ -45,76 +45,124 @@
 }
 
 /* ==========================================================================
-   Dark Theme
+   Dark Theme — Premium Glassmorphism
    ========================================================================== */
 [data-theme="dark"] {
-    --bg-color: #0F172A;
-    --surface-color: #1E293B;
-    --surface-alt: #334155;
+    --bg-color: #0A0A0F;
+    --surface-color: rgba(255, 255, 255, 0.05);
+    --surface-alt: rgba(255, 255, 255, 0.06);
 
     --primary: #6366F1;
     --primary-hover: #818CF8;
     --primary-light: rgba(99, 102, 241, 0.15);
 
-    --text-primary: #F1F5F9;
-    --text-secondary: #94A3B8;
-    --text-muted: #64748B;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A0A0B0;
+    --text-muted: #7A7A8A;
 
-    --border-color: #334155;
+    --border-color: rgba(255, 255, 255, 0.08);
     --success: #34D399;
-    --success-bg: rgba(52, 211, 153, 0.15);
+    --success-bg: rgba(52, 211, 153, 0.12);
     --warning: #FBBF24;
-    --warning-bg: rgba(251, 191, 36, 0.15);
+    --warning-bg: rgba(251, 191, 36, 0.12);
     --danger: #F87171;
-    --danger-bg: rgba(248, 113, 113, 0.15);
+    --danger-bg: rgba(248, 113, 113, 0.12);
     --info: #60A5FA;
-    --info-bg: rgba(96, 165, 250, 0.15);
+    --info-bg: rgba(96, 165, 250, 0.12);
 
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6);
 }
 
-/* Dark mode: alerts text readability */
+/* Dark: glassmorphic cards */
+[data-theme="dark"] .fintech-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+[data-theme="dark"] .fintech-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Dark: alerts text readability */
 [data-theme="dark"] .alert-success { color: #6EE7B7; }
 [data-theme="dark"] .alert-danger  { color: #FCA5A5; }
 [data-theme="dark"] .alert-warning { color: #FDE68A; }
 [data-theme="dark"] .alert-info    { color: #93C5FD; }
 
-/* Dark mode: Bootstrap overrides */
+/* Dark: forms */
 [data-theme="dark"] .form-control,
 [data-theme="dark"] .form-select {
-    background-color: var(--surface-alt);
-    border-color: var(--border-color);
-    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
 }
 [data-theme="dark"] .form-control:focus,
 [data-theme="dark"] .form-select:focus {
-    background-color: #1E293B;
+    background-color: rgba(255, 255, 255, 0.08);
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25);
 }
-[data-theme="dark"] .form-control::placeholder { color: var(--text-muted); }
+[data-theme="dark"] .form-control::placeholder { color: #7A7A8A; }
+[data-theme="dark"] .form-label { color: #A0A0B0; }
+
+/* Dark: buttons */
 [data-theme="dark"] .btn-light {
-    background-color: var(--surface-alt);
-    color: var(--text-primary);
-    border-color: var(--border-color);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.12);
 }
 [data-theme="dark"] .btn-light:hover {
-    background-color: #475569;
-    border-color: #64748B;
+    background-color: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 [data-theme="dark"] .btn-close { filter: invert(1); }
-[data-theme="dark"] .text-dark { color: var(--text-primary) !important; }
+
+/* Dark: text utilities */
+[data-theme="dark"] .text-dark { color: #FFFFFF !important; }
+[data-theme="dark"] .text-muted { color: #A0A0B0 !important; }
+[data-theme="dark"] .text-secondary { color: #A0A0B0 !important; }
+[data-theme="dark"] .form-text { color: #7A7A8A !important; }
+
+/* Dark: form label icons (FontAwesome beside labels) */
+[data-theme="dark"] .form-label .text-muted,
+[data-theme="dark"] .form-label i { color: #A0A0B0 !important; }
+
+/* Dark: footer text */
+[data-theme="dark"] footer .text-muted,
+[data-theme="dark"] footer .small { color: #A0A0B0 !important; }
+
+/* Dark: Bootstrap variable override */
+[data-theme="dark"] { --bs-secondary-color: #A0A0B0; }
+
+/* Dark: tables */
 [data-theme="dark"] .table > :not(caption) > * > * {
     background-color: transparent;
-    color: var(--text-primary);
-    border-bottom-color: var(--border-color);
+    color: #FFFFFF;
+    border-bottom-color: rgba(255, 255, 255, 0.06);
 }
+[data-theme="dark"] .table-fintech th {
+    color: #A0A0B0;
+}
+
+/* Dark: input group */
 [data-theme="dark"] .input-group-text {
-    background-color: var(--surface-alt);
-    border-color: var(--border-color);
-    color: var(--text-secondary);
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #A0A0B0;
+}
+
+/* Dark: category/badge pills */
+[data-theme="dark"] .badge-fintech,
+[data-theme="dark"] [style*="background:var(--primary-light)"] {
+    color: #C7D2FE !important;
+}
+
+/* Dark: progress bar bg */
+[data-theme="dark"] .progress {
+    background-color: rgba(255, 255, 255, 0.08);
 }
 
 /* ── Theme Toggle ──────────────────────────────────────────────────────── */
@@ -135,6 +183,7 @@
 .theme-toggle .fa-sun, .theme-toggle .fa-moon {
     position: absolute; transition: transform 0.4s ease, opacity 0.3s ease;
 }
+.theme-toggle .fa-sun  { opacity: 1; transform: rotate(0) scale(1); }
 .theme-toggle .fa-moon { opacity: 0; transform: rotate(-90deg) scale(0); }
 [data-theme="dark"] .theme-toggle .fa-sun  { opacity: 0; transform: rotate(90deg) scale(0); }
 [data-theme="dark"] .theme-toggle .fa-moon { opacity: 1; transform: rotate(0) scale(1); }
@@ -144,7 +193,7 @@
     position: fixed; top: 0; left: 0;
     width: 400px; height: 400px;
     border-radius: 50%; pointer-events: none; z-index: 0;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
     transform: translate(-50%, -50%);
     opacity: 0; transition: opacity 0.4s ease;
 }
@@ -155,6 +204,7 @@
     transform-style: preserve-3d;
     will-change: transform;
 }
+
 
 
 /* ==========================================================================
@@ -208,7 +258,9 @@ a:hover {
     background-color: rgba(255, 255, 255, 0.9) !important;
 }
 [data-theme="dark"] .navbar {
-    background-color: rgba(15, 23, 42, 0.85) !important;
+    background-color: rgba(10, 10, 15, 0.85) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 .navbar-brand {

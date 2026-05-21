@@ -18,22 +18,25 @@
                 <form method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label"><i class="fas fa-user text-muted me-2"></i>Username</label>
-                        <input type="text" class="form-control" id="username" name="username" required autofocus placeholder="Choose a username">
+                        <input type="text" class="form-control" id="username" name="username" required autofocus placeholder="e.g. john_doe">
+                        <div class="form-text" style="font-size:0.75rem;color:var(--text-muted);">3–30 characters, letters, numbers and underscore only</div>
                     </div>
 
                     <div class="mb-3">
                         <label for="email" class="form-label"><i class="fas fa-envelope text-muted me-2"></i>Email Address</label>
-                        <input type="email" class="form-control" id="email" name="email" required placeholder="name@example.com">
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="e.g. john@example.com">
                     </div>
                     
                     <div class="mb-3">
                         <label for="password" class="form-label"><i class="fas fa-lock text-muted me-2"></i>Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required placeholder="Create a password">
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Min. 6 characters">
+                        <div class="form-text" style="font-size:0.75rem;color:var(--text-muted);">Must be at least 6 characters</div>
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="confirm_password" class="form-label"><i class="fas fa-check-circle text-muted me-2"></i>Confirm Password</label>
-                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Repeat your password">
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Re-enter your password">
+                        <div id="passwordMatch" style="font-size:0.75rem;margin-top:0.25rem;min-height:1.1em;"></div>
                     </div>
 
                     <div class="d-grid gap-2 mb-4">
@@ -48,4 +51,26 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    var pw = document.getElementById('password');
+    var cpw = document.getElementById('confirm_password');
+    var indicator = document.getElementById('passwordMatch');
+    function check() {
+        if (!cpw.value) { indicator.textContent = ''; return; }
+        if (pw.value === cpw.value) {
+            indicator.textContent = '✓ Passwords match';
+            indicator.style.color = '#10B981';
+        } else {
+            indicator.textContent = '✗ Passwords do not match';
+            indicator.style.color = '#EF4444';
+        }
+    }
+    pw.addEventListener('input', check);
+    cpw.addEventListener('input', check);
+})();
+</script>
 {% endblock %}

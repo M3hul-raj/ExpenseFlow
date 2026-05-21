@@ -17,7 +17,7 @@
         var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
         var meta = document.getElementById('metaThemeColor');
-        if (meta) meta.content = theme === 'dark' ? '#0F172A' : '#4F46E5';
+        if (meta) meta.content = theme === 'dark' ? '#0A0A0F' : '#4F46E5';
     })();
     </script>
     <!-- Bootstrap 5 CSS -->
@@ -140,7 +140,7 @@
             localStorage.setItem('ef-theme', next);
             // Update theme-color meta
             var meta = document.getElementById('metaThemeColor');
-            if (meta) meta.content = next === 'dark' ? '#0F172A' : '#4F46E5';
+            if (meta) meta.content = next === 'dark' ? '#0A0A0F' : '#4F46E5';
             // Dispatch event for chart updates
             window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: next } }));
         });
