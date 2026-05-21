@@ -29,13 +29,23 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=1.2">
     <link rel="stylesheet" href="{{ url_for('static', filename='avatars.css') }}">
     <style>
     .nav-link.active {
         color: var(--primary) !important;
         font-weight: 600;
         box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    
+    @media (max-width: 991.98px) {
+        .offcanvas-lg.offcanvas-end {
+            width: 75vw !important;
+            max-width: 350px !important;
+            background-color: var(--bg-color) !important;
+            border-left: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg) !important;
+        }
     }
     </style>
     {% block head %}{% endblock %}
