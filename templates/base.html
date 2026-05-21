@@ -46,6 +46,10 @@
         background-color: #0A0A0F !important;
         box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
     }
+    .offcanvas-backdrop {
+        top: 76px !important;
+        z-index: 1040 !important;
+    }
     </style>
     {% block head %}{% endblock %}
 </head>
@@ -55,7 +59,7 @@
     <div class="cursor-glow" id="cursorGlow"></div>
 
     <!-- Modern Fintech Navbar -->
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top" style="z-index: 1050;">
         <div class="container-fluid px-4 px-lg-5">
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-layer-group"></i> ExpenseFlow
@@ -65,7 +69,7 @@
                     <i class="fas fa-sun"></i>
                     <i class="fas fa-moon"></i>
                 </button>
-                <button class="navbar-toggler border-0 shadow-none px-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler border-0 shadow-none px-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
                     <i class="fas fa-bars fs-4" style="color: var(--text-primary) !important;"></i>
                 </button>
             </div>
@@ -99,8 +103,11 @@
             </div>
         </div>
 
-        <!-- Mobile Full-Height Sidebar Dropdown -->
-        <div class="collapse position-absolute end-0 d-lg-none" id="mobileMenu" style="top: 100%; width: 280px; height: calc(100vh - 75px); z-index: 1050; padding: 1.5rem; border-left: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); overflow-y: auto;">
+    </nav>
+
+    <!-- Mobile Hardware-Accelerated Side-Drawer (Offset below navbar) -->
+    <div class="offcanvas offcanvas-end d-lg-none border-0" tabindex="-1" id="mobileMenu" style="top: 76px !important; height: calc(100vh - 76px) !important; width: 280px !important; border-left: 1px solid var(--border-color) !important; z-index: 1045;">
+        <div class="offcanvas-body pt-4">
             <ul class="navbar-nav gap-2">
                 {% if session.get('user_id') %}
                     <li class="nav-item"><a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dashboard</a></li>
@@ -115,7 +122,7 @@
                 {% endif %}
             </ul>
         </div>
-    </nav>
+    </div>
 
     <!-- Main Content Area -->
     <main class="min-vh-100 pb-5">
