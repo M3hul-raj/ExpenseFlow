@@ -107,8 +107,8 @@
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
 }
 [data-theme="dark"] option {
-    background-color: var(--bg-color);
     color: #FFFFFF;
+    background-color: #1A1A1A; /* Closest universal native dark surface */
 }
 [data-theme="dark"] .form-control:focus,
 [data-theme="dark"] .form-select:focus {
@@ -334,6 +334,12 @@ a:hover {
 .nav-link:hover, .nav-link.active {
     color: var(--primary) !important;
     background-color: var(--primary-light);
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    color: #FFFFFF !important;
+    background-color: var(--primary) !important;
 }
 
 .nav-cta-btn {
