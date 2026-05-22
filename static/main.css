@@ -212,13 +212,13 @@
 [data-theme="dark"] .theme-toggle {
     background: var(--primary); border-color: var(--primary); color: #fff;
 }
-.theme-toggle .fa-sun, .theme-toggle .fa-moon {
+.theme-toggle .fa-moon, .theme-toggle .fa-circle-half-stroke {
     position: absolute; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 }
-.theme-toggle .fa-sun  { opacity: 1; transform: rotate(0) scale(1); }
-.theme-toggle .fa-moon { opacity: 0; transform: rotate(-90deg) scale(0); }
-[data-theme="dark"] .theme-toggle .fa-sun  { opacity: 0; transform: rotate(90deg) scale(0); }
-[data-theme="dark"] .theme-toggle .fa-moon { opacity: 1; transform: rotate(0) scale(1); }
+.theme-toggle .fa-moon  { opacity: 1; transform: rotate(0) scale(1); }
+.theme-toggle .fa-circle-half-stroke { opacity: 0; transform: rotate(-90deg) scale(0); }
+[data-theme="dark"] .theme-toggle .fa-moon  { opacity: 0; transform: rotate(90deg) scale(0); }
+[data-theme="dark"] .theme-toggle .fa-circle-half-stroke { opacity: 1; transform: rotate(0) scale(1); }
 
 /* ── Cursor Glow (dark mode only) ──────────────────────────────────────── */
 .cursor-glow {
