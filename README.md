@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>A premium, full-stack personal finance tracker built with Flask</strong><br>
-  Track expenses · Set budgets · Analyze spending · Export reports · Install as PWA
+  Track expenses · Set budgets · Deep Analytics · Smart Dark/Light Modes · Install as PWA
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 
 ## What is ExpenseFlow?
 
-ExpenseFlow is a production-grade personal finance management application designed with a modern **fintech aesthetic**. It goes far beyond basic expense tracking — offering real-time budget alerts, 9-section analytics dashboards, PDF report generation, and Progressive Web App support for mobile installation.
+ExpenseFlow is a production-grade personal finance management application designed with a modern **premium fintech aesthetic**. It goes far beyond basic expense tracking — offering real-time budget alerts, 9-section analytics dashboards with GitHub-style heatmaps, beautiful Dark and Light modes, PDF report generation, and Progressive Web App support for mobile installation.
 
 Built as a full-stack Flask application with SQLAlchemy ORM, it features server-side input validation, indexed database queries, comprehensive error handling, and session-based authentication with hashed passwords.
 
@@ -38,27 +38,29 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 ### Budgeting
 - **Monthly Budgets** — Set a specific budget for any month/year combination
 - **Recurring Budgets** — Auto-apply the same budget to all future months
-- **Budget Progress Bar** — Visual progress indicator on Dashboard and Add Expense pages
+- **Budget Progress Bar** — Dynamic visual progress indicators on Dashboard and Add Expense pages
 - **Smart Alerts** — Dismissible banners: amber at 90%+ usage, red at 100%+ (persisted per session via localStorage)
 
 ### Analytics & Reporting
-- **9-Section Analytics Dashboard** — Month selector, MoM comparison, category breakdown, daily spending bar chart, calendar heatmap, top 5 expenses, budget history, payment method breakdown, spending trend
+- **9-Section Analytics Dashboard** — Month selector, MoM comparison, category breakdown, daily spending bar chart, top 5 expenses, budget history, payment method breakdown, and spending trend
+- **GitHub-Style Calendar Heatmap** — Dynamic visual spending legend scaling relative to your highest spending day of the month
 - **Dashboard Overview** — 4 stat cards (Total Spent, This Month, Daily Average, Top Category), category donut chart, 6-month spending trend line chart
 - **PDF Export** — Professional ReportLab-generated PDF with indigo header, summary stats, category breakdown table, full paginated expense list, and page numbers
 - **CSV Export** — Client-side JavaScript CSV generation with one-click download
+
+### Design & UX
+- **Flawless Dark & Light Modes** — Precision-engineered themes that respect OS preferences with a dedicated manual toggle switch
+- **Fintech Aesthetic** — Indigo color system, Inter font, premium glassmorphic frosted cards, and smooth micro-animations
+- **Responsive Layout** — Full-width dashboard-style layouts optimized for desktop, tablet, and mobile
+- **Active Navbar** — Current page highlighted with indigo bottom border
+- **Auto-dismissing Flash Messages** — 4-second fade-out with smooth CSS animations
+- **Custom Error Pages** — Branded 404 and 500 pages matching the app design
+- **Animated Landing Page** — Floating stat cards with CSS keyframe animations
 
 ### User Management
 - **Registration & Login** — Secure authentication with Werkzeug password hashing
 - **Profile Editing** — Update username, email, and password with duplicate checks
 - **Session Management** — Protected routes with login-required redirects
-
-### Design & UX
-- **Fintech Aesthetic** — Indigo color system, Inter font, glassmorphic cards, smooth transitions
-- **Responsive Layout** — Full-width dashboard-style layouts on all pages
-- **Active Navbar** — Current page highlighted with indigo bottom border
-- **Auto-dismissing Flash Messages** — 4-second fade-out with smooth CSS animations
-- **Custom Error Pages** — Branded 404 and 500 pages matching the app design
-- **Animated Landing Page** — Floating stat cards with CSS keyframe animations
 
 ### Progressive Web App (PWA)
 - **Installable** — Add to home screen on mobile and desktop
@@ -84,7 +86,7 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 | Landing Page | Animated floating stat cards with fintech design |
 | Dashboard | 4 stat cards, budget bar, category donut, trend chart |
 | Transactions | Filterable table with search, export buttons, tip card |
-| Analytics | 9-section deep-dive with calendar heatmap |
+| Analytics | 9-section deep-dive with GitHub-style calendar heatmap |
 | Add Expense | Quick-add shortcuts, budget sidebar, full form |
 | PDF Export | Professional indigo-themed expense report |
 
@@ -112,9 +114,9 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 
 Most expense trackers are basic CRUD apps with minimal styling. ExpenseFlow is built to **production standards**:
 
-- **Real fintech UI** — Not Bootstrap defaults. Custom design system with indigo palette, glassmorphic cards, micro-animations, and responsive layouts that look like a real SaaS product.
-- **Smart budgeting** — Not just "set a number". Recurring budgets, visual progress bars, contextual warnings at 90% and 100% thresholds, and budget sidebar visible while adding expenses.
-- **Deep analytics** — 9 analytical sections including calendar heatmaps, month-over-month comparisons, and payment method breakdowns. Not just "total spent this month".
+- **Real fintech UI** — Not Bootstrap defaults. Custom design system with an indigo palette, frosted glassmorphic cards, micro-animations, and perfect Dark/Light modes that look like a real SaaS product.
+- **Smart budgeting** — Not just "set a number". Recurring budgets, visual progress bars, contextual warnings at 90% and 100% thresholds, and a budget sidebar visible while adding expenses.
+- **Deep analytics** — 9 analytical sections including GitHub-style calendar heatmaps, month-over-month comparisons, and payment method breakdowns. Not just "total spent this month".
 - **PDF reports** — Professional, paginated PDF exports with styled tables, category breakdowns, and branded headers. Not a plain text dump.
 - **PWA installable** — Service worker with intelligent caching strategies. Works offline. Installable on any device.
 - **Production security** — Server-side validation on every input, future-date blocking, category whitelists, duplicate email checks, environment-variable secrets, and comprehensive error handling.
