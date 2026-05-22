@@ -494,8 +494,8 @@ a:hover {
    Forms & Inputs
    ========================================================================== */
 .form-control, .form-select {
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
+    background-color: #F1F5F9;
+    border: 1px solid #CBD5E1;
     border-radius: var(--radius-md);
     padding: 0.75rem 1rem;
     color: var(--text-primary);
@@ -504,9 +504,11 @@ a:hover {
 }
 
 .form-control:focus, .form-select:focus {
-    background-color: var(--surface-color);
-    border-color: var(--primary);
+    background-color: #FFFFFF;
+    border: 2px solid #4F46E5;
+    padding: calc(0.75rem - 1px) calc(1rem - 1px); /* Prevent shifting */
     box-shadow: 0 0 0 4px var(--primary-light);
+    outline: none;
 }
 
 .form-label {
