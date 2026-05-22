@@ -507,7 +507,7 @@ def view_expense():
 
     savings_tip = random.choice(TIPS) if TIPS else "Track your expenses regularly!"
 
-    return render_template('view_expense_updated.html',
+    return render_template('view_expense.html',
                          expenses=expenses,
                          total_spent=total_spent,
                          category_totals=sorted_category_totals,
