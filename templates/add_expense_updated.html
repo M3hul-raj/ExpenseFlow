@@ -120,7 +120,7 @@
                         {{ "%.1f"|format(budget_pct) }}%
                     </span>
                 </div>
-                <div style="background:var(--bg-color);border-radius:9999px;height:8px;overflow:hidden;">
+                <div style="background:var(--track-bg);border-radius:9999px;height:8px;overflow:hidden;">
                     <div style="height:100%;border-radius:9999px;width:{{ [budget_pct, 100]|min }}%;"
                          class="{% if budget_pct > 90 %}bg-danger{% elif budget_pct > 75 %}bg-warning{% else %}bg-success{% endif %}"></div>
                 </div>

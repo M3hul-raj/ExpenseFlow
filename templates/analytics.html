@@ -22,7 +22,7 @@
     .cat-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0;
                border-bottom: 1px solid var(--border-color); }
     .cat-row:last-child { border-bottom: none; }
-    .cat-bar-wrap { flex: 1; height: 6px; border-radius: 9999px; background: var(--bg-color); overflow: hidden; }
+    .cat-bar-wrap { flex: 1; height: 6px; border-radius: 9999px; background: var(--track-bg); overflow: hidden; }
     .cat-bar-fill { height: 100%; border-radius: 9999px; background: var(--primary); }
 
     /* Calendar heatmap */
@@ -31,7 +31,7 @@
                       color: var(--text-secondary); padding: 4px 0; }
     .cal-day { aspect-ratio: 1; border-radius: 6px; display: flex; flex-direction: column;
                align-items: center; justify-content: center; font-size: 0.72rem; cursor: default;
-               position: relative; transition: transform 0.1s; background: var(--bg-color); }
+               position: relative; transition: transform 0.1s; background: var(--calendar-bg); }
     .cal-day:hover { transform: scale(1.1); z-index: 2; }
     .cal-day.empty { background: transparent; }
     .cal-day .cal-num { font-weight: 600; line-height: 1; }

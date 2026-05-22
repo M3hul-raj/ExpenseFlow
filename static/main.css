@@ -12,6 +12,10 @@
     --primary-hover: #4338CA;
     --primary-light: #EEF2FF;
     
+    /* UI Element Backgrounds */
+    --track-bg: #E2E8F0;
+    --calendar-bg: #F1F5F9;
+    
     /* Typography Colors */
     --text-primary: #0F172A;
     --text-secondary: #64748B;
@@ -58,6 +62,9 @@
     --primary: #6366F1;
     --primary-hover: #818CF8;
     --primary-light: rgba(99, 102, 241, 0.15);
+
+    --track-bg: rgba(255, 255, 255, 0.08);
+    --calendar-bg: var(--bg-color);
 
     --text-primary: #FFFFFF;
     --text-secondary: #A0A0B0;
@@ -191,7 +198,7 @@
 
 /* Dark: progress bar bg */
 [data-theme="dark"] .progress {
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: var(--track-bg);
 }
 
 /* ── Theme Toggle ──────────────────────────────────────────────────────── */
