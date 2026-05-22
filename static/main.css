@@ -267,8 +267,8 @@ body {
     font-family: var(--font-family);
     background-color: var(--bg-color);
     background-image: 
-        radial-gradient(circle at 0% 0%, #EEF2FF 0%, rgba(238, 242, 255, 0) 50%),
-        radial-gradient(circle at 100% 100%, #F1F5F9 0%, rgba(241, 245, 249, 0) 50%);
+        radial-gradient(circle at 0% 0%, #EEF2FF 0%, rgba(238, 242, 255, 0) 65%),
+        radial-gradient(circle at 100% 100%, #EDE9FE 0%, rgba(237, 233, 254, 0) 65%);
     background-attachment: fixed;
     color: var(--text-primary);
     line-height: 1.6;
