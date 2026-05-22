@@ -444,14 +444,15 @@ a:hover {
 }
 
 .btn-light {
-    background-color: var(--surface-color);
+    background-color: #F1F5F9;
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid #CBD5E1;
 }
 
 .btn-light:hover {
-    background-color: var(--bg-color);
-    border-color: var(--text-muted);
+    background-color: #FFFFFF;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 /* ==========================================================================
@@ -558,14 +559,14 @@ a:hover {
     font-size: 0.75rem;
     letter-spacing: 0.05em;
     padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid #CBD5E1;
     background-color: transparent;
 }
 
 .table-fintech td {
     padding: 1rem;
     vertical-align: middle;
-    border-bottom: 1px solid var(--bg-color);
+    border-bottom: 1px solid #E2E8F0;
     color: var(--text-primary);
 }
 
@@ -574,7 +575,7 @@ a:hover {
 }
 
 .table-fintech tbody tr:hover {
-    background-color: var(--bg-color);
+    background-color: #F1F5F9;
 }
 
 /* ==========================================================================
