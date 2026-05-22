@@ -29,7 +29,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=2.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=2.1">
     <link rel="stylesheet" href="{{ url_for('static', filename='avatars.css') }}">
     <style>
     .navbar-nav .nav-link.active {
@@ -75,7 +75,7 @@
             </div>
             <!-- Desktop Navigation -->
             <div class="collapse navbar-collapse d-none d-lg-block" id="navbarNavDesktop">
-                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                <ul class="navbar-nav ms-auto align-items-center flex-nowrap gap-2">
                     {% if session.get('user_id') %}
                         <li class="nav-item"><a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link {% if request.endpoint == 'analytics' %}active{% endif %}" href="{{ url_for('analytics') }}">Analytics</a></li>

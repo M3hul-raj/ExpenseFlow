@@ -208,9 +208,13 @@
 .theme-toggle:hover {
     border-color: var(--primary); color: var(--primary);
     background-color: var(--primary-light);
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
 }
 [data-theme="dark"] .theme-toggle {
     background: var(--primary); border-color: var(--primary); color: #fff;
+}
+[data-theme="dark"] .theme-toggle:hover {
+    box-shadow: 0 0 15px rgba(79, 70, 229, 0.6);
 }
 .theme-toggle .fa-moon, .theme-toggle .fa-circle-half-stroke {
     position: absolute; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
@@ -336,6 +340,7 @@ a:hover {
     border-radius: var(--radius-sm);
     transition: all 0.2s ease;
     margin: 0 0.25rem;
+    white-space: nowrap;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -356,6 +361,7 @@ a:hover {
     font-weight: 500;
     padding: 0.5rem 1.25rem !important;
     border-radius: var(--radius-full);
+    white-space: nowrap;
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -371,6 +377,7 @@ a:hover {
     font-weight: 500;
     padding: 0.5rem 1.25rem !important;
     border-radius: var(--radius-full);
+    white-space: nowrap;
     transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -378,6 +385,15 @@ a:hover {
     border-color: var(--primary);
     color: var(--primary) !important;
     background-color: var(--primary-light);
+}
+
+/* Responsive adjustments for Zoomed displays (110%-150%) */
+@media (min-width: 992px) and (max-width: 1250px) {
+    .navbar-brand { font-size: 1.2rem; }
+    .nav-link { padding: 0.4rem 0.6rem !important; font-size: 0.9rem; margin: 0 0.1rem; }
+    .nav-outline-btn, .nav-cta-btn { padding: 0.4rem 1rem !important; font-size: 0.9rem; }
+    .theme-toggle { width: 36px; height: 36px; }
+    .navbar-nav { gap: 0.25rem !important; }
 }
 
 .nav-cta-btn:active, .nav-outline-btn:active {
