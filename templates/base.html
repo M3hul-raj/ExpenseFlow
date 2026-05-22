@@ -29,7 +29,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=1.8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}?v=1.9">
     <link rel="stylesheet" href="{{ url_for('static', filename='avatars.css') }}">
     <style>
     .navbar-nav .nav-link.active {
@@ -66,7 +66,7 @@
             </a>
             <div class="d-flex align-items-center gap-3 d-lg-none">
                 <button class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
-                    <i class="fas fa-sun"></i>
+                    <i class="far fa-sun"></i>
                     <i class="fas fa-moon"></i>
                 </button>
                 <button class="navbar-toggler border-0 shadow-none px-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
@@ -84,7 +84,7 @@
                         <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2 {% if request.endpoint == 'edit_profile' %}active{% endif %}" href="{{ url_for('edit_profile') }}"><span class="avatar avatar-sm avatar-{{ (session.get('avatar', 'avatar_1') | replace('avatar_', '')) }}"></span>Profile</a></li>
                         <li class="nav-item ms-lg-1">
                             <button class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
-                                <i class="fas fa-sun"></i>
+                                <i class="far fa-sun"></i>
                                 <i class="fas fa-moon"></i>
                             </button>
                         </li>
@@ -92,7 +92,7 @@
                     {% else %}
                         <li class="nav-item">
                             <button class="theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">
-                                <i class="fas fa-sun"></i>
+                                <i class="far fa-sun"></i>
                                 <i class="fas fa-moon"></i>
                             </button>
                         </li>
