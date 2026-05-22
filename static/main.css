@@ -559,15 +559,21 @@ a:hover {
     font-size: 0.75rem;
     letter-spacing: 0.05em;
     padding: 1rem;
-    border-bottom: 1px solid #CBD5E1;
+    border-bottom: 1px solid var(--border-color);
     background-color: transparent;
+}
+:root:not([data-theme="dark"]) .table-fintech th {
+    border-bottom: 1px solid #CBD5E1;
 }
 
 .table-fintech td {
     padding: 1rem;
     vertical-align: middle;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid var(--bg-color);
     color: var(--text-primary);
+}
+:root:not([data-theme="dark"]) .table-fintech td {
+    border-bottom: 1px solid #E2E8F0;
 }
 
 .table-fintech tbody tr {
@@ -575,8 +581,15 @@ a:hover {
 }
 
 .table-fintech tbody tr:hover {
+    background-color: var(--bg-color);
+}
+:root:not([data-theme="dark"]) .table-fintech tbody tr:hover {
     background-color: #F1F5F9;
 }
+
+/* Light mode specific utility for inner card dividers */
+.border-card-divider { border-color: var(--border-color) !important; }
+:root:not([data-theme="dark"]) .border-card-divider { border-color: #CBD5E1 !important; }
 
 /* ==========================================================================
    Mobile Offcanvas Menu

@@ -185,7 +185,7 @@
     <!-- ─── Table ─── -->
     {% if expenses %}
     <div class="fintech-card p-0">
-        <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom" style="border-color: var(--border-color) !important;">
+        <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom border-card-divider">
             <span id="resultCount" class="text-secondary">Showing all {{ expenses|length }} records</span>
             <div class="d-flex gap-2">
                 <a href="{{ url_for('export_pdf') }}" class="btn btn-light btn-sm rounded-pill">
