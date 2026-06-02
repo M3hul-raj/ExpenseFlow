@@ -25,53 +25,64 @@
 
                 <!-- ── Hero Visual: Floating Stat Cards ──────────────────── -->
                 <div class="hero-cards-wrap d-none d-md-flex mt-5 position-relative justify-content-center" aria-hidden="true">
+                    
+                    <!-- Glow Orb -->
+                    <div class="hero-glow-orb"></div>
 
                     <!-- Card 1: Total Spent -->
-                    <div class="hero-card hero-card--float-a" style="--delay:0s;">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="hero-card-icon" style="background:var(--primary-light);color:var(--primary);">
-                                <i class="fas fa-indian-rupee-sign"></i>
-                            </div>
-                            <div class="text-start">
-                                <p class="hero-card-label mb-0">This Month</p>
-                                <p class="hero-card-value mb-0">₹24,500</p>
+                    <div class="hero-entrance-wrapper" style="--enter-delay: 0.1s;">
+                        <div class="hero-card hero-card--float-a" style="--delay:0s;">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="hero-card-icon" style="background:var(--primary-light);color:var(--primary);">
+                                    <i class="fas fa-indian-rupee-sign"></i>
+                                </div>
+                                <div class="text-start">
+                                    <p class="hero-card-label mb-0">This Month</p>
+                                    <p class="hero-card-value mb-0">₹24,500</p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 2: Budget Progress -->
-                    <div class="hero-card hero-card--float-b" style="--delay:0.4s;">
-                        <p class="hero-card-label mb-2">Monthly Budget</p>
-                        <div class="hero-progress-track">
-                            <div class="hero-progress-fill" style="width:78%;"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-1">
-                            <span class="hero-card-small">₹7,800 left</span>
-                            <span class="hero-card-small" style="color:#D97706;font-weight:600;">78% used</span>
+                    <div class="hero-entrance-wrapper" style="--enter-delay: 0.3s;">
+                        <div class="hero-card hero-card--float-b" style="--delay:0.4s;">
+                            <p class="hero-card-label mb-2">Monthly Budget</p>
+                            <div class="hero-progress-track">
+                                <div class="hero-progress-fill" style="width:78%;"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1">
+                                <span class="hero-card-small">₹7,800 left</span>
+                                <span class="hero-card-small" style="color:#D97706;font-weight:600;">78% used</span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Card 3: Top Category -->
-                    <div class="hero-card hero-card--float-c" style="--delay:0.8s;">
-                        <p class="hero-card-label mb-2">Top Category</p>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="hero-trophy">🏆</span>
-                            <div>
-                                <p class="hero-card-value mb-0" style="font-size:1rem;">Shopping</p>
-                                <p class="hero-card-small mb-0">₹8,200 this month</p>
+                    <div class="hero-entrance-wrapper" style="--enter-delay: 0.5s;">
+                        <div class="hero-card hero-card--float-c" style="--delay:0.8s;">
+                            <p class="hero-card-label mb-2">Top Category</p>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="hero-trophy">🏆</span>
+                                <div>
+                                    <p class="hero-card-value mb-0" style="font-size:1rem;">Shopping</p>
+                                    <p class="hero-card-small mb-0">₹8,200 this month</p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 4: Streak -->
-                    <div class="hero-card hero-card--float-d" style="--delay:1.2s;">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="hero-streak-icon">
-                                <i class="fas fa-circle-check"></i>
-                            </div>
-                            <div class="text-start">
-                                <p class="hero-card-value mb-0" style="font-size:0.9rem;color:var(--success);">Under budget</p>
-                                <p class="hero-card-small mb-0">3 months in a row 🎉</p>
+                    <div class="hero-entrance-wrapper" style="--enter-delay: 0.7s;">
+                        <div class="hero-card hero-card--float-d" style="--delay:1.2s;">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="hero-streak-icon">
+                                    <i class="fas fa-circle-check"></i>
+                                </div>
+                                <div class="text-start">
+                                    <p class="hero-card-value mb-0" style="font-size:0.9rem;color:var(--success);">Under budget</p>
+                                    <p class="hero-card-small mb-0">3 months in a row 🎉</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -87,9 +98,36 @@
                     pointer-events: none;
                     user-select: none;
                 }
+                
+                .hero-glow-orb {
+                    position: absolute;
+                    width: 400px;
+                    height: 400px;
+                    background: var(--primary);
+                    filter: blur(120px);
+                    opacity: 0.25;
+                    border-radius: 50%;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    z-index: -1;
+                    pointer-events: none;
+                }
+
+                @keyframes heroSlideUp {
+                    0% { opacity: 0; transform: translateY(40px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
+
+                .hero-entrance-wrapper {
+                    animation: heroSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+                    animation-delay: var(--enter-delay);
+                }
 
                 .hero-card {
                     background: var(--surface-color);
+                    backdrop-filter: blur(24px);
+                    -webkit-backdrop-filter: blur(24px);
                     border: 1px solid var(--border-color);
                     border-radius: 16px;
                     box-shadow: 0 8px 24px rgba(15,23,42,0.07), 0 2px 6px rgba(15,23,42,0.04);
