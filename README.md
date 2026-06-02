@@ -80,16 +80,31 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 
 ## Screenshots
 
-> Screenshots coming soon — the app is live at [m3hulraj.pythonanywhere.com](https://m3hulraj.pythonanywhere.com)
+<p align="center">
+  <img src="static/screenshots/dashboard.png" width="800" alt="ExpenseFlow Dashboard (Save your screenshot as dashboard.png in static/screenshots/)">
+</p>
 
-| Page | Description |
-|------|-------------|
-| Landing Page | Animated floating stat cards with fintech design |
-| Dashboard | 4 stat cards, budget bar, category donut, trend chart |
-| Transactions | Filterable table with search, export buttons, tip card |
-| Analytics | 9-section deep-dive with GitHub-style calendar heatmap |
-| Add Expense | Quick-add shortcuts, budget sidebar, full form |
-| PDF Export | Professional indigo-themed expense report |
+### Detailed Views
+
+<details>
+<summary><b>1. Landing Page</b> (Click to expand)</summary>
+<img src="static/screenshots/landing.png" alt="Save your screenshot as landing.png in static/screenshots/">
+</details>
+
+<details>
+<summary><b>2. Analytics & Heatmap</b> (Click to expand)</summary>
+<img src="static/screenshots/analytics.png" alt="Save your screenshot as analytics.png in static/screenshots/">
+</details>
+
+<details>
+<summary><b>3. Transactions & Filters</b> (Click to expand)</summary>
+<img src="static/screenshots/transactions.png" alt="Save your screenshot as transactions.png in static/screenshots/">
+</details>
+
+<details>
+<summary><b>4. Add Expense</b> (Click to expand)</summary>
+<img src="static/screenshots/add_expense.png" alt="Save your screenshot as add_expense.png in static/screenshots/">
+</details>
 
 ---
 
