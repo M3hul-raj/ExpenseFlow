@@ -306,10 +306,8 @@ def dashboard():
         if month_key == current_year_month:
             current_month_spent += e.amount
 
-    import calendar
-    year, month = map(int, current_year_month.split('-'))
-    days_in_month = calendar.monthrange(year, month)[1]
-    avg_daily_spend = current_month_spent / days_in_month if days_in_month > 0 else 0
+    days_passed = max(1, datetime.now().day)
+    avg_daily_spend = current_month_spent / days_passed
     top_category = max(category_totals, key=category_totals.get) if category_totals else 'None'
 
     budget = get_user_budget(user_id, current_year_month)
