@@ -306,8 +306,10 @@ def dashboard():
         if month_key == current_year_month:
             current_month_spent += e.amount
 
-    unique_dates = set(e.date for e in expenses_obj)
-    avg_daily_spend = total_spent / max(1, len(unique_dates))
+    import calendar
+    year, month = map(int, current_year_month.split('-'))
+    days_in_month = calendar.monthrange(year, month)[1]
+    avg_daily_spend = current_month_spent / days_in_month if days_in_month > 0 else 0
     top_category = max(category_totals, key=category_totals.get) if category_totals else 'None'
 
     budget = get_user_budget(user_id, current_year_month)
@@ -496,8 +498,12 @@ def view_expense():
         month_key = e.date[:7]
         monthly_totals[month_key] = monthly_totals.get(month_key, 0) + e.amount
 
-    unique_dates = set(e.date for e in expenses_obj)
-    avg_daily_spend = total_spent / max(1, len(unique_dates))
+    if expenses_obj:
+        first_date = datetime.strptime(min(e.date for e in expenses_obj), '%Y-%m-%d').date()
+        days_active = max(1, (datetime.now().date() - first_date).days + 1)
+        avg_daily_spend = total_spent / days_active
+    else:
+        avg_daily_spend = 0
     top_category = max(category_totals, key=category_totals.get) if category_totals else 'None'
     top_payment_method = max(payment_method_totals, key=payment_method_totals.get) if payment_method_totals else 'None'
 
@@ -985,7 +991,7 @@ def analytics():
         calendar_weeks.append(week)
 
     # ── Avg daily spend ────────────────────────────────────────────────────
-    avg_daily = total_this_month / active_days if active_days > 0 else 0
+    avg_daily = total_this_month / days_in_month if days_in_month > 0 else 0
 
     return render_template('analytics.html',
         username=user.username,
