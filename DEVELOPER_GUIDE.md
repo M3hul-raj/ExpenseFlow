@@ -87,6 +87,16 @@ The application utilizes a custom Service Worker (`sw.js`) to intercept network 
 *   **Cache-First Strategy:** Static assets (CSS, logos, JS) are served instantly from the local cache.
 *   **Network-First Strategy:** HTML pages attempt to fetch fresh data from the server, but gracefully fall back to a custom `offline.html` page if the user loses connectivity.
 
+### E. High-Fidelity Glassmorphism & Animations
+The landing page implements high-end visual design techniques seen in top-tier SaaS platforms.
+*   **Glow Orb & Frosted Glass:** A heavily blurred, absolutely positioned `.hero-glow-orb` div sits behind the cards. The cards utilize `backdrop-filter: blur(24px)` to allow the gradient to organically bleed through the UI.
+*   **Staggered Entrance Velocity:** Cards trigger a `slideUpFadeIn` entrance animation on load with staggered delays (`--enter-delay`), before gracefully transitioning into an infinite, multi-layered CSS keyframe float.
+
+### F. True Velocity "Burn Rate" Analytics
+Instead of simply dividing total monthly spend by 30 days, the Dashboard dynamically computes the user's "True Velocity".
+*   It calculates the exact number of days that have passed in the current month to date (`max(1, datetime.now().day)`).
+*   Dividing current spending by this exact integer gives an aggressive, highly accurate daily burn rate that forces real-time financial accountability.
+
 ---
 
 ## 5. Deployment & Local Setup

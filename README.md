@@ -44,7 +44,8 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 ### Analytics & Reporting
 - **9-Section Analytics Dashboard** — Month selector, MoM comparison, category breakdown, daily spending bar chart, top 5 expenses, budget history, payment method breakdown, and spending trend
 - **GitHub-Style Calendar Heatmap** — Dynamic visual spending legend scaling relative to your highest spending day of the month
-- **Dashboard Overview** — 4 stat cards (Total Spent, This Month, Daily Average, Top Category), category donut chart, 6-month spending trend line chart
+- **Dashboard Overview** — 4 stat cards (Total Spent, This Month, True Velocity Daily Average, Top Category), category donut chart, 6-month spending trend line chart
+- **True Velocity Analytics** — The daily average dynamically tracks exactly how many days have passed in the current month to enforce real-time budgeting accountability.
 - **PDF Export** — Professional ReportLab-generated PDF with indigo header, summary stats, category breakdown table, full paginated expense list, and page numbers
 - **CSV Export** — Client-side JavaScript CSV generation with one-click download
 
@@ -55,7 +56,7 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 - **Active Navbar** — Current page highlighted with indigo bottom border
 - **Auto-dismissing Flash Messages** — 4-second fade-out with smooth CSS animations
 - **Custom Error Pages** — Branded 404 and 500 pages matching the app design
-- **Animated Landing Page** — Floating stat cards with CSS keyframe animations
+- **Animated Landing Page** — "Vercel-style" glassmorphic stat cards with staggered slide-up entrance animations, infinite floating keyframes, and a dynamic glow orb background.
 
 ### User Management
 - **Registration & Login** — Secure authentication with Werkzeug password hashing
@@ -211,8 +212,8 @@ ExpenseFlow/
 │   ├── register.html           # Create account
 │   ├── dashboard.html          # Main dashboard
 │   ├── analytics.html          # 9-section analytics
-│   ├── view_expense_updated.html  # Transactions list
-│   ├── add_expense_updated.html   # Add expense form
+│   ├── view_expense.html       # Transactions list
+│   ├── add_expense.html        # Add expense form
 │   ├── edit_expense.html       # Edit expense form
 │   ├── set_budget.html         # Budget configuration
 │   ├── edit_profile.html       # Profile management
