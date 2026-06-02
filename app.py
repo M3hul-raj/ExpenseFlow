@@ -458,7 +458,7 @@ def add_expense():
     add_budget_pct = (month_spent / add_budget * 100) if add_budget > 0 else 0
     # threshold for badge/strip colour: 90%
 
-    return render_template('add_expense_updated.html',
+    return render_template('add_expense.html',
         current_date=datetime.now(),
         budget=add_budget,
         budget_spent=month_spent,
