@@ -487,7 +487,7 @@ def view_expense():
     payment_method_totals = {}
 
     for e in expenses_obj:
-        expenses.append([e.date, e.category, str(e.amount), e.description, e.payment_method])
+        expenses.append([e.date, e.category, str(e.amount), e.description, e.payment_method, e.id])
         
         total_spent += e.amount
         category_totals[e.category] = category_totals.get(e.category, 0) + e.amount
@@ -523,25 +523,20 @@ def view_expense():
                          savings_tip=savings_tip,
                          current_date=datetime.now())
 
-@app.route('/edit/<int:expense_index>', methods=['GET', 'POST'])
-def edit_expense(expense_index):
+@app.route('/edit/<int:expense_id>', methods=['GET', 'POST'])
+def edit_expense(expense_id):
     """
     GET:  Load an existing expense into the edit form.
     POST: Validate and persist the updated fields.
-    expense_index is a positional index into the user's date-sorted expense list.
+    expense_id is the database primary key (Expense.id), scoped to the
+    logged-in user so one user cannot edit another user's expense.
     """
     if not is_logged_in():
         flash('Please log in to edit expenses.', 'error')
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    expenses_obj = get_user_expenses_sorted(user_id)
-
-    if not (0 <= expense_index < len(expenses_obj)):
-        flash('Invalid expense index.', 'error')
-        return redirect(url_for('view_expense'))
-
-    expense_to_edit = expenses_obj[expense_index]
+    expense_to_edit = Expense.query.filter_by(id=expense_id, user_id=user_id).first_or_404()
 
     if request.method == 'POST':
         import re as _re
@@ -559,27 +554,27 @@ def edit_expense(expense_index):
 
         if not date or not _re.match(r'\d{4}-\d{2}-\d{2}', date):
             flash('Please select a valid date.', 'error')
-            return redirect(url_for('edit_expense', expense_index=expense_index))
+            return redirect(url_for('edit_expense', expense_id=expense_id))
         try:
             if datetime.strptime(date, '%Y-%m-%d').date() > datetime.now().date():
                 flash('Expense date cannot be in the future.', 'error')
-                return redirect(url_for('edit_expense', expense_index=expense_index))
+                return redirect(url_for('edit_expense', expense_id=expense_id))
         except ValueError:
             flash('Please select a valid date.', 'error')
-            return redirect(url_for('edit_expense', expense_index=expense_index))
+            return redirect(url_for('edit_expense', expense_id=expense_id))
         if category not in VALID_CATEGORIES:
             flash('Please select a valid category.', 'error')
-            return redirect(url_for('edit_expense', expense_index=expense_index))
+            return redirect(url_for('edit_expense', expense_id=expense_id))
         try:
             amount = float(amount_raw)
             if amount <= 0:
                 raise ValueError
         except (ValueError, TypeError):
             flash('Please enter a valid positive amount.', 'error')
-            return redirect(url_for('edit_expense', expense_index=expense_index))
+            return redirect(url_for('edit_expense', expense_id=expense_id))
         if payment_method not in VALID_METHODS:
             flash('Please select a valid payment method.', 'error')
-            return redirect(url_for('edit_expense', expense_index=expense_index))
+            return redirect(url_for('edit_expense', expense_id=expense_id))
         description = description[:255]
 
         expense_to_edit.date = date
@@ -594,14 +589,16 @@ def edit_expense(expense_index):
         flash('Expense updated successfully!', 'success')
         return redirect(url_for('view_expense'))
 
-
     expense_list = [expense_to_edit.date, expense_to_edit.category, str(expense_to_edit.amount), expense_to_edit.description, expense_to_edit.payment_method]
-    return render_template('edit_expense.html', expense=expense_list, expense_index=expense_index)
+    return render_template('edit_expense.html', expense=expense_list, expense_id=expense_id)
 
-@app.route('/delete/<int:expense_index>')
-def delete_expense(expense_index):
+@app.route('/delete/<int:expense_id>', methods=['POST'])
+def delete_expense(expense_id):
     """
-    Delete the expense at the given positional index in the user's sorted list.
+    Delete the expense identified by its database primary key (Expense.id).
+    Accepts POST only — GET requests are rejected with 405 Method Not Allowed.
+    The query is scoped to the logged-in user so one user cannot delete
+    another user's expense.
     Redirects to the transactions page with a success or error flash.
     """
     if not is_logged_in():
@@ -609,17 +606,12 @@ def delete_expense(expense_index):
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    expenses_obj = get_user_expenses_sorted(user_id)
+    expense_to_delete = Expense.query.filter_by(id=expense_id, user_id=user_id).first_or_404()
 
-    if 0 <= expense_index < len(expenses_obj):
-        expense_to_delete = expenses_obj[expense_index]
-        db.session.delete(expense_to_delete)
-        db.session.commit()
-        logger.info('Expense deleted: user=%s id=%s', user_id, expense_to_delete.id)
-        flash('Expense deleted successfully!', 'success')
-    else:
-        logger.warning('Invalid delete index %s for user %s', expense_index, user_id)
-        flash('Expense not found.', 'error')
+    db.session.delete(expense_to_delete)
+    db.session.commit()
+    logger.info('Expense deleted: user=%s id=%s', user_id, expense_to_delete.id)
+    flash('Expense deleted successfully!', 'success')
 
     return redirect(url_for('view_expense'))
 

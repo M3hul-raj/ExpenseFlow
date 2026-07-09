@@ -229,12 +229,14 @@
                         <td class="text-secondary small">{{ expense[4] if expense[4] else '—' }}</td>
                         <td class="text-end fw-bold" style="color:var(--danger);white-space:nowrap;">₹{{ "%.2f"|format(expense[2]|float) }}</td>
                         <td class="text-end" style="white-space:nowrap;">
-                            <a href="/edit/{{ loop.index0 }}" class="action-btn edit me-1" title="Edit">
+                            <a href="/edit/{{ expense[5] }}" class="action-btn edit me-1" title="Edit">
                                 <i class="fas fa-pen"></i>
                             </a>
-                            <button onclick="deleteExpense({{ loop.index0 }})" class="action-btn delete" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <form method="POST" action="/delete/{{ expense[5] }}" style="display:inline;" onsubmit="return confirm('Delete this expense? This action cannot be undone.');">
+                                <button type="submit" class="action-btn delete" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -393,11 +395,6 @@
         applyFilters();
     }
 
-    function deleteExpense(index) {
-        if (confirm('Delete this expense? This action cannot be undone.')) {
-            window.location.href = '/delete/' + index;
-        }
-    }
 
     function exportToCSV() {
         const headers = ['Date', 'Category', 'Description', 'Payment Method', 'Amount'];
