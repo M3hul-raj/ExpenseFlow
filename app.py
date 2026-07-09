@@ -1,5 +1,8 @@
 import logging
-from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory, make_response
+from flask_wtf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from datetime import datetime
 import random, os
 from dateutil.relativedelta import relativedelta
@@ -33,6 +36,21 @@ def format_currency(value):
 app.secret_key = os.environ.get('EXPENSEFLOW_SECRET_KEY', 'dev-only-fallback-change-in-prod-!@#')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# WTF_CSRF_TIME_LIMIT: how long (seconds) a CSRF token stays valid; None = session lifetime
+app.config['WTF_CSRF_TIME_LIMIT'] = None
+
+# ── CSRF protection (Flask-WTF) ────────────────────────────────────────────────
+# Automatically validates the csrf_token hidden field on every POST/PUT/PATCH/DELETE.
+csrf = CSRFProtect(app)
+
+# ── Rate limiting (Flask-Limiter) ──────────────────────────────────────────────
+# Keyed by the real client IP.  No default limit; limits are applied per-route.
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=[],          # no blanket limit — only /login is restricted
+    storage_uri='memory://',    # in-process memory store (swap for Redis in prod)
+)
 
 db.init_app(app)
 
@@ -211,7 +229,26 @@ def register():
 
     return render_template('register.html')
 
+def _login_rate_limit_exceeded(limit):
+    """
+    Called by Flask-Limiter when the /login POST rate limit is breached.
+    Must return a real Response object (not a plain string) so Flask-Limiter
+    uses this page instead of its default 429 error response.
+    """
+    flash(
+        'Too many login attempts. Please wait 15 minutes before trying again.',
+        'error'
+    )
+    return make_response(render_template('login.html'), 429)
+
+
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit(
+    '5 per 15 minutes',
+    methods=['POST'],           # only count POST attempts toward the limit
+    error_message='Too many login attempts.',
+    on_breach=_login_rate_limit_exceeded,
+)
 def login():
     """
     GET:  Show login form; redirect to dashboard if already logged in.

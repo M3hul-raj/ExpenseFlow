@@ -34,6 +34,7 @@
             <!-- Budget Form -->
             <div class="fintech-card">
                 <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row g-3">
                         <!-- Month -->
                         <div class="col-sm-6">

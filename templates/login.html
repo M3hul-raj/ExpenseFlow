@@ -16,6 +16,7 @@
                 </div>
 
                 <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-3">
                         <label for="username" class="form-label"><i class="fas fa-user text-muted me-2"></i>Username</label>
                         <input type="text" class="form-control" id="username" name="username" required autofocus placeholder="Enter your username">

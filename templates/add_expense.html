@@ -44,6 +44,7 @@
             <!-- Main Form -->
             <div class="fintech-card">
                 <form method="POST" id="expenseForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row g-3">
                         <!-- Date -->
                         <div class="col-sm-6">
