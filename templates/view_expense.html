@@ -57,7 +57,7 @@
             <h1 class="fw-bold mb-1" style="font-size: 1.75rem;">Transactions</h1>
             <p class="text-secondary mb-0 small">{{ expenses|length }} records as of {{ current_date.strftime('%d %B %Y') }}</p>
         </div>
-        <a href="{{ url_for('add_expense') }}" class="btn btn-primary rounded-pill d-none d-sm-inline-flex">
+        <a href="{{ url_for('expenses.add_expense') }}" class="btn btn-primary rounded-pill d-none d-sm-inline-flex">
             <i class="fas fa-plus me-2"></i>Add Expense
         </a>
     </div>
@@ -188,7 +188,7 @@
         <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom border-card-divider">
             <span id="resultCount" class="text-secondary">Showing all {{ expenses|length }} records</span>
             <div class="d-flex gap-2">
-                <a href="{{ url_for('export_pdf') }}" class="btn btn-light btn-sm rounded-pill">
+                <a href="{{ url_for('analytics.export_pdf') }}" class="btn btn-light btn-sm rounded-pill">
                     <i class="fas fa-file-pdf me-1 text-danger"></i>Export PDF
                 </a>
                 <button onclick="exportToCSV()" class="btn btn-light btn-sm rounded-pill">
@@ -229,10 +229,10 @@
                         <td class="text-secondary small">{{ expense[4] if expense[4] else '—' }}</td>
                         <td class="text-end fw-bold" style="color:var(--danger);white-space:nowrap;">₹{{ "%.2f"|format(expense[2]|float) }}</td>
                         <td class="text-end" style="white-space:nowrap;">
-                            <a href="/edit/{{ expense[5] }}" class="action-btn edit me-1" title="Edit">
+                            <a href="{{ url_for('expenses.edit_expense', expense_id=expense[5]) }}" class="action-btn edit me-1" title="Edit">
                                 <i class="fas fa-pen"></i>
                             </a>
-                            <form method="POST" action="/delete/{{ expense[5] }}" style="display:inline;" onsubmit="return confirm('Delete this expense? This action cannot be undone.');">
+                            <form method="POST" action="{{ url_for('expenses.delete_expense', expense_id=expense[5]) }}" style="display:inline;" onsubmit="return confirm('Delete this expense? This action cannot be undone.');">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="action-btn delete" title="Delete">
                                     <i class="fas fa-trash"></i>
@@ -264,7 +264,7 @@
         </div>
         <h5 class="fw-bold mb-2">No transactions yet</h5>
         <p class="text-secondary mb-3">Start tracking your spending to see records here.</p>
-        <a href="{{ url_for('add_expense') }}" class="btn btn-primary rounded-pill px-4">
+        <a href="{{ url_for('expenses.add_expense') }}" class="btn btn-primary rounded-pill px-4">
             <i class="fas fa-plus me-2"></i>Add Your First Expense
         </a>
     </div>

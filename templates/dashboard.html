@@ -93,7 +93,7 @@
                 <p class="text-secondary mb-0 small">Here's your financial overview for {{ current_date.strftime('%B %Y') }}</p>
             </div>
         </div>
-        <a href="{{ url_for('add_expense') }}" class="btn btn-primary rounded-pill d-none d-md-inline-flex">
+        <a href="{{ url_for('expenses.add_expense') }}" class="btn btn-primary rounded-pill d-none d-md-inline-flex">
             <i class="fas fa-plus me-2"></i>Add Expense
         </a>
     </div>
@@ -208,7 +208,7 @@
                 <i class="fas fa-wallet text-primary"></i>
                 Monthly Budget
             </div>
-            <a href="{{ url_for('set_budget') }}" class="btn btn-outline-primary btn-sm rounded-pill">
+            <a href="{{ url_for('budget.set_budget') }}" class="btn btn-outline-primary btn-sm rounded-pill">
                 <i class="fas fa-sliders-h me-1"></i>Adjust Budget
             </a>
         </div>
@@ -278,12 +278,12 @@
     <!-- ─── Quick Actions ─── -->
     <div class="row g-3 mb-4 d-md-none">
         <div class="col-6">
-            <a href="{{ url_for('add_expense') }}" class="btn btn-primary w-100 rounded-pill py-2">
+            <a href="{{ url_for('expenses.add_expense') }}" class="btn btn-primary w-100 rounded-pill py-2">
                 <i class="fas fa-plus me-1"></i>Add
             </a>
         </div>
         <div class="col-6">
-            <a href="{{ url_for('view_expense') }}" class="btn btn-outline-primary w-100 rounded-pill py-2">
+            <a href="{{ url_for('expenses.view_expense') }}" class="btn btn-outline-primary w-100 rounded-pill py-2">
                 <i class="fas fa-list me-1"></i>View All
             </a>
         </div>
@@ -297,7 +297,7 @@
                 <i class="fas fa-clock text-primary"></i>
                 Recent Transactions
             </div>
-            <a href="{{ url_for('view_expense') }}" class="btn btn-light btn-sm rounded-pill text-secondary">
+            <a href="{{ url_for('expenses.view_expense') }}" class="btn btn-light btn-sm rounded-pill text-secondary">
                 View all <i class="fas fa-arrow-right ms-1"></i>
             </a>
         </div>
@@ -334,7 +334,7 @@
             <div class="empty-state-icon"><i class="fas fa-receipt"></i></div>
             <h5 class="fw-bold mb-2">No expenses yet</h5>
             <p class="text-secondary mb-3">Start tracking your daily spending to see your budget breakdowns and trends here.</p>
-            <a href="{{ url_for('add_expense') }}" class="btn btn-primary rounded-pill px-4">
+            <a href="{{ url_for('expenses.add_expense') }}" class="btn btn-primary rounded-pill px-4">
                 <i class="fas fa-plus me-2"></i>Add Your First Expense
             </a>
         </div>

@@ -17,8 +17,8 @@ import re
 
 import pytest
 
-from app import db, get_user_budget, get_budget_history, get_current_year_month
-from models import User, Expense, Budget
+from models import db, User, Expense, Budget
+from utils import get_user_budget, get_budget_history, get_current_year_month
 
 
 # ══════════════════════════════════════════════════════════════════════════════

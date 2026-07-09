@@ -51,7 +51,7 @@
             </h1>
             <p class="text-secondary small mb-0">Deep insights for {{ selected_month_label }}</p>
         </div>
-        <form method="GET" action="{{ url_for('analytics') }}" class="d-flex align-items-center gap-2">
+        <form method="GET" action="{{ url_for('analytics.analytics') }}" class="d-flex align-items-center gap-2">
             <i class="fas fa-calendar-alt text-muted"></i>
             <select name="month" class="form-select form-select-sm rounded-pill" style="min-width:160px;"
                     onchange="this.form.submit()">

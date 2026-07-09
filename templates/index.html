@@ -12,15 +12,15 @@
                 <h1 class="display-4 fw-bold mb-4">Welcome back, {{ session.get('display_name') or session.get('username') }}!</h1>
                 <p class="lead text-secondary mb-5 px-lg-4">Pick up right where you left off. Track, manage, and analyze your finances with ease.</p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-4 py-2 rounded-pill">Go to Dashboard</a>
-                    <a href="{{ url_for('add_expense') }}" class="btn btn-outline-primary btn-lg px-4 py-2 rounded-pill">Add Record</a>
+                    <a href="{{ url_for('auth.dashboard') }}" class="btn btn-primary btn-lg px-4 py-2 rounded-pill">Go to Dashboard</a>
+                    <a href="{{ url_for('expenses.add_expense') }}" class="btn btn-outline-primary btn-lg px-4 py-2 rounded-pill">Add Record</a>
                 </div>
                 {% else %}
                 <h1 class="display-4 fw-bold mb-4">Master Your Money with ExpenseFlow</h1>
                 <p class="lead text-secondary mb-5 px-lg-4">A minimalist, powerful platform designed to help you track daily spending, plan monthly budgets, and achieve financial clarity.</p>
                 <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">Get Started for Free</a>
-                    <a href="{{ url_for('login') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill">Sign In</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm">Get Started for Free</a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill">Sign In</a>
                 </div>
 
                 <!-- ── Hero Visual: Floating Stat Cards ──────────────────── -->
@@ -314,7 +314,7 @@
     <div class="container">
         <div class="row g-4 align-items-center">
             <div class="col-md-6 text-center text-md-start">
-                <a class="text-decoration-none text-dark fw-bold fs-5 d-inline-flex align-items-center gap-2 mb-2" href="{{ url_for('index') }}">
+                <a class="text-decoration-none text-dark fw-bold fs-5 d-inline-flex align-items-center gap-2 mb-2" href="{{ url_for('auth.index') }}">
                     <i class="fas fa-layer-group text-primary"></i> ExpenseFlow
                 </a>
             </div>
