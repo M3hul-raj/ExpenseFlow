@@ -22,7 +22,7 @@
 
 ExpenseFlow is a production-grade personal finance management application designed with a modern **premium fintech aesthetic**. It goes far beyond basic expense tracking — offering real-time budget alerts, 9-section analytics dashboards with GitHub-style heatmaps, beautiful Dark and Light modes, PDF report generation, and Progressive Web App support for mobile installation.
 
-Built as a full-stack Flask application with SQLAlchemy ORM, it features server-side input validation, indexed database queries, comprehensive error handling, and session-based authentication with hashed passwords.
+Built as a full-stack Flask application with SQLAlchemy ORM and the **application factory pattern**, it features CSRF protection, login rate limiting, server-side input validation, indexed database queries, comprehensive error handling, session-based authentication with hashed passwords, and a full automated test suite with CI.
 
 ---
 
@@ -69,10 +69,16 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 - **Offline Support** — Branded offline fallback page when network is unavailable
 - **App Icons** — Custom 192x192 and 512x512 indigo icons with stacked-layers logo
 
-### Infrastructure
+### Security & Infrastructure
+- **CSRF Protection** — All POST forms validated via Flask-WTF CSRF tokens
+- **Login Rate Limiting** — Flask-Limiter enforces 5 attempts per 15 minutes on `/login` POST to prevent brute-force attacks
 - **SQLAlchemy ORM** — Proper relational models with cascade deletes
+- **Application Factory** — `create_app()` pattern with separate production and testing configurations
+- **Blueprint Architecture** — Routes split into 5 blueprints (`auth`, `expenses`, `budget`, `analytics`, `main`) for modularity
 - **Indexed Queries** — Database indexes on `user_id`, `date`, `username`, `email`, and composite `(user_id, date)`
 - **Server-side Validation** — Regex-based input sanitization, whitelist validation for categories and payment methods, future-date blocking
+- **Automated Testing** — 26 pytest tests covering CRUD, budget logic, validation, and CSRF enforcement
+- **CI/CD** — GitHub Actions workflow runs `pytest tests/ -v` on every push and PR to `main`
 - **Structured Logging** — All events logged to `expenseflow.log` with timestamps
 - **Environment Variables** — `SECRET_KEY` loaded from `EXPENSEFLOW_SECRET_KEY` env var
 
@@ -112,9 +118,11 @@ Built as a full-stack Flask application with SQLAlchemy ORM, it features server-
 
 | Layer | Technology |
 |-------|-----------|
-| **Backend** | Python 3.x, Flask 3.1, Flask-SQLAlchemy |
+| **Backend** | Python 3.14, Flask 3.1, Flask-SQLAlchemy |
+| **Security** | Flask-WTF (CSRF), Flask-Limiter (rate limiting) |
 | **Database** | SQLite via SQLAlchemy ORM |
 | **Authentication** | Werkzeug security (pbkdf2 password hashing) |
+| **Testing** | pytest (26 tests), GitHub Actions CI |
 | **Frontend** | HTML5, CSS3, JavaScript, Jinja2 templating |
 | **UI Framework** | Bootstrap 5.3, Font Awesome 6.4 |
 | **Charts** | Chart.js 4.4 |
@@ -135,7 +143,7 @@ Most expense trackers are basic CRUD apps with minimal styling. ExpenseFlow is b
 - **Deep analytics** — 9 analytical sections including GitHub-style calendar heatmaps, month-over-month comparisons, and payment method breakdowns. Not just "total spent this month".
 - **PDF reports** — Professional, paginated PDF exports with styled tables, category breakdowns, and branded headers. Not a plain text dump.
 - **PWA installable** — Service worker with intelligent caching strategies. Works offline. Installable on any device.
-- **Production security** — Server-side validation on every input, future-date blocking, category whitelists, duplicate email checks, environment-variable secrets, and comprehensive error handling.
+- **Production security** — CSRF token validation on every form, login rate limiting (5 per 15 min), server-side validation on every input, future-date blocking, category whitelists, duplicate email checks, environment-variable secrets, and comprehensive error handling.
 
 ---
 
@@ -210,11 +218,26 @@ Open your browser and navigate to **http://127.0.0.1:5000/**
 
 ```
 ExpenseFlow/
-├── app.py                      # Flask application (all routes)
+├── .github/workflows/
+│   └── ci.yml                  # GitHub Actions CI (pytest on push/PR)
+├── app.py                      # Application factory (create_app)
+├── extensions.py               # Flask extension instances (CSRF, Limiter)
 ├── models.py                   # SQLAlchemy models (User, Expense, Budget)
+├── utils.py                    # Shared helper functions and constants
 ├── requirements.txt            # Python dependencies
+├── blueprints/
+│   ├── __init__.py
+│   ├── auth.py                 # Auth routes (login, register, dashboard, profile)
+│   ├── expenses.py             # Expense CRUD routes (add, view, edit, delete)
+│   ├── budget.py               # Budget management routes
+│   ├── analytics.py            # Analytics dashboard and PDF export
+│   └── main.py                 # PWA routes (service worker, manifest, offline)
+├── tests/
+│   ├── conftest.py             # Shared pytest fixtures (isolated in-memory DB)
+│   └── test_app.py             # 26 functional tests (CRUD, budget, CSRF)
 ├── static/
 │   ├── main.css                # Design system (fintech theme)
+│   ├── avatars.css             # Avatar styling
 │   ├── sw.js                   # Service worker (PWA caching)
 │   ├── manifest.json           # PWA web app manifest
 │   └── icons/

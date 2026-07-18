@@ -8,11 +8,11 @@ If you are a developer looking to contribute or understand the codebase, this do
 
 ## 1. Executive Architecture Summary
 
-ExpenseFlow is a production-grade, full-stack web application built on a modern Python backend (Flask) with a custom, highly interactive vanilla JavaScript/CSS frontend. It strictly implements the **MVC (Model-View-Controller)** pattern through server-side rendering (SSR):
+ExpenseFlow is a production-grade, full-stack web application built on a modern Python backend (Flask) with a custom, highly interactive vanilla JavaScript/CSS frontend. It uses the **application factory pattern** (`create_app()`) with **Flask Blueprints** and strictly implements the **MVC (Model-View-Controller)** pattern through server-side rendering (SSR):
 
 *   **Model (`models.py`)**: Defines the SQLite database structure using SQLAlchemy ORM.
 *   **View (`templates/`, `static/`)**: Jinja2 HTML templates styled with a completely custom CSS design system (`main.css`), featuring dynamic JavaScript interactivity without heavy frontend frameworks.
-*   **Controller (`app.py`)**: The central Flask application handling routing, business logic, authentication, PDF generation, and complex analytics processing.
+*   **Controller (`app.py` + `blueprints/`)**: The application factory in `app.py` wires extensions and registers 5 blueprints (`auth`, `expenses`, `budget`, `analytics`, `main`) that contain all route logic. Shared utilities live in `utils.py`, and extension instances (CSRF, rate limiter) are defined in `extensions.py` to avoid circular imports.
 
 ---
 
@@ -20,12 +20,27 @@ ExpenseFlow is a production-grade, full-stack web application built on a modern 
 
 ```text
 ExpenseFlow/
-├── app.py                      # Central controller: routes, auth, PDF generation, analytics math.
+├── .github/workflows/
+│   └── ci.yml                  # GitHub Actions CI: pytest on every push/PR to main.
+├── app.py                      # Application factory (create_app): config, extensions, blueprints.
+├── extensions.py               # Bare Flask extension instances (CSRFProtect, Limiter).
 ├── models.py                   # SQLAlchemy database structure (User, Expense, Budget tables).
+├── utils.py                    # Shared helpers: is_logged_in, get_user_budget, budget history, TIPS.
 ├── requirements.txt            # Python dependencies graph.
 ├── DEVELOPER_GUIDE.md          # This documentation file.
+├── blueprints/
+│   ├── __init__.py             # Package marker.
+│   ├── auth.py                 # Auth routes: login, register, logout, dashboard, edit_profile.
+│   ├── expenses.py             # Expense CRUD: add, view, edit, delete.
+│   ├── budget.py               # Budget management: set_budget, adjust_budget, quick_adjust.
+│   ├── analytics.py            # Analytics dashboard (9 sections) and PDF export.
+│   └── main.py                 # PWA routes: /sw.js, /manifest.json, /offline.
+├── tests/
+│   ├── conftest.py             # Shared pytest fixtures (isolated in-memory SQLite per test).
+│   └── test_app.py             # 26 functional tests: CRUD, budget logic, validation, CSRF.
 ├── static/
 │   ├── main.css                # The core CSS Design System (CSS Variables, Dark/Light modes).
+│   ├── avatars.css             # Avatar styling for profile selection.
 │   ├── sw.js                   # Service Worker script handling PWA offline caching.
 │   ├── manifest.json           # Web App Manifest for PWA installation.
 │   └── icons/                  # Application icons.
@@ -38,7 +53,9 @@ ExpenseFlow/
 │   ├── view_expense.html       # Transactions list with multi-parameter filtering.
 │   ├── add_expense.html        # Form to add a new expense with server-side validation.
 │   ├── set_budget.html         # Form to configure monthly or recurring budgets.
-│   └── edit_profile.html       # Account management page.
+│   ├── edit_profile.html       # Account management page.
+│   ├── 404.html / 500.html     # Custom error pages.
+│   └── offline.html            # PWA offline fallback.
 └── instance/
     └── expenses.db             # The SQLite database file (auto-generated).
 ```
@@ -97,6 +114,20 @@ Instead of simply dividing total monthly spend by 30 days, the Dashboard dynamic
 *   It calculates the exact number of days that have passed in the current month to date (`max(1, datetime.now().day)`).
 *   Dividing current spending by this exact integer gives an aggressive, highly accurate daily burn rate that forces real-time financial accountability.
 
+### G. CSRF Protection & Login Rate Limiting
+All POST forms include a hidden `csrf_token()` field validated by **Flask-WTF's CSRFProtect**. Extension instances are defined in `extensions.py` (not in `app.py`) to avoid circular imports with blueprints.
+*   **Rate Limiting:** Flask-Limiter enforces **5 POST requests per 15 minutes** on `/login`. The `on_breach` callback returns a proper `make_response(render_template('login.html'), 429)` — not a raw string — so the styled login page renders correctly on the 429 response.
+*   **Testing:** CSRF is disabled in the test configuration (`WTF_CSRF_ENABLED=False`) so functional tests can POST without tokens. Two dedicated tests re-enable CSRF to verify rejection without a valid token.
+
+### H. Automated Testing & CI
+The `tests/` directory contains **26 pytest tests** covering:
+*   **Expense CRUD** — add, edit, delete with server-side validation (negative amounts, future dates, invalid categories)
+*   **Cross-user isolation** — one user cannot edit/delete another user's expenses (returns 404)
+*   **Budget logic** — default budget, explicit budget row, recurring fallback, override priority
+*   **CSRF enforcement** — POST without token returns 400
+
+Tests run against an isolated **in-memory SQLite database** created via `create_app('testing')` — the production `expenses.db` is never touched. **GitHub Actions CI** (`.github/workflows/ci.yml`) runs `pytest tests/ -v` on every push and pull request to `main`.
+
 ---
 
 ## 5. Deployment & Local Setup
@@ -120,8 +151,10 @@ touch /var/www/your_username_pythonanywhere_com_wsgi.py
 
 For technical recruiters reviewing this repository, here is a summary of the engineering skills demonstrated in this codebase:
 
-*   **Full Stack Architecture:** Engineered a custom MVC backend with Flask and SQLAlchemy ORM, utilizing composite database indexing to achieve high-performance query times.
+*   **Full Stack Architecture:** Engineered a modular MVC backend with Flask's application factory pattern and 5 Blueprints, using SQLAlchemy ORM with composite database indexing for high-performance query times.
+*   **Security Hardening:** Implemented CSRF token validation on all POST forms via Flask-WTF, and brute-force login protection via Flask-Limiter (5 req / 15 min rate limit with custom 429 response rendering).
 *   **Advanced Data Processing:** Developed complex data aggregation algorithms to feed a real-time 9-section analytics engine, calculating dynamic budget thresholds, MoM variances, and heatmap intensities.
+*   **Testing & CI/CD:** Built a 26-test pytest suite with isolated in-memory database fixtures, integrated into a GitHub Actions CI pipeline running on every push and PR.
 *   **UI/UX Engineering:** Designed a premium, glassmorphic UI with a scalable CSS variable architecture, implementing flawless, OS-aware Dark and Light modes.
 *   **Web APIs & PWA:** Programmed a custom Service Worker with distinct "network-first" and "cache-first" caching strategies for offline resilience and mobile installation.
 *   **Document Generation:** Built a custom pipeline using ReportLab to dynamically render and serve formatted, paginated PDF financial reports from memory.
